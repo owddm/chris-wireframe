@@ -1,0 +1,35 @@
+---
+import "../styles/global.css";
+import { SITE } from "../config";
+
+export interface Props {
+  title?: string;
+}
+
+const { title } = Astro.props;
+const pageTitle = title ? SITE.title.template.replace("%s", title) : SITE.title.default;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{pageTitle}</title>
+    <script is:inline>
+      // ☝️ This script prevents the FART effect.
+      if (localStorage.getItem("theme") === null) {
+        document.documentElement.setAttribute("data-theme", "wireframe");
+      } else {
+        document.documentElement.setAttribute("data-theme", localStorage.getItem("theme"));
+      }
+    </script>
+    <script>
+      import { themeChange } from "theme-change";
+      themeChange();
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

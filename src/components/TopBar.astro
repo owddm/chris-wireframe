@@ -1,0 +1,43 @@
+---
+import { Icon } from "astro-icon/components";
+import { MENU, SITE } from "../config";
+import Container from "./Container.astro";
+---
+
+<div class="navbar bg-base-100 fixed top-0 z-50 shadow-md">
+  <Container class="flex justify-between">
+    <div class="navbar-start">
+      <a href="/" class="btn btn-ghost normal-case text-xl">{SITE.name}</a>
+    </div>
+    <div class="navbar-end">
+      <div class="hidden lg:flex">
+        <ul class="menu menu-horizontal px-1">
+          {
+            MENU.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="dropdown dropdown-end lg:hidden">
+        <label tabindex="0" class="btn btn-ghost">
+          <Icon name="cil:hamburger-menu" size={24} />
+        </label>
+        <ul
+          tabindex="0"
+          class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+        >
+          {
+            MENU.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </Container>
+</div>

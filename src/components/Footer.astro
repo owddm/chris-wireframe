@@ -1,0 +1,24 @@
+---
+import ThemePicker from "./ThemePicker.astro";
+import Socials from "./Socials.astro";
+import Container from "./Container.astro";
+import { MENU } from "../config";
+---
+
+<footer class="bg-base-300 text-base-content">
+  <Container class="flex justify-between py-10">
+    <nav class="flex gap-4">
+      {
+        MENU.map((item) => (
+          <a href={item.href} class="link link-hover">
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="flex items-center gap-4">
+      <Socials />
+      <ThemePicker />
+    </div>
+  </Container>
+</footer>

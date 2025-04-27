@@ -1,0 +1,37 @@
+---
+import { Icon } from "astro-icon/components";
+import { THEMES } from "../config";
+---
+
+<div>
+  <button class="btn btn-circle" onclick="theme_modal.showModal()">
+    <Icon name="cil:paint" size={18} />
+  </button>
+  <dialog id="theme_modal" class="modal" data-theme="light">
+    <div class="modal-box w-11/12 max-w-5xl">
+      <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+        {
+          THEMES.map((theme) => (
+            <button
+              data-theme={theme}
+              data-set-theme={theme}
+              data-act-class="active"
+              class="btn w-full"
+              onclick="theme_modal.close()"
+            >
+              {theme}
+            </button>
+          ))
+        }
+      </div>
+      <div class="modal-action flex justify-between">
+        <a class="btn btn-primary" href="https://daisyui.com/theme-generator" target="_blank"
+          >Theme Generator</a
+        >
+        <form method="dialog">
+          <button class="btn">Close</button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+</div>

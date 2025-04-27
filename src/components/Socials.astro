@@ -1,0 +1,20 @@
+---
+import { Icon } from "astro-icon/components";
+import { SOCIALS } from "../config";
+---
+
+<div class="grid grid-flow-col gap-4">
+  {
+    SOCIALS.map((social) => (
+      <a
+        href={social.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-primary transition-colors"
+        aria-label={social.label}
+      >
+        <Icon name={social.icon} size={18} />
+      </a>
+    ))
+  }
+</div>

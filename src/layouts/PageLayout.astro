@@ -1,0 +1,19 @@
+---
+import RootLayout from "./RootLayout.astro";
+import TopBar from "../components/TopBar.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<RootLayout>
+  <div class="min-h-screen flex flex-col">
+    <header>
+      <TopBar />
+    </header>
+    <main class="flex-1">
+      <slot />
+    </main>
+    <footer>
+      <Footer />
+    </footer>
+  </div>
+</RootLayout>

@@ -1,9 +1,18 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import PageLayout from "../layouts/PageLayout.astro";
 ---
 
-<Layout>
-  <div class="p-6 mx-auto text-center">
-    Hello World
+<PageLayout>
+  <div class="hero min-h-[70vh] bg-base-200">
+    <div class="hero-content text-center">
+      <div class="max-w-md">
+        <h1 class="text-5xl font-bold">Welcome to OKWireframe</h1>
+        <p class="py-6">
+          Empowering innovation through technology solutions that drive success and transform
+          businesses.
+        </p>
+        <button class="btn btn-primary">Get Started</button>
+      </div>
+    </div>
   </div>
-</Layout>
+</PageLayout>
