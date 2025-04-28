@@ -2,14 +2,15 @@
 import RootLayout from "./RootLayout.astro";
 import TopBar from "../components/TopBar.astro";
 import Footer from "../components/Footer.astro";
+const { title } = Astro.props;
 ---
 
-<RootLayout>
+<RootLayout title={title}>
   <div class="min-h-screen flex flex-col">
     <header>
       <TopBar />
     </header>
-    <main class="flex-1">
+    <main class="flex-1 mt-16">
       <slot />
     </main>
     <footer>

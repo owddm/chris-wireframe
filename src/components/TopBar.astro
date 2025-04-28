@@ -2,18 +2,20 @@
 import { Icon } from "astro-icon/components";
 import { MENU, SITE } from "../config";
 import Container from "./Container.astro";
+
+const items = MENU.filter((item) => item.header !== false);
 ---
 
 <div class="navbar bg-base-100 fixed top-0 z-50 shadow-md">
   <Container class="flex justify-between">
     <div class="navbar-start">
-      <a href="/" class="btn btn-ghost normal-case text-xl">{SITE.name}</a>
+      <a href="/" class="btn btn-ghost normal-case text-xl">{SITE.shortName}</a>
     </div>
     <div class="navbar-end">
       <div class="hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
           {
-            MENU.map((item) => (
+            items.map((item) => (
               <li>
                 <a href={item.href}>{item.label}</a>
               </li>
@@ -30,7 +32,7 @@ import Container from "./Container.astro";
           class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
         >
           {
-            MENU.map((item) => (
+            items.map((item) => (
               <li>
                 <a href={item.href}>{item.label}</a>
               </li>

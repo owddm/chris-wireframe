@@ -2,23 +2,50 @@
 import ThemePicker from "./ThemePicker.astro";
 import Socials from "./Socials.astro";
 import Container from "./Container.astro";
-import { MENU } from "../config";
+import { MENU, SITE } from "../config";
 ---
 
 <footer class="bg-base-300 text-base-content">
   <Container class="flex justify-between py-10">
-    <nav class="flex gap-4">
-      {
-        MENU.map((item) => (
-          <a href={item.href} class="link link-hover">
-            {item.label}
-          </a>
-        ))
-      }
-    </nav>
-    <div class="flex items-center gap-4">
-      <Socials />
-      <ThemePicker />
+    <div class="flex flex-col gap-8">
+      <nav class="flex gap-4">
+        {
+          MENU.map((item) => (
+            <a href={item.href} class="link link-hover">
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+      <div>
+        <span class="text-xl mr-2 font-bold">
+          {SITE.shortName}
+        </span>
+        <span class="text-xs">
+          {SITE.longName}
+        </span>
+      </div>
+    </div>
+    <div class="flex flex-col gap-8 items-end">
+      <div class="flex items-center gap-4">
+        <Socials />
+        <ThemePicker />
+      </div>
+      <div class="text-xs">
+        <a
+          href="https://github.com/owddm/owddm.github.io/commit/e83f4545b44cd939e4f8ea390afbd83697e4c885"
+          target="_blank"
+          class="link link-hover"
+          >Built with <code class="badge badge-xs">{`<3`}</code> on
+          {
+            new Date().toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          }
+        </a>
+      </div>
     </div>
   </Container>
 </footer>

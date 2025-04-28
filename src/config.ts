@@ -1,27 +1,41 @@
-const name = "OKWireframe";
+const shortName = "OKWireframe";
+const longName = "Osaka Kansai Wireframe Meetup Group";
+const name = `${shortName} - ${longName}`;
 
 export const SITE = {
   name,
+  shortName,
+  longName,
   title: {
     default: name,
     template: "%s - " + name,
   },
 } as const;
 
-export const MENU = [
+export const MENU: { label: string; href: string; header?: boolean }[] = [
   {
     label: "Home",
     href: "/",
+    header: false,
+  },
+  {
+    label: "Events",
+    href: "/events",
+  },
+  {
+    label: "Community",
+    href: "/community",
   },
   {
     label: "About",
     href: "/about",
   },
   {
-    label: "Events",
-    href: "/events",
+    label: "Sitemap",
+    href: "/sitemap",
+    header: false,
   },
-] as const;
+];
 
 export const SOCIALS = [
   {
@@ -36,7 +50,7 @@ export const SOCIALS = [
   },
   {
     icon: "cib:discord",
-    href: "https://discord.com/invite/k8xj8d75f6",
+    href: "/discord",
     label: "Discord",
   },
   {

@@ -9,6 +9,8 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-
   integrations: [react(), icon()],
+  redirects: {
+    discord: "https://discord.com/invite/k8xj8d75f6",
+  },
 });
