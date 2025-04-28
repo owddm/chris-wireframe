@@ -1,10 +1,14 @@
 ---
+import MemberSummary from "../components/MemberSummary.astro";
 import Section from "../components/Section.astro";
 import PageLayout from "../layouts/PageLayout.astro";
+import Container from "../components/Container.astro";
+import { FAKER_COUNT } from "../config";
 ---
 
 <PageLayout title="Community">
-  <Section title="Get Involved" />
-  <Section title="Speakers" />
-  <Section title="Volunteers" />
+  <Section> Just one big list, not separated, includes gallery</Section>
+  <Container wide class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {Array.from({ length: FAKER_COUNT }, (_, index) => <MemberSummary id={index.toString()} />)}
+  </Container>
 </PageLayout>

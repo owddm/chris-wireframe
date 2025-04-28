@@ -2,6 +2,8 @@ const shortName = "OKWireframe";
 const longName = "Osaka Kansai Wireframe Meetup Group";
 const name = `${shortName} - ${longName}`;
 
+export const FAKER_COUNT = 99;
+
 export const SITE = {
   name,
   shortName,

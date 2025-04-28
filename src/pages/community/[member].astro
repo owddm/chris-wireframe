@@ -1,0 +1,20 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+import Section from "../../components/Section.astro";
+import MemberSummary from "../../components/MemberSummary.astro";
+import { FAKER_COUNT } from "../../config";
+
+export function getStaticPaths() {
+  return Array.from({ length: FAKER_COUNT }, (_, index) => ({
+    params: { member: index.toString() },
+  }));
+}
+
+const { member } = Astro.params;
+---
+
+<PageLayout title={`Member ${member}`}>
+  <Section>
+    <MemberSummary id={member} />
+  </Section>
+</PageLayout>

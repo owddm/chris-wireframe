@@ -1,0 +1,103 @@
+---
+import { faker } from "@faker-js/faker";
+import { THEMES } from "../config";
+
+interface Props {
+  id: string;
+}
+
+const { id = "0" } = Astro.props;
+
+// Seed faker with the member ID to get consistent data
+faker.seed(parseInt(id.replace(/\D/g, "") || "0", 10));
+
+// Predefined lists
+const PROGRAMMING_LANGUAGES = [
+  "TypeScript",
+  "JavaScript",
+  "Python",
+  "Java",
+  "C++",
+  "Rust",
+  "Go",
+  "Ruby",
+  "PHP",
+  "Swift",
+];
+
+const ROLE_COLORS = {
+  Volunteer: "badge-success",
+  Speaker: "badge-warning",
+  Organizer: "badge-accent",
+} as const;
+
+const POSSIBLE_ROLES = ["Volunteer", "Speaker", "Organizer"] as const;
+
+interface MemberData {
+  name: string;
+  jobTitle: string;
+  company: string;
+  department: string;
+  bio: string;
+  avatar: string;
+  skills: string[];
+  location: string;
+  email: string;
+  roles: string[];
+  theme: string;
+}
+
+// Generate realistic dummy data
+const memberData: MemberData = {
+  name: faker.person.fullName(),
+  jobTitle: faker.person.jobTitle(),
+  company: faker.company.name(),
+  department: faker.commerce.department(),
+  bio: faker.person.bio(),
+  avatar: faker.image.avatar(),
+  skills: faker.helpers.arrayElements(PROGRAMMING_LANGUAGES, { min: 2, max: 4 }),
+  location: `${faker.location.city()}, ${faker.location.country()}`,
+  email: faker.internet.email(),
+  roles: faker.helpers.arrayElements(POSSIBLE_ROLES, { min: 0, max: 2 }),
+  theme: faker.helpers.arrayElement(THEMES),
+};
+---
+
+<a
+  data-theme={memberData.theme}
+  href={`/community/${id}`}
+  class="card card-border border-2 text-base-content/80 hover:text-base-content hover:border-neutral/50"
+>
+  <div class="card-body p-2">
+    <!-- Header with image and name -->
+    <div class="flex gap-6 items-center">
+      <figure class="w-28 h-28 flex-shrink-0">
+        <img
+          src={memberData.avatar}
+          alt={memberData.name}
+          class="w-full h-full object-cover rounded-lg"
+        />
+      </figure>
+      <div class="flex flex-col gap-2">
+        <div>
+          <h3 class="card-title text-xl">{memberData.name}</h3>
+          <p class="text-sm">{memberData.jobTitle}</p>
+        </div>
+        {
+          memberData.roles.length > 0 && (
+            <div class="gap-1 flex flex-wrap">
+              {/* {memberData.roles.map((role) => (
+                <span class={`badge  badge-sm ${ROLE_COLORS[role as keyof typeof ROLE_COLORS]}`}>
+                  {role}
+                </span>
+              ))} */}
+              {memberData.skills.map((skill) => (
+                <span class="badge badge-soft badge-sm">{skill}</span>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</a>

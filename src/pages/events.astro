@@ -1,8 +1,20 @@
 ---
+import EventSummary from "../components/EventSummary.astro";
 import Section from "../components/Section.astro";
 import PageLayout from "../layouts/PageLayout.astro";
+import Container from "../components/Container.astro";
+import { FAKER_COUNT } from "../config";
 ---
 
 <PageLayout title="Events">
   <Section> Just one big list, not separated, includes gallery</Section>
+  <Container wide grid>
+    {
+      Array.from({ length: FAKER_COUNT }, (_, index) => (
+        <div>
+          <EventSummary id={index.toString()} />
+        </div>
+      ))
+    }
+  </Container>
 </PageLayout>
