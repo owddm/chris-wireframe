@@ -1,9 +1,38 @@
+## Updated Sitemap
+
+- Landing
+  - Hero / About
+  - Upcoming Event
+  - Past Events
+- Events
+  - Just one big list, not separated, includes gallery
+  - /events/id
+    - Details
+    - Speakers
+- Community
+  - Volunteers
+  - Speakers
+  - Get Involved
+  - /member/id
+    - Myspace type thing with theme
+    - Profile
+    - Expertise
+    - Links Social Etc.
+    - Associated Events
+- About
+  - Mission
+  - Contact
+
+## Ideas
+
+- Member page with themes
+- Add custom OKTheme using colors
+
 ## Suggested Changes from Meeting
 
 - Merge the events into a single list, with tags
 - Highlight members / Patchwork
 - RSS Feed
-- Videos?
 
 ## Original Sitemap
 
