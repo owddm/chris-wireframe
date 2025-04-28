@@ -1,0 +1,52 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Prefer Astro Components Over React
+
+Always prefer Astro components (`.astro`) over React components (`.tsx`) unless you specifically need client-side interactivity.
+
+## Correct Astro Syntax
+
+Every `.astro` file must have both opening and closing frontmatter fences:
+
+```astro
+---
+// JavaScript/TypeScript code goes here
+const myVar = "Hello";
+---
+
+<!-- Template goes here -->
+<div>{myVar}</div>
+```
+
+Don't use React/JSX patterns in Astro files:
+
+❌ Wrong (React/JSX style):
+```astro
+const Component = () => {
+  return <div>{data.map(item => <span>{item}</span>)}</div>
+}
+```
+
+✅ Correct (Astro style):
+```astro
+---
+const data = ["item1", "item2"];
+---
+
+<div>
+  {data.map(item => (
+    <span>{item}</span>
+  ))}
+</div>
+```
+
+Key differences:
+- No component functions - just frontmatter and template
+- No useState/useEffect - use frontmatter for data
+- No JSX expressions - use Astro's template syntax
+- No client: directives unless specifically needed
+
+Example implementation in [src/components/Socials.astro](mdc:src/components/Socials.astro)

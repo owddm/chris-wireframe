@@ -1,0 +1,34 @@
+---
+description: 
+globs: *.astro,*.tsx
+alwaysApply: false
+---
+# Use Daisy UI Components
+
+When creating elements or components, always try to use Daisy UI v5 components and utilities as much as reasonably possible.
+
+## Component Usage Guidelines
+
+❌ Wrong:
+```html
+<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+  Click me
+</button>
+```
+
+✅ Correct:
+```html
+<button class="btn btn-primary">Click me</button>
+```
+
+## Theme Configuration
+- Use Daisy UI theme colors (primary, secondary, accent, etc.)
+- Maintain consistent theme across components
+
+## Best Practices
+1. Check the [Daisy UI Components](mdc:https:/daisyui.com/components) documentation first
+2. Use semantic class names (e.g., `btn-primary` over custom color classes)
+3. Combine with Tailwind utilities when needed for fine-tuning
+4. Keep accessibility in mind - Daisy UI components are built with a11y in mind
+
+Example implementation in the navigation component.
