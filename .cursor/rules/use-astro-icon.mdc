@@ -17,21 +17,21 @@ import { Icon } from "astro-icon/components";
 
 ## Icon Sets and Prefixes
 
-For brand and core icons, use CoreUI icons with these prefixes:
+For icons, use these prefixes:
 - `cib:` for brand icons (e.g., `cib:github`, `cib:twitter`, `cib:meetup`)
-- `cil:` for core/general icons (e.g., `cil:cart`, `cil:user`, `cil:settings`)
+- `lucide:` for general icons (e.g., `lucide:shopping-cart`, `lucide:user`, `lucide:settings`)
 
 Example:
 ```astro
 <div class="flex gap-4">
   <Icon name="cib:github" size={24} /> <!-- Brand icon -->
-  <Icon name="cil:cart" size={24} />   <!-- Core icon -->
+  <Icon name="lucide:shopping-cart" size={24} />   <!-- General icon -->
 </div>
 ```
 
 Key points:
 - Import from "astro-icon/components" (not "astro-icon")
-- Use appropriate prefix for the icon type (cib/cil)
+- Use appropriate prefix for the icon type (cib/lucide)
 - Set size using the size prop
 - Icons are automatically optimized at build time
 

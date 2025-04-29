@@ -2,19 +2,20 @@
 import PageLayout from "../../layouts/PageLayout.astro";
 import Section from "../../components/Section.astro";
 import EventSummary from "../../components/EventSummary.astro";
-import { FAKER_COUNT } from "../../config";
+import { events, type Event } from "../../data";
 
 export function getStaticPaths() {
-  return Array.from({ length: FAKER_COUNT }, (_, index) => ({
-    params: { event: index.toString() },
+  return events.map((event) => ({
+    params: { event: event.id },
   }));
 }
 
-const { event } = Astro.params;
+const { event: eventId } = Astro.params;
+const event = events.find((e) => e.id === eventId) as Event;
 ---
 
-<PageLayout title={`Event ${event}`}>
+<PageLayout title={`Event ${event.title}`}>
   <Section>
-    <EventSummary id={event} />
+    <EventSummary event={event} />
   </Section>
 </PageLayout>

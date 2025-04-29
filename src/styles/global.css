@@ -3,3 +3,7 @@
 @plugin "daisyui" {
   themes: all;
 }
+
+.hover-zoom {
+  @apply transition-all duration-100 ease-in-out hover:scale-[1.01];
+}

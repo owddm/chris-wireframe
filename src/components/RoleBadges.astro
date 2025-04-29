@@ -1,0 +1,23 @@
+---
+import RoleBadge from "./RoleBadge.astro";
+import { type Role } from "../data";
+
+interface Props {
+  roles: Role[];
+}
+
+const { roles } = Astro.props;
+
+if (roles.length === 0) return null;
+---
+
+<div
+  class="absolute -top-1 -right-1 bg-transparent flex join rounded-md shadow-sm bg-white"
+  data-theme="light"
+>
+  {
+    roles
+      .sort((a: Role, b: Role) => a.localeCompare(b))
+      .map((role: Role) => <RoleBadge role={role} />)
+  }
+</div>

@@ -1,20 +1,21 @@
 ---
 import PageLayout from "../../layouts/PageLayout.astro";
 import Section from "../../components/Section.astro";
-import MemberSummary from "../../components/MemberSummary.astro";
-import { FAKER_COUNT } from "../../config";
+import MemberDetails from "../../components/MemberDetails.astro";
+import { members, type Member } from "../../data";
 
 export function getStaticPaths() {
-  return Array.from({ length: FAKER_COUNT }, (_, index) => ({
-    params: { member: index.toString() },
+  return members.map((member) => ({
+    params: { member: member.id },
   }));
 }
 
-const { member } = Astro.params;
+const { member: memberId } = Astro.params;
+const member = members.find((m) => m.id === memberId) as Member;
 ---
 
-<PageLayout title={`Member ${member}`}>
+<PageLayout title={`Member ${member.name}`}>
   <Section>
-    <MemberSummary id={member} />
+    <MemberDetails member={member} />
   </Section>
 </PageLayout>

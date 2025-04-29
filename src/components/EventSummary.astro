@@ -1,84 +1,48 @@
 ---
 import { Icon } from "astro-icon/components";
-import { faker } from "@faker-js/faker";
+import { type Event } from "../data";
 
 interface Props {
-  id: string;
+  event: Event;
 }
 
-const { id = "0" } = Astro.props;
+const { event } = Astro.props;
 
-// Seed faker with the event ID to get consistent data
-faker.seed(parseInt(id.replace(/\D/g, "") || "0", 10));
-
-interface Speaker {
-  name: string;
-  role: string;
-  company: string;
-  avatar: string;
-}
-
-interface EventData {
-  title: string;
-  date: string;
-  time: string;
-  location: string;
-  description: string;
-  speakers: Speaker[];
-  coverImage: string;
-}
-
-// Generate realistic dummy data
-const eventData: EventData = {
-  title: faker.company.catchPhrase(),
-  date: faker.date.future().toISOString(),
-  time: faker.date.future().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
-  location: `${faker.location.city()} Convention Center`,
-  description: faker.lorem.paragraph(),
-  coverImage: faker.image.urlPicsumPhotos({ width: 800, height: 400 }),
-  speakers: Array.from({ length: 3 }, () => ({
-    name: faker.person.fullName(),
-    role: faker.person.jobTitle(),
-    company: faker.company.name(),
-    avatar: faker.image.avatar(),
-  })),
-};
-
-const formattedDate = new Date(eventData.date).toLocaleDateString("en-US", {
+const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
   month: "short",
   day: "numeric",
 });
 ---
 
 <a
-  href={`/events/${id}`}
-  class="card card-border bg-base-200/50 border border-base-300 hover:bg-base-100/50 transition-all duration-300 text-base-content/80 hover:text-base-content hover:border-neutral/80"
+  href={`/events/${event.id}`}
+  class="card card-border bg-base-200/50 border border-base-300 hover:bg-base-100/50 transition-all duration-300 text-base-content/80 hover:text-base-content hover:border-neutral/80 hover-zoom"
 >
   <figure class="h-48 overflow-hidden">
-    <img src={eventData.coverImage} alt="Event cover" class="w-full h-full object-cover" />
+    <img src={event.coverImage} alt="Event cover" class="w-full h-full object-cover" />
   </figure>
   <div class="card-body p-4 gap-4 flex flex-col">
-    <h3 class="card-title text-lg">{eventData.title}</h3>
+    <h3 class="card-title text-lg">{event.title}</h3>
     <div>
       <p class="text-sm line-clamp-3">
-        {eventData.description}
+        {event.description}
       </p>
     </div>
     <div class="flex flex-col gap-1 text-sm flex-grow">
-      <div class="flex items-center gap-2">
-        <Icon name="cil:calendar" size={16} />
-        <span>{formattedDate} • {eventData.time}</span>
+      <div class="flex gap-2 items-center">
+        <Icon name="lucide:calendar" size={16} />
+        <span>{formattedDate} • {event.time}</span>
       </div>
-      <div class="flex items-center gap-2">
-        <Icon name="cil:location-pin" size={16} />
-        <span>{eventData.location}</span>
+      <div class="flex gap-2 items-center">
+        <Icon name="lucide:map-pin" size={16} />
+        <span>{event.location}</span>
       </div>
     </div>
 
     <div class="flex -space-x-2 mt-3">
       {
-        eventData.speakers.map((speaker) => (
-          <div class="avatar" title={`${speaker.name} - ${speaker.role}`}>
+        event.speakers.map((speaker) => (
+          <div class="avatar" title={`${speaker.name}`}>
             <div class="w-8 h-8 rounded-full ring-2 ring-base-100">
               <img src={speaker.avatar} alt={speaker.name} />
             </div>
