@@ -1,0 +1,55 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+import Section from "../../components/Section.astro";
+import Container from "../../components/Container.astro";
+import MemberSummary from "../../components/MemberSummary.astro";
+import { members, POSSIBLE_ROLES } from "../../data";
+
+export function getStaticPaths() {
+  return [...POSSIBLE_ROLES, undefined].map((role) => ({
+    params: { filter: role },
+  }));
+}
+
+const { filter } = Astro.params;
+
+const filteredMembers = members.filter((member) => {
+  if (filter === undefined) return true;
+  return member.roles.includes(filter);
+});
+---
+
+<PageLayout title="Community">
+  <Section
+    title="Get Involved"
+    description="Join the community to get involved in the project. TODO add a button..."
+  />
+  <Section>
+    <div class="flex justify-center">
+      <div class="join">
+        <a href="/community" class={`btn join-item ${filter === undefined ? "btn-primary" : ""}`}>
+          Everyone
+        </a>
+        {
+          POSSIBLE_ROLES.map((role) => (
+            <a
+              href={`/community/${role}`}
+              class={`btn join-item capitalize ${filter === role ? "btn-primary" : ""}`}
+            >
+              {role}s
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </Section>
+  <Container wide grid>
+    {
+      filteredMembers.map((member) => (
+        <div>
+          <MemberSummary member={member} />
+        </div>
+      ))
+    }
+  </Container>
+</PageLayout>

@@ -1,7 +1,9 @@
 ---
 import { type Member } from "../data";
 import RoleBadges from "./RoleBadges.astro";
-import { Icon } from "astro-icon/components";
+import MemberSocialLink from "./MemberSocialLink.astro";
+import EventSummary from "./EventSummary.astro";
+import Container from "./Container.astro";
 
 interface Props {
   member: Member;
@@ -10,89 +12,57 @@ interface Props {
 const { member } = Astro.props;
 ---
 
-<div data-theme={member.theme} class="w-full">
-  <div class="card lg:card-side bg-base-200/80 shadow-xl">
-    <figure class="lg:w-1/3 p-8">
-      <img
-        src={member.avatar}
-        alt={member.name}
-        class="rounded-xl w-full h-[400px] object-cover shadow-lg"
-      />
-    </figure>
-    <div class="card-body lg:w-2/3">
-      <div class="relative">
-        <RoleBadges roles={member.roles} />
-        <h2 class="card-title text-3xl mb-2">{member.name}</h2>
-        <p class="text-xl text-base-content/70">{member.jobTitle}</p>
-      </div>
+<div class="w-full flex flex-col md:flex-row gap-8">
+  <figure class="md:w-1/3">
+    <img
+      src={member.avatar}
+      alt={member.name}
+      class="rounded-xl w-full h-[400px] object-cover shadow-lg"
+    />
+  </figure>
 
-      <div class="divider"></div>
-
-      <div class="space-y-6">
-        <div>
-          <h3 class="text-xl font-semibold mb-3 flex items-center gap-2">
-            <Icon name="lucide:wrench" size={24} />
-            Skills
-          </h3>
-          <div class="flex flex-wrap gap-2">
-            {member.skills.map((skill) => <span class="badge badge-lg badge-soft">{skill}</span>)}
-          </div>
-        </div>
-
-        {
-          member.bio && (
-            <div>
-              <h3 class="text-xl font-semibold mb-3 flex items-center gap-2">
-                <Icon name="lucide:user" size={24} />
-                About
-              </h3>
-              <p class="text-base-content/80 text-lg leading-relaxed">{member.bio}</p>
+  <div class="w-full flex flex-col gap-6">
+    <div data-theme={member.theme} class="card card-bordered bg-base-200 text-base-content w-full">
+      <div class="card-body p-8">
+        <div class="flex flex-col gap-8">
+          <div class="flex justify-between items-start">
+            <div class="flex flex-col gap-2">
+              <h3 class="card-title text-4xl font-bold">{member.name}</h3>
+              <p class="text-xl">{member.jobTitle}</p>
             </div>
-          )
-        }
+          </div>
 
-        {
-          member.links && (
-            <div>
-              <h3 class="text-xl font-semibold mb-3 flex items-center gap-2">
-                <Icon name="lucide:link" size={24} />
-                Links
-              </h3>
-              <div class="flex gap-4">
-                {member.links.github && (
-                  <a
-                    href={member.links.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="btn btn-circle btn-ghost"
-                  >
-                    <Icon name="cib:github" size={24} />
-                  </a>
+          <div class="flex flex-wrap gap-4">
+            <MemberSocialLink type="email" url={member.email} />
+            <MemberSocialLink type="website" url={member.links?.website} />
+            <MemberSocialLink type="github" url={member.links?.github} />
+            <MemberSocialLink type="twitter" url={member.links?.twitter} />
+            <MemberSocialLink type="linkedin" url={member.links?.linkedin} />
+          </div>
+
+          {
+            (member.roles.length > 0 || member.skills.length > 0) && (
+              <div class="flex flex-col gap-2">
+                {member.roles.length > 0 && (
+                  <div class="flex flex-wrap gap-2">
+                    <RoleBadges roles={member.roles} />
+                  </div>
                 )}
-                {member.links.twitter && (
-                  <a
-                    href={member.links.twitter}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="btn btn-circle btn-ghost"
-                  >
-                    <Icon name="cib:twitter" size={24} />
-                  </a>
-                )}
-                {member.links.linkedin && (
-                  <a
-                    href={member.links.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="btn btn-circle btn-ghost"
-                  >
-                    <Icon name="cib:linkedin" size={24} />
-                  </a>
+                {member.skills.length > 0 && (
+                  <div class="flex flex-wrap gap-2">
+                    {member.skills.map((skill) => (
+                      <span class="badge badge-neutral badge-lg">{skill}</span>
+                    ))}
+                  </div>
                 )}
               </div>
-            </div>
-          )
-        }
+            )
+          }
+
+          <div class="prose prose-lg max-w-none">
+            <p class="whitespace-pre-line text-lg">{member.bio}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

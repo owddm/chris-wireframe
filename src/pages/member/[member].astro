@@ -1,0 +1,53 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+import Section from "../../components/Section.astro";
+import MemberDetails from "../../components/MemberDetails.astro";
+import { Icon } from "astro-icon/components";
+import { members, type Member } from "../../data";
+import Container from "../../components/Container.astro";
+import EventSummary from "../../components/EventSummary.astro";
+
+export function getStaticPaths() {
+  return members.map((member) => ({
+    params: { member: member.id },
+  }));
+}
+
+const { member: memberId } = Astro.params;
+
+const currentIndex = members.findIndex((m) => m.id === memberId);
+const member = members[currentIndex];
+const prevMember = currentIndex > 0 ? members[currentIndex - 1] : null;
+const nextMember = currentIndex < members.length - 1 ? members[currentIndex + 1] : null;
+---
+
+<PageLayout title={`${member.name} - Community`}>
+  <Section>
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex gap-4">
+        {
+          prevMember && (
+            <a href={`/member/${prevMember.id}`} class="btn btn-soft gap-2">
+              <Icon name="lucide:chevron-left" size={20} />
+              {prevMember.name}
+            </a>
+          )
+        }
+      </div>
+      <div class="flex gap-4">
+        {
+          nextMember && (
+            <a href={`/member/${nextMember.id}`} class="btn btn-soft gap-2">
+              {nextMember.name}
+              <Icon name="lucide:chevron-right" size={20} />
+            </a>
+          )
+        }
+      </div>
+    </div>
+    <MemberDetails member={member} />
+  </Section>
+  <Container wide grid>
+    {member.events.map((event) => <EventSummary event={event} />)}
+  </Container>
+</PageLayout>

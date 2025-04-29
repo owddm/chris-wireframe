@@ -1,0 +1,44 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  url: string | undefined;
+  type: "github" | "twitter" | "linkedin" | "email" | "website";
+}
+
+const { url, type } = Astro.props;
+
+// If no URL provided, render nothing
+if (!url) return null;
+
+// Extract username from social links
+const getUsername = (url: string) => {
+  return url.split("/").pop() || url;
+};
+
+const iconMap = {
+  github: "cib:github",
+  twitter: "cib:twitter",
+  linkedin: "cib:linkedin",
+  email: "lucide:mail",
+  website: "lucide:globe",
+} as const;
+
+const displayText =
+  type === "email"
+    ? url
+    : type === "website"
+      ? url.replace(/^https?:\/\//, "")
+      : `@${getUsername(url)}`;
+const href = type === "email" ? `mailto:${url}` : url;
+---
+
+<a
+  href={href}
+  target={type === "email" ? undefined : "_blank"}
+  rel={type === "email" ? undefined : "noopener noreferrer"}
+  class="text-lg link link-hover flex items-center gap-2"
+>
+  <Icon name={iconMap[type]} size={20} />
+  {displayText}
+</a>

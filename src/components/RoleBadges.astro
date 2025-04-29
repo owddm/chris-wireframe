@@ -4,20 +4,14 @@ import { type Role } from "../data";
 
 interface Props {
   roles: Role[];
+  compact?: boolean;
 }
 
-const { roles } = Astro.props;
+const { roles, compact = false } = Astro.props;
 
 if (roles.length === 0) return null;
+
+const sortedRoles = roles.sort((a: Role, b: Role) => a.localeCompare(b));
 ---
 
-<div
-  class="absolute -top-1 -right-1 bg-transparent flex join rounded-md shadow-sm bg-white"
-  data-theme="light"
->
-  {
-    roles
-      .sort((a: Role, b: Role) => a.localeCompare(b))
-      .map((role: Role) => <RoleBadge role={role} />)
-  }
-</div>
+{sortedRoles.map((role: Role) => <RoleBadge role={role} compact={compact} />)}

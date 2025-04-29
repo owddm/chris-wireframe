@@ -1,34 +1,26 @@
 ---
 import { Icon } from "astro-icon/components";
-import { type Role } from "../data";
+import { type Role, ROLE_CONFIGS } from "../data";
 
 interface Props {
   role: Role;
+  compact?: boolean;
 }
 
-const { role } = Astro.props;
-
-const ROLE_CONFIGS = {
-  Volunteer: {
-    color: "badge-accent",
-    icon: "lucide:hand",
-  },
-  Speaker: {
-    color: "badge-error",
-    icon: "lucide:mic",
-  },
-  Organizer: {
-    color: "badge-warning",
-    icon: "lucide:users",
-  },
-} as const;
+const { role, compact = false } = Astro.props;
 
 const config = ROLE_CONFIGS[role];
+
+if (!config) {
+  throw new Error(`Role ${role} not found`);
+}
 ---
 
 <div
-  class={`tooltip opacity-70 hover:opacity-100 transition-all duration-100 join-item badge w-7 h-7 ${config.color} px-1`}
-  data-tip={role}
+  class={`badge ${config.color} ${compact ? "join-item w-7 h-7 px-1 tooltip opacity-70 hover:opacity-100 transition-all duration-100" : "badge-lg gap-2"}`}
+  data-tip={compact ? role : null}
+  data-theme="light"
 >
-  <Icon name={config.icon} size={16} />
+  <Icon name={config.icon} size={compact ? 16 : 20} />
+  {!compact && config.label}
 </div>

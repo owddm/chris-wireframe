@@ -11,10 +11,16 @@ const { member } = Astro.props;
 
 <a
   data-theme={member.theme}
-  href={`/community/${member.id}`}
+  href={`/member/${member.id}`}
   class="hover-zoom relative card card-border border-1 bg-base-200/80 hover:bg-base-200/90 text-base-content/80 hover:text-base-content hover:border-neutral/50"
 >
-  <RoleBadges roles={member.roles} />
+  {
+    member.roles.length > 0 && (
+      <div class="absolute -top-1 -right-1 bg-white rounded-md shadow-sm flex flex-wrap join">
+        <RoleBadges roles={member.roles} compact />
+      </div>
+    )
+  }
   <div class="card-body p-2">
     <div class="flex gap-6 items-center">
       <figure class="w-28 h-28 flex-shrink-0">

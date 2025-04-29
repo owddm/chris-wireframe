@@ -17,11 +17,30 @@ const PROGRAMMING_LANGUAGES = [
   "Swift",
 ];
 
-const POSSIBLE_ROLES = ["Volunteer", "Speaker", "Organizer"] as const;
-export type Role = (typeof POSSIBLE_ROLES)[number];
+export const ROLE_CONFIGS = {
+  volunteer: {
+    label: "Volunteer",
+    color: "badge-accent",
+    icon: "lucide:hand",
+  },
+  speaker: {
+    label: "Speaker",
+    color: "badge-error",
+    icon: "lucide:mic",
+  },
+  organizer: {
+    label: "Organizer",
+    color: "badge-warning",
+    icon: "lucide:users",
+  },
+} as const;
+
+export type Role = keyof typeof ROLE_CONFIGS;
+export const POSSIBLE_ROLES = Object.keys(ROLE_CONFIGS) as Role[];
 
 export type Member = {
   id: string;
+  gender: ReturnType<typeof faker.person.sexType>;
   name: string;
   jobTitle: string;
   company: string;
@@ -38,6 +57,7 @@ export type Member = {
     github?: string;
     twitter?: string;
     linkedin?: string;
+    website?: string;
   };
 };
 
@@ -56,6 +76,15 @@ function generateMember(id: string): Member {
   // Seed faker with the member ID to get consistent data
   faker.seed(parseInt(id.replace(/\D/g, "") || "0", 10));
 
+  // Determine if this should be an anonymous/GitHub-style user (roughly 20% chance)
+  const isAnonymous = faker.number.int(100) < 20;
+
+  // Generate username once to use consistently across profile
+  const username = faker.internet.username().toLowerCase();
+
+  // First determine gender for consistency using the type-safe method
+  const gender = faker.person.sexType();
+
   // Generate 2-3 paragraphs of text
   const paragraphs = faker.helpers.multiple(() => faker.lorem.paragraph(), {
     count: { min: 2, max: 3 },
@@ -70,24 +99,34 @@ function generateMember(id: string): Member {
     `* ${faker.lorem.words(4)}\n\n` +
     `> ${faker.lorem.sentence()}`;
 
+  // For anonymous users, use generic avatar
+  const avatar = isAnonymous
+    ? faker.image.avatarGitHub()
+    : faker.image.personPortrait({ sex: gender });
+
+  // For anonymous users, use username as display name
+  const name = isAnonymous ? username : faker.person.fullName({ sex: gender });
+
   return {
     id,
-    name: faker.person.fullName(),
+    gender,
+    name,
     jobTitle: faker.person.jobTitle(),
     company: faker.company.name(),
     department: faker.commerce.department(),
     bio,
-    avatar: faker.image.avatar(),
-    skills: faker.helpers.arrayElements(PROGRAMMING_LANGUAGES, { min: 2, max: 4 }),
+    avatar,
+    skills: faker.helpers.arrayElements(PROGRAMMING_LANGUAGES, { min: 0, max: 8 }),
     location: `${faker.location.city()}, ${faker.location.country()}`,
     email: faker.internet.email(),
-    roles: faker.helpers.arrayElements(POSSIBLE_ROLES, { min: 0, max: 2 }),
+    roles: faker.helpers.arrayElements(POSSIBLE_ROLES, { min: 0, max: 3 }),
     theme: faker.helpers.arrayElement(THEMES),
     events: [],
     links: {
-      github: faker.helpers.maybe(() => `https://github.com/${faker.internet.username()}`),
-      twitter: faker.helpers.maybe(() => `https://twitter.com/${faker.internet.username()}`),
-      linkedin: faker.helpers.maybe(() => `https://linkedin.com/in/${faker.internet.username()}`),
+      github: faker.helpers.maybe(() => `https://github.com/${username}`),
+      twitter: faker.helpers.maybe(() => `https://twitter.com/${username}`),
+      linkedin: faker.helpers.maybe(() => `https://linkedin.com/in/${username}`),
+      website: faker.helpers.maybe(() => `https://${username}.dev`),
     },
   };
 }
@@ -121,8 +160,8 @@ events.forEach((event) => {
   event.speakers = faker.helpers.arrayElements(members, { min: 1, max: 4 });
   event.speakers.forEach((speaker) => {
     speaker.events.push(event);
-    if (!speaker.roles.includes("Speaker")) {
-      speaker.roles.push("Speaker");
+    if (!speaker.roles.includes("speaker")) {
+      speaker.roles.push("speaker");
     }
   });
 });
