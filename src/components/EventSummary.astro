@@ -14,11 +14,8 @@ const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
 });
 ---
 
-<a
-  href={`/events/${event.id}`}
-  class="card card-border bg-base-200/50 border border-base-300 hover:bg-base-100/50 transition-all duration-300 text-base-content/80 hover:text-base-content hover:border-neutral/80 hover-zoom"
->
-  <figure class="h-48 overflow-hidden">
+<a href={`/events/${event.id}`} class="card card-border bg-base-100 hover-zoom">
+  <figure class="aspect-video w-full bg-base-300">
     <img src={event.coverImage} alt="Event cover" class="w-full h-full object-cover" />
   </figure>
   <div class="card-body p-4 gap-4 flex flex-col">

@@ -1,7 +1,8 @@
 ---
 import PageLayout from "../../layouts/PageLayout.astro";
 import Section from "../../components/Section.astro";
-import EventSummary from "../../components/EventSummary.astro";
+import EventDetails from "../../components/EventDetails.astro";
+import { Icon } from "astro-icon/components";
 import { events, type Event } from "../../data";
 
 export function getStaticPaths() {
@@ -11,11 +12,36 @@ export function getStaticPaths() {
 }
 
 const { event: eventId } = Astro.params;
-const event = events.find((e) => e.id === eventId) as Event;
+const currentIndex = events.findIndex((e) => e.id === eventId);
+const event = events[currentIndex];
+const prevEvent = currentIndex > 0 ? events[currentIndex - 1] : null;
+const nextEvent = currentIndex < events.length - 1 ? events[currentIndex + 1] : null;
 ---
 
-<PageLayout title={`Event ${event.title}`}>
+<PageLayout title={`${event.title} - Events`}>
   <Section>
-    <EventSummary event={event} />
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex gap-4">
+        {
+          prevEvent && (
+            <a href={`/events/${prevEvent.id}`} class="btn btn-soft gap-2">
+              <Icon name="lucide:chevron-left" size={20} />
+              {prevEvent.title}
+            </a>
+          )
+        }
+      </div>
+      <div class="flex gap-4">
+        {
+          nextEvent && (
+            <a href={`/events/${nextEvent.id}`} class="btn btn-soft gap-2">
+              {nextEvent.title}
+              <Icon name="lucide:chevron-right" size={20} />
+            </a>
+          )
+        }
+      </div>
+    </div>
+    <EventDetails event={event} />
   </Section>
 </PageLayout>

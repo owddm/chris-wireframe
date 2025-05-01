@@ -22,7 +22,7 @@ const { member } = Astro.props;
   </figure>
 
   <div class="w-full flex flex-col gap-6">
-    <div data-theme={member.theme} class="card card-bordered bg-base-200 text-base-content w-full">
+    <div data-theme={member.theme} class="card bg-primary-content text-primary w-full relative">
       <div class="card-body p-8">
         <div class="flex flex-col gap-8">
           <div class="flex justify-between items-start">
@@ -43,15 +43,15 @@ const { member } = Astro.props;
           {
             (member.roles.length > 0 || member.skills.length > 0) && (
               <div class="flex flex-col gap-2">
-                {member.roles.length > 0 && (
+                {/* {member.roles.length > 0 && (
                   <div class="flex flex-wrap gap-2">
                     <RoleBadges roles={member.roles} />
                   </div>
-                )}
+                )} */}
                 {member.skills.length > 0 && (
                   <div class="flex flex-wrap gap-2">
                     {member.skills.map((skill) => (
-                      <span class="badge badge-neutral badge-lg">{skill}</span>
+                      <span class="badge badge-primary badge-lg">{skill}</span>
                     ))}
                   </div>
                 )}
@@ -62,6 +62,7 @@ const { member } = Astro.props;
           <div class="prose prose-lg max-w-none">
             <p class="whitespace-pre-line text-lg">{member.bio}</p>
           </div>
+          <p>Theme: {member.theme}</p>
         </div>
       </div>
     </div>

@@ -1,0 +1,36 @@
+---
+import { Icon } from "astro-icon/components";
+import type { Event } from "../data";
+import staticMap from "../assets/staticmap.png";
+
+interface Props {
+  event: Event;
+}
+
+const { event } = Astro.props;
+
+const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+---
+
+<div class="flex flex-col gap-4 md:p-4">
+  <div class="flex rounded gap-2">
+    <Icon name="lucide:clock" size={20} />
+    <span>{formatDate(event.date)} at {event.time}</span>
+  </div>
+  <div class="flex items-center gap-2">
+    <Icon name="lucide:map-pin" size={20} />
+    <span>{event.location}</span>
+  </div>
+</div>
+
+<div class="aspect-video md:rounded-xl md:shadow-lg md:aspect-square bg-base-300 w-full">
+  <img src={staticMap.src} alt={`Map for ${event.location}`} class="w-full h-full object-cover" />
+</div>

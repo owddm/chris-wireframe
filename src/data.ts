@@ -70,6 +70,7 @@ export type Event = {
   description: string;
   coverImage: string;
   speakers: Member[];
+  url?: string;
 };
 
 function generateMember(id: string): Member {

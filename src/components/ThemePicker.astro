@@ -9,18 +9,21 @@ import { THEMES } from "../config";
   </button>
   <dialog id="theme_modal" class="modal" data-theme="light">
     <div class="modal-box w-11/12 max-w-5xl">
-      <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+      <div
+        class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-8 rounded-xl overflow-hidden bg-base-300"
+      >
         {
           THEMES.map((theme) => (
-            <button
-              data-theme={theme}
-              data-set-theme={theme}
-              data-act-class="active"
-              class="btn w-full"
-              onclick="theme_modal.close()"
-            >
-              {theme}
-            </button>
+            <div data-theme={theme} class="p-3 bg-base-100 ">
+              <button
+                data-set-theme={theme}
+                data-act-class="active"
+                class="btn btn-primary w-full"
+                onclick="theme_modal.close()"
+              >
+                {theme}
+              </button>
+            </div>
           ))
         }
       </div>

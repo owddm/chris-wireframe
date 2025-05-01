@@ -12,18 +12,19 @@ const { member } = Astro.props;
 <a
   data-theme={member.theme}
   href={`/member/${member.id}`}
-  class="hover-zoom relative card card-border border-1 bg-base-200/80 hover:bg-base-200/90 text-base-content/80 hover:text-base-content hover:border-neutral/50"
+  class="hover-zoom relative card bg-primary-content text-primary"
 >
-  {
+  <!-- {
     member.roles.length > 0 && (
       <div class="absolute -top-1 -right-1 bg-white rounded-md shadow-sm flex flex-wrap join">
         <RoleBadges roles={member.roles} compact />
       </div>
     )
-  }
+  } -->
   <div class="card-body p-2">
+    <!-- TODO usae https://daisyui.com/components/avatar/ -->
     <div class="flex gap-6 items-center">
-      <figure class="w-28 h-28 flex-shrink-0">
+      <figure class="w-28 h-40 flex-shrink-0">
         <img src={member.avatar} alt={member.name} class="w-full h-full object-cover rounded-lg" />
       </figure>
       <div class="flex flex-col gap-2">
@@ -32,7 +33,7 @@ const { member } = Astro.props;
           <p class="text-sm">{member.jobTitle}</p>
         </div>
         <div class="gap-1 flex flex-wrap">
-          {member.skills.map((skill) => <span class="badge badge-soft badge-sm">{skill}</span>)}
+          {member.skills.map((skill) => <span class="badge badge-primary badge-sm">{skill}</span>)}
         </div>
       </div>
     </div>
