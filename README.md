@@ -1,3 +1,7 @@
+## Todo
+
+add tailwind intellisense plugin
+
 ## Updated Sitemap
 
 - Landing

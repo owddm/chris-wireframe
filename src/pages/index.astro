@@ -1,31 +1,35 @@
 ---
 import Section from "../components/Section.astro";
+import Hero from "../components/Hero.astro";
 import PageLayout from "../layouts/PageLayout.astro";
 ---
 
 <PageLayout>
-  <div class="hero min-h-[70vh] bg-primary-content text-primary">
-    <div class="hero-content text-center">
-      <div class="max-w-md">
-        <h1 class="text-5xl font-bold">Welcome to OKWireframe</h1>
-        <p class="py-6">
-          Empowering innovation through technology solutions that drive success and transform
-          businesses.
-        </p>
-        <button class="btn btn-primary">Get Started</button>
-      </div>
-    </div>
-  </div>
+  <Hero
+    title="Welcome to OKWireframe"
+    description="Empowering innovation through technology solutions that drive success and transform businesses."
+    button={{ text: "View Members" }}
+  />
   <Section
-    title="Events"
+    title="Upcoming Events Countdown with map and image"
     description="We are a team of experienced professionals who are dedicated to providing the best possible solutions to our clients."
+    button={{ text: "View Members" }}
+  />
+  <Section
+    title="Recent Events"
+    description="Link to the most recent events"
+    button={{ text: "View Members" }}
+  />
+  <Section
+    title="Stats"
+    description="First event (years ago), Latest Event, Total Events, Total Locations, Total Speakres, Etc."
+    button={{ text: "View Members" }}
   />
   <Section
     title="Community"
     description="We are a team of experienced professionals who are dedicated to providing the best possible solutions to our clients."
+    button={{ text: "View Members" }}
   />
-  <Section
-    title="Call To Action"
-    description="We are a team of experienced professionals who are dedicated to providing the best possible solutions to our clients."
-  />
+  <Section title="About OKWirefrmae" button={{ text: "Learn More" }} />
+  <Section title="Get Involved" button={{ text: "Link to #contact" }} />
 </PageLayout>

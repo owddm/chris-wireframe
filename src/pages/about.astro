@@ -1,10 +1,23 @@
 ---
 import PageLayout from "../layouts/PageLayout.astro";
+import ImagePlaceholder from "../components/ImagePlaceholder.astro";
 import Section from "../components/Section.astro";
+import Hero from "../components/Hero.astro";
+import Container from "../components/Container.astro";
+import IconCard from "../components/IconCard.astro";
+import SocialsBig from "../components/SocialsBig.astro";
 ---
 
 <PageLayout title="About">
-  <Section title="Mission" description="About the project" />
-  <Section title="History" description="About the project" />
-  <Section title="Contact" description="About the project" />
+  <Hero
+    title="About OKWireframe"
+    description="Lorem ipsum dolor sit amet"
+    button={{ text: "Contact Us", href: "#contact" }}
+  />
+  <Section split lorem title="Our Mission">
+    <ImagePlaceholder />
+  </Section>
+  <Section split title="OK History" lorem split left><ImagePlaceholder /> </Section>
+  <Section anchor="contact" title="Contact" description="Reach out to us..." class="text-center" />
+  <SocialsBig />
 </PageLayout>

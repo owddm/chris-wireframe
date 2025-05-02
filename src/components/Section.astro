@@ -1,13 +1,40 @@
 ---
 import Container from "./Container.astro";
+import Lorem from "./Lorem.astro";
+import Button from "./Button.astro";
 
-const { title, description, class: className } = Astro.props;
+const {
+  anchor,
+  button,
+  title,
+  description,
+  left,
+  class: className,
+  split,
+  markdown,
+  lorem,
+} = Astro.props;
 ---
 
-<section class:list={["py-12", className]}>
-  <Container>
-    {title && <h2 class="text-4xl font-bold text-center mb-4">{title}</h2>}
-    {description && <p class="text-gray-500 text-center">{description}</p>}
+<section class:list={["py-12", className]} id={anchor}>
+  <Container
+    wide={split}
+    class:list={[
+      split && "grid md:grid-cols-2 gap-24 items-center",
+      left && "md:grid-cols-reverse",
+    ]}
+  >
+    {
+      (title || description || markdown) && (
+        <div class={split && "max-w-xl m-auto text-lg flex flex-col gap-6"}>
+          {title && <h2 class="text-4xl font-bold mb-4">{title}</h2>}
+          {description && <p class="">{description}</p>}
+          {markdown && <div> TODO: RENDER: {markdown}</div>}
+          {lorem && <Lorem />}
+          {button && <Button {...button} />}
+        </div>
+      )
+    }
     <slot />
   </Container>
 </section>

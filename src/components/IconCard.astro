@@ -1,0 +1,23 @@
+---
+import { Icon } from "astro-icon/components";
+
+const { icon, label, description, href } = Astro.props;
+---
+
+<a
+  class="cursor-pointer transition-all card card-border rounded-2xl bg-base-100 text-center hover:bg-primary/10 hover:text-primary"
+  href={href}
+  rel="noopener noreferrer"
+  aria-label={label}
+>
+  <div class="p-6 flex flex-col gap-10">
+    <div class="mx-10 bg-primary/20 text-primary rounded-full">
+      <Icon name={icon || "lucide:code"} class="w-full h-full p-2" />
+    </div>
+
+    <div class="text-pretty">
+      <h2 class="text-3xl font-bold">{label}</h2>
+      <p class="text-lg mt-2">{description}</p>
+    </div>
+  </div>
+</a>

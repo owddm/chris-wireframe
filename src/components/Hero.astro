@@ -1,0 +1,16 @@
+---
+import Button from "./Button.astro";
+
+const { title, description, button } = Astro.props;
+---
+
+<div class="hero min-h-[70vh] bg-primary-content text-primary">
+  <div class="hero-content">
+    <div class="max-w-md text-center flex flex-col gap-12">
+      {title && <h1 class="text-5xl font-bold">{title}</h1>}
+      {description && <p class="text-3xl text-primary/70">{description}</p>}
+      {button && <Button class="btn-xl" {...button} />}
+      <slot />
+    </div>
+  </div>
+</div>
