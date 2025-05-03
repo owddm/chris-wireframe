@@ -2,15 +2,12 @@
 import Section from "../components/Section.astro";
 import Hero from "../components/Hero.astro";
 import PageLayout from "../layouts/PageLayout.astro";
-import EventFeatured from "../components/EventFeatured.astro";
 import { events } from "../data";
 import Container from "../components/Container.astro";
-import Countdown from "../components/Countdown.tsx";
 import EventSummary from "../components/EventSummary.astro";
-import Button from "../components/Button.astro";
 import StatsGrid from "../components/StatsGrid.astro";
 import EventsUpcoming from "../components/EventsUpcoming.astro";
-
+import ImagePlaceholder from "../components/ImagePlaceholder.astro";
 const stats = [
   {
     title: "First Event",
@@ -51,14 +48,20 @@ const stats = [
     description="Empowering innovation through technology solutions that drive success and transform businesses."
     button={{ text: "View Members" }}
   />
-  <EventsUpcoming />
+  <Container wide class="p-12 bg-secondary/20">
+    <EventsUpcoming />
+  </Container>
+  <Container class="py-24">
+    <StatsGrid stats={stats} />
+  </Container>
   <Section
+    class="bg-primary/20"
     inline
-    class="p-0"
     title="Recent Events"
     button={{ text: "More Events", href: "/events" }}
   />
-  <Container wide grid>
+
+  <Container wide grid class="bg-primary/20 pb-12">
     {
       events
         .slice(5, 9)
@@ -67,22 +70,25 @@ const stats = [
         ))
     }
   </Container>
-  <Container class="py-12">
-    <StatsGrid stats={stats} />
-  </Container>
   <Section
     title="Community"
     description="Join our vibrant community of tech enthusiasts, professionals, and innovators. Connect with like-minded individuals, share knowledge, and grow together in the ever-evolving tech landscape."
     button={{ text: "View Members" }}
   />
+
   <Section
+    split
     title="About OKWireframe"
-    description="OKWireframe is a leading technology community dedicated to fostering innovation and collaboration. We organize events, workshops, and networking opportunities to help professionals stay at the forefront of technology."
-    button={{ text: "Learn More" }}
-  />
+    lorem
+    split
+    class="bg-secondary/20"
+    button={{ text: "Learn More", href: "/about" }}
+    ><ImagePlaceholder />
+  </Section>
+
   <Section
     title="Get Involved"
     description="Ready to be part of something bigger? Whether you want to speak at our events, sponsor our initiatives, or simply join our community, we welcome your participation and ideas."
-    button={{ text: "Link to #contact" }}
+    button={{ text: "Get Involved", href: "/about#contact" }}
   />
 </PageLayout>

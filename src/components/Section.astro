@@ -34,7 +34,7 @@ const {
           ]}
         >
           {title && <h2 class:list={["text-3xl font-bold", !inline && "mb-4"]}>{title}</h2>}
-          <div>
+          <div class="flex flex-col gap-6">
             {description && <p class="">{description}</p>}
             {markdown && <div> TODO: RENDER: {markdown}</div>}
             {lorem && <Lorem />}

@@ -3,7 +3,8 @@ import PageLayout from "../../layouts/PageLayout.astro";
 import Section from "../../components/Section.astro";
 import Container from "../../components/Container.astro";
 import MemberSummary from "../../components/MemberSummary.astro";
-import { members, POSSIBLE_ROLES } from "../../data";
+import { members, POSSIBLE_ROLES, ROLE_CONFIGS } from "../../data";
+import { Icon } from "astro-icon/components";
 
 export function getStaticPaths() {
   return [...POSSIBLE_ROLES, undefined].map((role) => ({
@@ -20,26 +21,34 @@ const filteredMembers = members.filter((member) => {
 ---
 
 <PageLayout title="Community">
-  <Section
-    title="Get Involved"
-    description="Join the community to get involved in the project. TODO add a button..."
-  />
+  <Section inline title="Community" button={{ text: "Switch", href: "/members" }} />
   <Section>
-    <p>TODO use https://daisyui.com/components/filter/</p>
-    <div class="flex justify-center">
+    <div class="flex justify-between items-center">
       <div class="join">
         <a href="/community" class={`btn join-item ${filter === undefined ? "btn-primary" : ""}`}>
+          <Icon name="lucide:users" size={20} class="mr-2" />
           Everyone
         </a>
         {
-          POSSIBLE_ROLES.map((role) => (
-            <a
-              href={`/community/${role}`}
-              class={`btn join-item capitalize ${filter === role ? "btn-primary" : ""}`}
-            >
-              {role}s
-            </a>
-          ))
+          POSSIBLE_ROLES.map((role) => {
+            const config = ROLE_CONFIGS[role];
+            return (
+              <a
+                href={`/community/${role}`}
+                class={`btn join-item ${filter === role ? "btn-primary" : ""}`}
+              >
+                <Icon name={config.icon} size={20} class="mr-2" />
+                {config.plural}
+              </a>
+            );
+          })
+        }
+      </div>
+      <div class="text-sm opacity-70">
+        {
+          filteredMembers.length === 1
+            ? "Showing 1 member"
+            : `Showing ${filteredMembers.length} members`
         }
       </div>
     </div>

@@ -8,7 +8,9 @@ import EventsUpcoming from "../components/EventsUpcoming.astro";
 ---
 
 <PageLayout title="Events">
-  <EventsUpcoming />
+  <Container wide class="p-12">
+    <EventsUpcoming />
+  </Container>
   <Section inline title="All Events" description="TODO SOrting and stuff" />
   <Container wide grid>
     {

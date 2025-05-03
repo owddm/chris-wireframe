@@ -14,7 +14,10 @@ const pageTitle = title ? SITE.title.template.replace("%s", title) : SITE.title.
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
     <title>{pageTitle}</title>
     <script is:inline>
       // ☝️ This script prevents the FART effect.
@@ -29,7 +32,7 @@ const pageTitle = title ? SITE.title.template.replace("%s", title) : SITE.title.
       themeChange();
     </script>
   </head>
-  <body>
+  <body class="bg-green-200">
     <slot />
   </body>
 </html>
