@@ -13,6 +13,7 @@ const {
   split,
   markdown,
   lorem,
+  inline,
 } = Astro.props;
 ---
 
@@ -21,17 +22,24 @@ const {
     wide={split}
     class:list={[
       split && "grid md:grid-cols-2 gap-24 items-center",
-      left && "md:grid-cols-reverse",
+      left && "md:[&>*:first-child]:order-2 md:[&>*:last-child]:order-1",
     ]}
   >
     {
       (title || description || markdown) && (
-        <div class={split && "max-w-xl m-auto text-lg flex flex-col gap-6"}>
-          {title && <h2 class="text-4xl font-bold mb-4">{title}</h2>}
-          {description && <p class="">{description}</p>}
-          {markdown && <div> TODO: RENDER: {markdown}</div>}
-          {lorem && <Lorem />}
-          {button && <Button {...button} />}
+        <div
+          class:list={[
+            split && "max-w-xl m-auto text-lg flex flex-col gap-6",
+            inline && "flex gap-12 justify-between items-center",
+          ]}
+        >
+          {title && <h2 class:list={["text-3xl font-bold", !inline && "mb-4"]}>{title}</h2>}
+          <div>
+            {description && <p class="">{description}</p>}
+            {markdown && <div> TODO: RENDER: {markdown}</div>}
+            {lorem && <Lorem />}
+            {button && <Button {...button} />}
+          </div>
         </div>
       )
     }

@@ -2,6 +2,47 @@
 import Section from "../components/Section.astro";
 import Hero from "../components/Hero.astro";
 import PageLayout from "../layouts/PageLayout.astro";
+import EventFeatured from "../components/EventFeatured.astro";
+import { events } from "../data";
+import Container from "../components/Container.astro";
+import Countdown from "../components/Countdown.tsx";
+import EventSummary from "../components/EventSummary.astro";
+import Button from "../components/Button.astro";
+import StatsGrid from "../components/StatsGrid.astro";
+import EventsUpcoming from "../components/EventsUpcoming.astro";
+
+const stats = [
+  {
+    title: "First Event",
+    value: "2015",
+    icon: "lucide:calendar",
+    description: "Started our journey",
+  },
+  {
+    title: "Total Events",
+    value: "172",
+    icon: "lucide:calendar-days",
+    description: "Events and counting",
+  },
+  {
+    title: "Locations",
+    value: "12",
+    icon: "lucide:map-pin",
+    description: "Cities reached",
+  },
+  {
+    title: "Speakers",
+    value: "85+",
+    icon: "lucide:mic",
+    description: "Expert voices shared",
+  },
+  {
+    title: "Participants",
+    value: "2000+",
+    icon: "lucide:users-2",
+    description: "Community members",
+  },
+];
 ---
 
 <PageLayout>
@@ -10,26 +51,38 @@ import PageLayout from "../layouts/PageLayout.astro";
     description="Empowering innovation through technology solutions that drive success and transform businesses."
     button={{ text: "View Members" }}
   />
+  <EventsUpcoming />
   <Section
-    title="Upcoming Events Countdown with map and image"
-    description="We are a team of experienced professionals who are dedicated to providing the best possible solutions to our clients."
-    button={{ text: "View Members" }}
-  />
-  <Section
+    inline
+    class="p-0"
     title="Recent Events"
-    description="Link to the most recent events"
-    button={{ text: "View Members" }}
+    button={{ text: "More Events", href: "/events" }}
   />
-  <Section
-    title="Stats"
-    description="First event (years ago), Latest Event, Total Events, Total Locations, Total Speakres, Etc."
-    button={{ text: "View Members" }}
-  />
+  <Container wide grid>
+    {
+      events
+        .slice(5, 9)
+        .map((event, i) => (
+          <EventSummary class={i > 2 ? "lg:hidden xl:block" : undefined} event={event} />
+        ))
+    }
+  </Container>
+  <Container class="py-12">
+    <StatsGrid stats={stats} />
+  </Container>
   <Section
     title="Community"
-    description="We are a team of experienced professionals who are dedicated to providing the best possible solutions to our clients."
+    description="Join our vibrant community of tech enthusiasts, professionals, and innovators. Connect with like-minded individuals, share knowledge, and grow together in the ever-evolving tech landscape."
     button={{ text: "View Members" }}
   />
-  <Section title="About OKWirefrmae" button={{ text: "Learn More" }} />
-  <Section title="Get Involved" button={{ text: "Link to #contact" }} />
+  <Section
+    title="About OKWireframe"
+    description="OKWireframe is a leading technology community dedicated to fostering innovation and collaboration. We organize events, workshops, and networking opportunities to help professionals stay at the forefront of technology."
+    button={{ text: "Learn More" }}
+  />
+  <Section
+    title="Get Involved"
+    description="Ready to be part of something bigger? Whether you want to speak at our events, sponsor our initiatives, or simply join our community, we welcome your participation and ideas."
+    button={{ text: "Link to #contact" }}
+  />
 </PageLayout>

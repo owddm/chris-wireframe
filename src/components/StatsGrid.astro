@@ -1,0 +1,31 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Stat {
+  title: string;
+  value: string | number;
+  icon: string;
+  description?: string;
+}
+
+interface Props {
+  stats: Stat[];
+}
+
+const { stats } = Astro.props;
+---
+
+<div class="stats bg-base-100 stats-vertical md:stats-horizontal shadow-lg w-full">
+  {
+    stats.map((stat) => (
+      <div class="stat">
+        <div class="stat-figure text-primary">
+          <Icon name={stat.icon} size={24} />
+        </div>
+        <div class="stat-title">{stat.title}</div>
+        <div class="stat-value">{stat.value}</div>
+        {stat.description && <div class="stat-desc">{stat.description}</div>}
+      </div>
+    ))
+  }
+</div>

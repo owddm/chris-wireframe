@@ -1,0 +1,18 @@
+---
+import Container from "./Container.astro";
+import Countdown from "./Countdown.tsx";
+import EventFeatured from "./EventFeatured.astro";
+import { events } from "../data";
+const nextEvent = events[2];
+const countdownDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+---
+
+<Container wide class="flex flex-col p-12 gap-12">
+  <div
+    class="flex flex-wrap justify-center items-center gap-6 bg-base-100 rounded-xl mx-auto py-6 px-8 shadow-lg"
+  >
+    <div class="text-lg">Next event starts in</div>
+    <Countdown client:load targetDate={countdownDate} />
+  </div>
+  <EventFeatured event={nextEvent} />
+</Container>

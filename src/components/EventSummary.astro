@@ -4,9 +4,10 @@ import { type Event } from "../data";
 
 interface Props {
   event: Event;
+  class?: string;
 }
 
-const { event } = Astro.props;
+const { event, class: className } = Astro.props;
 
 const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
   month: "short",
@@ -14,7 +15,10 @@ const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
 });
 ---
 
-<a href={`/events/${event.id}`} class="card card-border bg-base-100 hover-zoom">
+<a
+  href={`/events/${event.id}`}
+  class={`card card-border bg-base-100 hover-zoom ${className ?? ""}`}
+>
   <figure class="aspect-video w-full bg-base-300">
     <img src={event.coverImage} alt="Event cover" class="w-full h-full object-cover" />
   </figure>

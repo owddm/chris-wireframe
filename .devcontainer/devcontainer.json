@@ -6,7 +6,11 @@
   "image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
   "customizations": {
     "vscode": {
-      "extensions": ["astro-build.astro-vscode", "esbenp.prettier-vscode"]
+      "extensions": [
+        "astro-build.astro-vscode",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss"
+      ]
     }
   }
 
