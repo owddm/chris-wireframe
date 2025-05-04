@@ -1,0 +1,36 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<div class="flex flex-wrap gap-4 justify-center">
+  <!-- Location Filter -->
+  <div class="dropdown">
+    <div tabindex="0" role="button" class="btn btn-lg">
+      <Icon name="lucide:map-pin" size={20} />
+      Location
+      <Icon name="lucide:chevron-down" size={20} />
+    </div>
+    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+      <li><a>All Locations</a></li>
+      <li><a>Osaka</a></li>
+      <li><a>Kyoto</a></li>
+    </ul>
+  </div>
+
+  <!-- Tech Topics Filter -->
+  <div class="dropdown">
+    <div tabindex="0" role="button" class="btn btn-lg">
+      <Icon name="lucide:tag" size={20} />
+      Tech Topics
+      <Icon name="lucide:chevron-down" size={20} />
+    </div>
+    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+      <li><a>All Topics</a></li>
+      <li><a>Web Development</a></li>
+      <li><a>AI/ML</a></li>
+      <li><a>DevOps</a></li>
+      <li><a>Cloud Computing</a></li>
+      <li><a>Cybersecurity</a></li>
+    </ul>
+  </div>
+</div>
