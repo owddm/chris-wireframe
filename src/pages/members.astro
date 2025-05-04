@@ -14,7 +14,7 @@ const membersByRole = Object.entries(ROLE_CONFIGS).map(([role, roleConfig]) => {
 ---
 
 <PageLayout title="Community">
-  <Section inline title="Members" button={{ text: "Switch", href: "/community" }} />
+  <Section inline title="Members (Expanded)" button={{ text: "Tabs", href: "/community" }} />
   {
     membersByRole.map(({ plural, description, label, color, icon, members }) => (
       <div>

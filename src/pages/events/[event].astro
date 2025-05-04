@@ -4,6 +4,9 @@ import Section from "../../components/Section.astro";
 import EventDetails from "../../components/EventDetails.astro";
 import { Icon } from "astro-icon/components";
 import { events, type Event } from "../../data";
+import MemberSummary from "../../components/MemberSummary.astro";
+import Container from "../../components/Container.astro";
+import EventGallery from "../../components/EventGallery.astro";
 
 export function getStaticPaths() {
   return events.map((event) => ({
@@ -26,7 +29,7 @@ const nextEvent = currentIndex < events.length - 1 ? events[currentIndex + 1] : 
           prevEvent && (
             <a href={`/events/${prevEvent.id}`} class="btn btn-soft gap-2">
               <Icon name="lucide:chevron-left" size={20} />
-              {prevEvent.title}
+              Next Event
             </a>
           )
         }
@@ -35,7 +38,7 @@ const nextEvent = currentIndex < events.length - 1 ? events[currentIndex + 1] : 
         {
           nextEvent && (
             <a href={`/events/${nextEvent.id}`} class="btn btn-soft gap-2">
-              {nextEvent.title}
+              Previous Event
               <Icon name="lucide:chevron-right" size={20} />
             </a>
           )
@@ -44,4 +47,18 @@ const nextEvent = currentIndex < events.length - 1 ? events[currentIndex + 1] : 
     </div>
     <EventDetails event={event} />
   </Section>
+  <!-- <Section inline title="Speakers" /> -->
+  <Container grid class="py-12">
+    {event.speakers.map((speaker) => <MemberSummary member={speaker} />)}
+  </Container>
+  {
+    event.gallery && event.gallery.length > 0 && (
+      <>
+        {/* <Section inline title="Gallery" /> */}
+        <Container wide grid>
+          <EventGallery event={event} />
+        </Container>
+      </>
+    )
+  }
 </PageLayout>

@@ -1,0 +1,30 @@
+---
+import EventSummary from "../../components/EventSummary.astro";
+import Section from "../../components/Section.astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import Container from "../../components/Container.astro";
+import { events } from "../../data";
+import Grid from "../../components/Grid.astro";
+import EventGallery from "../../components/EventGallery.astro";
+import EventFeatured from "../../components/EventFeatured.astro";
+---
+
+<PageLayout title="Events">
+  <Section inline title="Events Gallery" button={{ text: "Events View", href: "/events" }} />
+  <div class="flex flex-col gap-24">
+    {
+      events
+        .filter((event) => event.gallery && event.gallery.length > 0)
+        .map((event) => (
+          <Container wide>
+            <div class="flex flex-col gap-12 bg-base-300/50 p-2 md:p-12 rounded-xl">
+              <EventFeatured event={event} />
+              <Grid>
+                <EventGallery event={event} />
+              </Grid>
+            </div>
+          </Container>
+        ))
+    }
+  </div>
+</PageLayout>

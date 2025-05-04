@@ -1,0 +1,16 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div
+  class:list={[
+    "grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-2",
+    className,
+  ]}
+>
+  <slot />
+</div>

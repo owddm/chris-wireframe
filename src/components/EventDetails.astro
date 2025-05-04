@@ -2,6 +2,8 @@
 import type { Event } from "../data";
 import MemberSummary from "./MemberSummary.astro";
 import EventInfo from "./EventInfo.astro";
+import Lorem from "./Lorem.astro";
+import Section from "./Section.astro";
 
 interface Props {
   event: Event;
@@ -22,9 +24,8 @@ const { event } = Astro.props;
         <img src={event.coverImage} alt={event.title} class="w-full h-full object-cover" />
       </figure>
       <h1 class="hidden md:block text-4xl font-bold">{event.title}</h1>
-      <div class="prose max-w-none">{event.description}</div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {event.speakers.map((speaker) => <MemberSummary member={speaker} />)}
+      <div class="flex flex-col gap-4 max-w-none">
+        <Lorem count={3} />
       </div>
     </div>
 

@@ -1,0 +1,15 @@
+---
+import { members } from "../data";
+---
+
+<div class="grid grid-cols-[repeat(auto-fit,minmax(4rem,1fr))] gap-4">
+  {
+    members.map((member) => (
+      <div class="avatar">
+        <div class="w-16 rounded-full">
+          <img src={member.avatar} alt={member.name} />
+        </div>
+      </div>
+    ))
+  }
+</div>

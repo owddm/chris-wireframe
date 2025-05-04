@@ -77,6 +77,10 @@ export type Event = {
   coverImage: string;
   speakers: Member[];
   url?: string;
+  gallery?: {
+    src: string;
+    description: string;
+  }[];
 };
 
 function generateMember(id: string): Member {
@@ -142,6 +146,16 @@ function generateEvent(id: string): Event {
   // Seed faker with the event ID to get consistent data
   faker.seed(parseInt(id.replace(/\D/g, "") || "0", 10));
 
+  // Generate gallery with 0 or 4-20 images
+  const hasGallery = faker.number.int(100) < 80; // 80% chance of having a gallery
+  const galleryCount = hasGallery ? faker.number.int({ min: 4, max: 20 }) : 0;
+  const gallery = hasGallery
+    ? Array.from({ length: galleryCount }, () => ({
+        src: faker.image.urlPicsumPhotos({ width: 800, height: 600 }),
+        description: faker.lorem.sentence(),
+      }))
+    : undefined;
+
   return {
     id,
     title: faker.company.catchPhrase(),
@@ -151,6 +165,7 @@ function generateEvent(id: string): Event {
     description: faker.lorem.paragraph(),
     coverImage: faker.image.urlPicsumPhotos({ width: 800, height: 400 }),
     speakers: [],
+    gallery,
   };
 }
 

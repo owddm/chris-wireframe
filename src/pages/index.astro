@@ -5,90 +5,60 @@ import PageLayout from "../layouts/PageLayout.astro";
 import { events } from "../data";
 import Container from "../components/Container.astro";
 import EventSummary from "../components/EventSummary.astro";
-import StatsGrid from "../components/StatsGrid.astro";
+import LandingStats from "../components/LandingStats.astro";
 import EventsUpcoming from "../components/EventsUpcoming.astro";
 import ImagePlaceholder from "../components/ImagePlaceholder.astro";
-const stats = [
-  {
-    title: "First Event",
-    value: "2015",
-    icon: "lucide:calendar",
-    description: "Started our journey",
-  },
-  {
-    title: "Total Events",
-    value: "172",
-    icon: "lucide:calendar-days",
-    description: "Events and counting",
-  },
-  {
-    title: "Locations",
-    value: "12",
-    icon: "lucide:map-pin",
-    description: "Cities reached",
-  },
-  {
-    title: "Speakers",
-    value: "85+",
-    icon: "lucide:mic",
-    description: "Expert voices shared",
-  },
-  {
-    title: "Participants",
-    value: "2000+",
-    icon: "lucide:users-2",
-    description: "Community members",
-  },
-];
+import MemberAvatars from "../components/MemberAvatars.astro";
 ---
 
 <PageLayout>
   <Hero
     title="Welcome to OKWireframe"
-    description="Empowering innovation through technology solutions that drive success and transform businesses."
-    button={{ text: "View Members" }}
+    description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos."
   />
-  <Container wide class="p-12 bg-secondary/20">
-    <EventsUpcoming />
-  </Container>
-  <Container class="py-24">
-    <StatsGrid stats={stats} />
-  </Container>
-  <Section
-    class="bg-primary/20"
-    inline
-    title="Recent Events"
-    button={{ text: "More Events", href: "/events" }}
-  />
-
-  <Container wide grid class="bg-primary/20 pb-12">
-    {
-      events
-        .slice(5, 9)
-        .map((event, i) => (
-          <EventSummary class={i > 2 ? "lg:hidden xl:block" : undefined} event={event} />
-        ))
-    }
-  </Container>
-  <Section
-    title="Community"
-    description="Join our vibrant community of tech enthusiasts, professionals, and innovators. Connect with like-minded individuals, share knowledge, and grow together in the ever-evolving tech landscape."
-    button={{ text: "View Members" }}
-  />
-
+  <div class="bg-secondary/20">
+    <Container wide class="p-12">
+      <EventsUpcoming />
+    </Container>
+  </div>
   <Section
     split
     title="About OKWireframe"
-    lorem
+    lorem={1}
     split
-    class="bg-secondary/20"
     button={{ text: "Learn More", href: "/about" }}
     ><ImagePlaceholder />
   </Section>
 
+  <Container class="py-24">
+    <LandingStats />
+  </Container>
+  <div class="bg-primary/20">
+    <Section inline title="Recent Events" button={{ text: "More Events", href: "/events" }} />
+    <Container wide grid class="pb-12">
+      {
+        events
+          .slice(5, 9)
+          .map((event, i) => (
+            <EventSummary class={i > 2 ? "lg:hidden xl:block" : undefined} event={event} />
+          ))
+      }
+    </Container>
+  </div>
   <Section
+    title="Community"
+    description="Join our vibrant community of tech enthusiasts, professionals, and innovators. Connect with like-minded individuals, share knowledge, and grow together in the ever-evolving tech landscape."
+  />
+  <Container wide>
+    <MemberAvatars />
+  </Container>
+  <Section button={{ text: "Our Members", href: "/community" }} />
+
+  <Hero
+    slim
     title="Get Involved"
     description="Ready to be part of something bigger? Whether you want to speak at our events, sponsor our initiatives, or simply join our community, we welcome your participation and ideas."
     button={{ text: "Get Involved", href: "/about#contact" }}
+    class="text-lg text-center"
   />
 </PageLayout>

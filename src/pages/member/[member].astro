@@ -6,6 +6,7 @@ import { Icon } from "astro-icon/components";
 import { members, type Member } from "../../data";
 import Container from "../../components/Container.astro";
 import EventSummary from "../../components/EventSummary.astro";
+import EventFeatured from "../../components/EventFeatured.astro";
 
 export function getStaticPaths() {
   return members.map((member) => ({
@@ -29,7 +30,7 @@ const nextMember = currentIndex < members.length - 1 ? members[currentIndex + 1]
           prevMember && (
             <a href={`/member/${prevMember.id}`} class="btn btn-soft gap-2">
               <Icon name="lucide:chevron-left" size={20} />
-              {prevMember.name}
+              Next Member
             </a>
           )
         }
@@ -38,7 +39,7 @@ const nextMember = currentIndex < members.length - 1 ? members[currentIndex + 1]
         {
           nextMember && (
             <a href={`/member/${nextMember.id}`} class="btn btn-soft gap-2">
-              {nextMember.name}
+              Previous Member
               <Icon name="lucide:chevron-right" size={20} />
             </a>
           )
@@ -47,7 +48,20 @@ const nextMember = currentIndex < members.length - 1 ? members[currentIndex + 1]
     </div>
     <MemberDetails member={member} />
   </Section>
-  <Container wide grid>
-    {member.events.map((event) => <EventSummary event={event} />)}
-  </Container>
+  {
+    member.events.length > 0 && (
+      <>
+        {/* <Section
+          inline
+          title="My Events"
+          description="Latest events that this member has spoken at"
+        /> */}
+        <Container wide class="flex flex-col gap-12">
+          {member.events.map((event) => (
+            <EventFeatured event={event} />
+          ))}
+        </Container>
+      </>
+    )
+  }
 </PageLayout>

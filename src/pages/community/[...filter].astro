@@ -3,7 +3,7 @@ import PageLayout from "../../layouts/PageLayout.astro";
 import Section from "../../components/Section.astro";
 import Container from "../../components/Container.astro";
 import MemberSummary from "../../components/MemberSummary.astro";
-import { members, POSSIBLE_ROLES, ROLE_CONFIGS } from "../../data";
+import { members, POSSIBLE_ROLES, ROLE_CONFIGS, type Role } from "../../data";
 import { Icon } from "astro-icon/components";
 
 export function getStaticPaths() {
@@ -14,6 +14,8 @@ export function getStaticPaths() {
 
 const { filter } = Astro.params;
 
+const role = ROLE_CONFIGS[filter as Role];
+
 const filteredMembers = members.filter((member) => {
   if (filter === undefined) return true;
   return member.roles.includes(filter);
@@ -21,35 +23,63 @@ const filteredMembers = members.filter((member) => {
 ---
 
 <PageLayout title="Community">
-  <Section inline title="Community" button={{ text: "Switch", href: "/members" }} />
+  <Section inline title="Members (Tabs)" button={{ text: "Expanded", href: "/members" }} />
   <Section>
-    <div class="flex justify-between items-center">
-      <div class="join">
-        <a href="/community" class={`btn join-item ${filter === undefined ? "btn-primary" : ""}`}>
-          <Icon name="lucide:users" size={20} class="mr-2" />
-          Everyone
-        </a>
-        {
-          POSSIBLE_ROLES.map((role) => {
-            const config = ROLE_CONFIGS[role];
-            return (
-              <a
-                href={`/community/${role}`}
-                class={`btn join-item ${filter === role ? "btn-primary" : ""}`}
-              >
-                <Icon name={config.icon} size={20} class="mr-2" />
-                {config.plural}
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div class="w-full md:w-auto">
+        <div class="join hidden md:flex">
+          <a href="/community" class={`btn join-item ${filter === undefined ? "btn-primary" : ""}`}>
+            <Icon name="lucide:users" size={20} class="mr-2" />
+            Everyone
+          </a>
+          {
+            POSSIBLE_ROLES.map((role) => {
+              const config = ROLE_CONFIGS[role];
+              return (
+                <a
+                  href={`/community/${role}`}
+                  class={`btn join-item ${filter === role ? "btn-primary" : ""}`}
+                >
+                  <Icon name={config.icon} size={20} class="mr-2" />
+                  {config.plural}
+                </a>
+              );
+            })
+          }
+        </div>
+        <div class="dropdown md:hidden w-full">
+          <div tabindex="0" role="button" class="btn btn-block justify-between">
+            {filter === undefined ? "Everyone" : ROLE_CONFIGS[filter as Role].plural}
+            <Icon name="lucide:chevron-down" size={20} />
+          </div>
+          <ul
+            tabindex="0"
+            class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full"
+          >
+            <li>
+              <a href="/community" class={filter === undefined ? "active" : ""}>
+                <Icon name="lucide:users" size={20} class="mr-2" />
+                Everyone
               </a>
-            );
-          })
-        }
+            </li>
+            {
+              POSSIBLE_ROLES.map((role) => {
+                const config = ROLE_CONFIGS[role];
+                return (
+                  <li>
+                    <a href={`/community/${role}`} class={filter === role ? "active" : ""}>
+                      <Icon name={config.icon} size={20} class="mr-2" />
+                      {config.plural}
+                    </a>
+                  </li>
+                );
+              })
+            }
+          </ul>
+        </div>
       </div>
-      <div class="text-sm opacity-70">
-        {
-          filteredMembers.length === 1
-            ? "Showing 1 member"
-            : `Showing ${filteredMembers.length} members`
-        }
+      <div class="text-sm md:text-base">
+        {role?.description || `${filteredMembers.length} members`}
       </div>
     </div>
   </Section>

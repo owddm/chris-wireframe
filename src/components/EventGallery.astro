@@ -1,0 +1,24 @@
+---
+import { Icon } from "astro-icon/components";
+import { type Event } from "../data";
+
+interface Props {
+  event: Event;
+  class?: string;
+}
+
+const { event, class: className } = Astro.props;
+---
+
+{
+  event.gallery?.map((item) => (
+    <div class="tooltip" data-tip={item.description}>
+      <img
+        src={item.src}
+        alt={item.description}
+        class="w-full aspect-[4/3] object-cover rounded-lg hover:opacity-90 transition-opacity bg-base-300"
+        loading="lazy"
+      />
+    </div>
+  ))
+}

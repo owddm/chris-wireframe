@@ -1,67 +1,25 @@
-## Todo
+## TODO
 
-add tailwind intellisense plugin
+Its a work in progress and I will continue to develop.
 
-## Updated Sitemap
+The Colors / Typography not applied, obviously. Just basic layout.
+We will add custom Theme using OKtech colors
 
-- Landing
-  - Hero / About
-  - Upcoming Event
-  - Past Events
-- Events
-  - Just one big list, not separated, includes gallery
-  - /events/id
-    - Details
-    - Speakers
-- Community
-  - Volunteers
-  - Speakers
-  - Get Involved
-  - /member/id
-    - Myspace type thing with theme
-    - Profile
-    - Expertise
-    - Links Social Etc.
-    - Associated Events
-- About
-  - Mission
-  - Contact
+## Changes to Sitemap
+
+- Covers same content but reorder a bit
+- Martin wanted to Highlight members / Patchwork idea
+- Merge the events into a single list, with tags / filtering
+- RSS Feed
 
 ## Ideas
 
-- Member page with themes
-- Add custom OKTheme using colors
+Sponsors page?
 
-## Suggested Changes from Meeting
+## Code TODOs
 
-- Merge the events into a single list, with tags
-- Highlight members / Patchwork
-- RSS Feed
+Replace Container with sections everywhere?
 
-## Original Sitemap
-
-- Landing
-  - Coming events
-  - Group (Kyoto / Osaka)
-  - Map
-  - Short Intro about OWDDM
-- About
-  - Our Story
-  - Our Purpose
-  - Our Volunteers team
-- Events / Workshops / Activities
-  - Osaka Event Lists
-  - Kyoto Event Lists
-  - Speakers Intro
-  - Past Events
-  - Gallery
-    - Sort by time
-- Get Involved
-  - Present at an Event
-  - Become a Volunteer
-  - Share your opinion
-- Contact Us
-  - Talk with us online
-  - Follow us
+## Sitemap Proposal
 
 ![Sitemap](./sitemap.png)
