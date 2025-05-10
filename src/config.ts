@@ -38,12 +38,12 @@ export const MENU: { label: string; href: string; header?: boolean }[] = [
 ];
 
 export const SOCIALS = [
-  {
-    icon: "lucide:mail",
-    href: "mailto:todo@example.com",
-    label: "Email",
-    description: "Send us a good old fashioned Email",
-  },
+  // {
+  //   icon: "lucide:mail",
+  //   href: "mailto:todo@example.com",
+  //   label: "Email",
+  //   description: "Send us a good old fashioned Email",
+  // },
   {
     icon: "cib:twitter",
     href: "https://x.com/owddm",

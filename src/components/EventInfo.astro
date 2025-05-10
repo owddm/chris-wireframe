@@ -31,6 +31,8 @@ const formatDate = (dateStr: string) => {
   </div>
 </div>
 
-<div class="aspect-video md:rounded-xl md:shadow-lg md:aspect-square bg-base-300 w-full">
+<div
+  class="aspect-video rounded-xl shadow-lg md:aspect-square md:rounded-none md:shadow-none bg-base-300 w-full overflow-hidden"
+>
   <img src={staticMap.src} alt={`Map for ${event.location}`} class="w-full h-full object-cover" />
 </div>
