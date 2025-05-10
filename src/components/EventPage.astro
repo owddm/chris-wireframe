@@ -1,20 +1,14 @@
 ---
-import PageLayout from "../../layouts/PageLayout.astro";
-import Section from "../../components/Section.astro";
-import EventDetails from "../../components/EventDetails.astro";
+import PageLayout from "../layouts/PageLayout.astro";
+import Section from "./Section.astro";
+import EventDetails from "./EventDetails.astro";
 import { Icon } from "astro-icon/components";
-import { events, type Event } from "../../data";
-import MemberSummary from "../../components/MemberSummary.astro";
-import Container from "../../components/Container.astro";
-import EventGallery from "../../components/EventGallery.astro";
+import { events } from "../data";
+import MemberSummary from "./MemberSummary.astro";
+import EventGallery from "./EventGallery.astro";
 
-export function getStaticPaths() {
-  return events.map((event) => ({
-    params: { event: event.id },
-  }));
-}
+const { slug: eventId } = Astro.params;
 
-const { event: eventId } = Astro.params;
 const currentIndex = events.findIndex((e) => e.id === eventId);
 const event = events[currentIndex];
 const prevEvent = currentIndex > 0 ? events[currentIndex - 1] : null;
@@ -47,18 +41,14 @@ const nextEvent = currentIndex < events.length - 1 ? events[currentIndex + 1] : 
     </div>
     <EventDetails event={event} />
   </Section>
-  <!-- <Section inline title="Speakers" /> -->
-  <Container grid class="py-12">
+  <Section grid title="Speakers">
     {event.speakers.map((speaker) => <MemberSummary member={speaker} />)}
-  </Container>
+  </Section>
   {
     event.gallery && event.gallery.length > 0 && (
-      <>
-        {/* <Section inline title="Gallery" /> */}
-        <Container wide grid>
-          <EventGallery event={event} />
-        </Container>
-      </>
+      <Section wide grid title="Gallery">
+        <EventGallery event={event} />
+      </Section>
     )
   }
 </PageLayout>

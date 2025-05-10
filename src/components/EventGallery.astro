@@ -1,5 +1,4 @@
 ---
-import { Icon } from "astro-icon/components";
 import { type Event } from "../data";
 
 interface Props {
@@ -7,7 +6,7 @@ interface Props {
   class?: string;
 }
 
-const { event, class: className } = Astro.props;
+const { event } = Astro.props;
 ---
 
 {

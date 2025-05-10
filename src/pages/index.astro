@@ -16,43 +16,45 @@ import MemberAvatars from "../components/MemberAvatars.astro";
     title="Welcome to OKWireframe"
     description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos."
   />
-  <div class="bg-secondary/20">
-    <Container wide class="p-12">
-      <EventsUpcoming />
-    </Container>
-  </div>
+  <Section wide class="bg-secondary/20">
+    <EventsUpcoming />
+  </Section>
   <Section
     split
     title="About OKWireframe"
     lorem={1}
-    split
     button={{ text: "Learn More", href: "/about" }}
-    ><ImagePlaceholder />
+  >
+    <ImagePlaceholder />
   </Section>
 
-  <Container class="py-24">
+  <Section>
     <LandingStats />
-  </Container>
-  <div class="bg-primary/20">
-    <Section inline title="Recent Events" button={{ text: "More Events", href: "/events" }} />
-    <Container wide grid class="pb-12">
-      {
-        events
-          .slice(5, 9)
-          .map((event, i) => (
-            <EventSummary class={i > 2 ? "lg:hidden xl:block" : undefined} event={event} />
-          ))
-      }
-    </Container>
-  </div>
+  </Section>
   <Section
+    inline
+    wide
+    grid
+    class="bg-primary/20"
+    title="Recent Events"
+    button={{ text: "More Events", href: "/events" }}
+  >
+    {
+      events
+        .slice(5, 9)
+        .map((event, i) => (
+          <EventSummary class={i > 2 ? "lg:hidden xl:block" : undefined} event={event} />
+        ))
+    }
+  </Section>
+
+  <Section
+    wide
     title="Community"
     description="Join our vibrant community of tech enthusiasts, professionals, and innovators. Connect with like-minded individuals, share knowledge, and grow together in the ever-evolving tech landscape."
-  />
-  <Container wide>
+  >
     <MemberAvatars />
-  </Container>
-  <Section button={{ text: "Our Members", href: "/community" }} />
+  </Section>
 
   <Hero
     slim

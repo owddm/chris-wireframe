@@ -1,0 +1,66 @@
+---
+import EventsFilter from "./EventsFilter.astro";
+import SearchBox from "./SearchBox.astro";
+import { events } from "../data";
+import EventSummary from "./EventSummary.astro";
+import Grid from "./Grid.astro";
+import Button from "./Button.astro";
+import PageLayout from "../layouts/PageLayout.astro";
+import Section from "./Section.astro";
+import EventsUpcoming from "./EventsUpcoming.astro";
+import EventFeatured from "./EventFeatured.astro";
+import EventGallery from "./EventGallery.astro";
+const { slug } = Astro.params;
+// TODO: we probably just want our own route here...
+// TODO: handle more filters
+const gallery = slug === "gallery";
+---
+
+<PageLayout title="Events">
+  <Section wide class="bg-secondary/20">
+    <EventsUpcoming />
+  </Section>
+  <Section wide class="pb-0">
+    <div class="flex flex-col gap-8">
+      <div class="flex items-center justify-between gap-8 flex-col md:flex-row">
+        <EventsFilter />
+        <div class="flex items-center gap-4">
+          <Button
+            class="btn btn-lg gap-4"
+            text={gallery ? "List" : "Gallery"}
+            href={gallery ? "/events" : "/events/gallery"}
+            icon={gallery ? "lucide:grid" : "lucide:image"}
+          />
+          <SearchBox />
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  {
+    gallery ? (
+      <>
+        {events
+          .filter((event) => event.gallery && event.gallery.length > 0)
+          .map((event, i) => (
+            <Section wide class:list={i % 2 === 0 ? "" : "bg-base-100/50"}>
+              <div class="flex flex-col gap-12">
+                <EventFeatured event={event} />
+                <Grid>
+                  <EventGallery event={event} />
+                </Grid>
+              </div>
+            </Section>
+          ))}
+      </>
+    ) : (
+      <Section grid wide>
+        {events.map((event) => (
+          <div>
+            <EventSummary event={event} />
+          </div>
+        ))}
+      </Section>
+    )
+  }
+</PageLayout>

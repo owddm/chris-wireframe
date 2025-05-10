@@ -15,36 +15,49 @@ const {
   markdown,
   lorem,
   inline,
+  grid,
 } = Astro.props;
+
+const generatedContent = title || description || markdown || button || lorem;
+const secondContainer = wide || grid;
+const firstContainer = !secondContainer || generatedContent;
 ---
 
-<section class:list={["py-12", className]} id={anchor}>
-  <Container
-    wide={wide}
-    class:list={[
-      split && "grid md:grid-cols-2 gap-24 items-center",
-      left && "md:[&>*:first-child]:order-2 md:[&>*:last-child]:order-1",
-    ]}
-  >
-    {
-      (title || description || markdown || button) && (
-        <div
-          class:list={[
-            split && "max-w-xl m-auto text-lg flex flex-col gap-6",
-            inline &&
-              "flex flex-col md:flex-row gap-6 md:gap-12 justify-between items-start md:items-center",
-          ]}
-        >
-          {title && <h2 class:list={["text-3xl font-bold", !inline && "mb-4"]}>{title}</h2>}
-          <div class="flex flex-col gap-6">
-            {description && <p class="">{description}</p>}
-            {markdown && <div> TODO: RENDER: {markdown}</div>}
-            {lorem && <Lorem count={typeof lorem === "number" ? lorem : undefined} />}
-            {button && <Button {...button} />}
+<section class:list={["py-18 flex flex-col gap-12", className]} id={anchor}>
+  {
+    firstContainer && (
+      <Container
+        class:list={[
+          split && "grid md:grid-cols-2 gap-24 items-center",
+          left && "md:[&>*:first-child]:order-2 md:[&>*:last-child]:order-1",
+        ]}
+      >
+        {generatedContent && (
+          <div
+            class:list={[
+              split && "max-w-xl m-auto text-lg flex flex-col gap-6",
+              inline &&
+                "flex flex-col md:flex-row gap-6 md:gap-12 justify-between items-start md:items-center",
+            ]}
+          >
+            {title && <h2 class:list={["text-3xl font-bold", !inline && "mb-4"]}>{title}</h2>}
+            <div class="flex flex-col gap-6">
+              {description && <p class="">{description}</p>}
+              {markdown && <div> TODO: RENDER: {markdown}</div>}
+              {lorem && <Lorem count={typeof lorem === "number" ? lorem : undefined} />}
+              {button && <Button {...button} />}
+            </div>
           </div>
-        </div>
-      )
-    }
-    <slot />
-  </Container>
+        )}
+        {!secondContainer && <slot />}
+      </Container>
+    )
+  }
+  {
+    secondContainer && (
+      <Container wide={wide} grid={grid}>
+        <slot />
+      </Container>
+    )
+  }
 </section>

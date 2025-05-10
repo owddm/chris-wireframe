@@ -1,9 +1,7 @@
 ---
 import type { Event } from "../data";
-import MemberSummary from "./MemberSummary.astro";
 import EventInfo from "./EventInfo.astro";
 import Lorem from "./Lorem.astro";
-import Section from "./Section.astro";
 import EventJoinButton from "./EventJoinButton.astro";
 
 interface Props {
@@ -15,7 +13,7 @@ const { event } = Astro.props;
 
 <div class="w-full flex flex-col gap-8">
   <div class="md:hidden flex flex-col gap-10">
-    <h1 class="text-4xl font-bold">{event.title}</h1>
+    <h1 class="text-4xl font-bold pt-6">{event.title}</h1>
     <EventInfo event={event} />
     <EventJoinButton />
   </div>
@@ -25,7 +23,7 @@ const { event } = Astro.props;
       <figure class="rounded-xl aspect-video w-full bg-base-300 shadow-xl overflow-hidden">
         <img src={event.coverImage} alt={event.title} class="w-full h-full object-cover" />
       </figure>
-      <h1 class="hidden md:block text-4xl font-bold">{event.title}</h1>
+      <h1 class="hidden md:block text-4xl font-bold pt-6">{event.title}</h1>
       <div class="flex flex-col gap-4 max-w-none">
         <Lorem count={3} />
       </div>

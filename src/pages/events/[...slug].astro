@@ -1,0 +1,15 @@
+---
+import { events } from "../../data";
+import EventsPage from "../../components/EventsPage.astro";
+import EventPage from "../../components/EventPage.astro";
+
+export function getStaticPaths() {
+  return [...events.map((event) => event.id), "gallery", undefined].map((slug) => ({
+    params: { slug },
+  }));
+}
+
+const { slug } = Astro.params;
+---
+
+{!slug || slug === "gallery" ? <EventsPage /> : <EventPage />}

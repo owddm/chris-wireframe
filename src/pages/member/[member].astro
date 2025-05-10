@@ -4,8 +4,6 @@ import Section from "../../components/Section.astro";
 import MemberDetails from "../../components/MemberDetails.astro";
 import { Icon } from "astro-icon/components";
 import { members, type Member } from "../../data";
-import Container from "../../components/Container.astro";
-import EventSummary from "../../components/EventSummary.astro";
 import EventFeatured from "../../components/EventFeatured.astro";
 
 export function getStaticPaths() {
@@ -50,18 +48,13 @@ const nextMember = currentIndex < members.length - 1 ? members[currentIndex + 1]
   </Section>
   {
     member.events.length > 0 && (
-      <>
-        {/* <Section
-          inline
-          title="My Events"
-          description="Latest events that this member has spoken at"
-        /> */}
-        <Container wide class="flex flex-col gap-12">
+      <Section wide>
+        <div class="flex flex-col gap-12">
           {member.events.map((event) => (
             <EventFeatured event={event} />
           ))}
-        </Container>
-      </>
+        </div>
+      </Section>
     )
   }
 </PageLayout>
