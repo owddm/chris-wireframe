@@ -2,6 +2,7 @@
 import { Icon } from "astro-icon/components";
 import { type Event } from "../data";
 import staticMap from "../assets/staticmap.png";
+import Link from "./Link.astro";
 
 interface Props {
   event: Event;
@@ -15,7 +16,7 @@ const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
 });
 ---
 
-<a
+<Link
   class="card rounded-xl bg-base-100 h-full overflow-hidden hover-zoom flex flex-col lg:flex-row shadow-md w-full hover:shadow-lg"
   href={`/events/${event.id}`}
 >
@@ -85,4 +86,4 @@ const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
       </div>
     </div>
   </div>
-</a>
+</Link>

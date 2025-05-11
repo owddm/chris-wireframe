@@ -1,5 +1,6 @@
 ---
 import { type Member } from "../data";
+import Link from "./Link.astro";
 
 interface Props {
   member: Member;
@@ -8,7 +9,7 @@ interface Props {
 const { member } = Astro.props;
 ---
 
-<a
+<Link
   data-theme={member.theme}
   href={`/member/${member.id}`}
   class="hover-zoom relative card bg-primary-content text-primary"
@@ -37,4 +38,4 @@ const { member } = Astro.props;
       </div>
     </div>
   </div>
-</a>
+</Link>

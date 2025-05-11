@@ -6,6 +6,7 @@ import { Icon } from "astro-icon/components";
 import { events } from "../data";
 import MemberSummary from "./MemberSummary.astro";
 import EventGallery from "./EventGallery.astro";
+import Link from "./Link.astro";
 
 const { slug: eventId } = Astro.params;
 
@@ -21,20 +22,20 @@ const nextEvent = currentIndex < events.length - 1 ? events[currentIndex + 1] : 
       <div class="flex gap-4">
         {
           prevEvent && (
-            <a href={`/events/${prevEvent.id}`} class="btn btn-soft gap-2">
+            <Link href={`/events/${prevEvent.id}`} class="btn btn-soft gap-2">
               <Icon name="lucide:chevron-left" size={20} />
               Next Event
-            </a>
+            </Link>
           )
         }
       </div>
       <div class="flex gap-4">
         {
           nextEvent && (
-            <a href={`/events/${nextEvent.id}`} class="btn btn-soft gap-2">
+            <Link href={`/events/${nextEvent.id}`} class="btn btn-soft gap-2">
               Previous Event
               <Icon name="lucide:chevron-right" size={20} />
-            </a>
+            </Link>
           )
         }
       </div>

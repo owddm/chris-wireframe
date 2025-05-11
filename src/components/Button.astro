@@ -1,10 +1,11 @@
 ---
 import { Icon } from "astro-icon/components";
+import Link from "./Link.astro";
 
 const { href, text, icon, class: className } = Astro.props;
 ---
 
-<a class:list={["btn btn-primary mx-auto", className]} href={href}>
+<Link class:list={["btn btn-primary mx-auto", className]} href={href}>
   {text}
   <Icon name={icon || "lucide:chevron-right"} />
-</a>
+</Link>

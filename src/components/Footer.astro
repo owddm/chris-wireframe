@@ -3,6 +3,7 @@ import ThemePicker from "./ThemePicker.astro";
 import Socials from "./Socials.astro";
 import Container from "./Container.astro";
 import { MENU, SITE } from "../config";
+import Link from "./Link.astro";
 ---
 
 <footer class="bg-base-300 text-base-content">
@@ -11,9 +12,9 @@ import { MENU, SITE } from "../config";
       <nav class="flex gap-4">
         {
           MENU.map((item) => (
-            <a href={item.href} class="link link-hover">
+            <Link href={item.href} class="link link-hover">
               {item.label}
-            </a>
+            </Link>
           ))
         }
       </nav>

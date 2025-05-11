@@ -1,10 +1,10 @@
 ---
 import PageLayout from "../../layouts/PageLayout.astro";
 import Section from "../../components/Section.astro";
-import Container from "../../components/Container.astro";
 import MemberSummary from "../../components/MemberSummary.astro";
 import { members, POSSIBLE_ROLES, ROLE_CONFIGS, type Role } from "../../data";
 import { Icon } from "astro-icon/components";
+import Link from "../../components/Link.astro";
 
 export function getStaticPaths() {
   return [...POSSIBLE_ROLES, undefined].map((role) => ({
@@ -27,21 +27,24 @@ const filteredMembers = members.filter((member) => {
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div class="w-full md:w-auto">
         <div class="join hidden md:flex">
-          <a href="/community" class={`btn join-item ${filter === undefined ? "btn-primary" : ""}`}>
+          <Link
+            href="/community"
+            class={`btn join-item ${filter === undefined ? "btn-primary" : ""}`}
+          >
             <Icon name="lucide:users" size={20} class="mr-2" />
             Everyone
-          </a>
+          </Link>
           {
             POSSIBLE_ROLES.map((role) => {
               const config = ROLE_CONFIGS[role];
               return (
-                <a
+                <Link
                   href={`/community/${role}`}
                   class={`btn join-item ${filter === role ? "btn-primary" : ""}`}
                 >
                   <Icon name={config.icon} size={20} class="mr-2" />
                   {config.plural}
-                </a>
+                </Link>
               );
             })
           }
@@ -56,20 +59,20 @@ const filteredMembers = members.filter((member) => {
             class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-full"
           >
             <li>
-              <a href="/community" class={filter === undefined ? "active" : ""}>
+              <Link href="/community" class={filter === undefined ? "active" : ""}>
                 <Icon name="lucide:users" size={20} class="mr-2" />
                 Everyone
-              </a>
+              </Link>
             </li>
             {
               POSSIBLE_ROLES.map((role) => {
                 const config = ROLE_CONFIGS[role];
                 return (
                   <li>
-                    <a href={`/community/${role}`} class={filter === role ? "active" : ""}>
+                    <Link href={`/community/${role}`} class={filter === role ? "active" : ""}>
                       <Icon name={config.icon} size={20} class="mr-2" />
                       {config.plural}
-                    </a>
+                    </Link>
                   </li>
                 );
               })

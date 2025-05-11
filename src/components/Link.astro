@@ -1,0 +1,13 @@
+---
+// Link.astro: A drop-in replacement for <a> that prepends Astro.base to internal links
+const { href = "", ...props } = Astro.props;
+const isExternal =
+  href.startsWith("http://") ||
+  href.startsWith("https://") ||
+  href.startsWith("mailto:") ||
+  href.startsWith("tel:");
+const base = import.meta.env.BASE_URL;
+const finalHref = isExternal ? href : `${base}${href.replace(/^\//, "")}`;
+---
+
+<a href={finalHref} {...props}><slot /></a>

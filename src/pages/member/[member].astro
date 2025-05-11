@@ -5,6 +5,7 @@ import MemberDetails from "../../components/MemberDetails.astro";
 import { Icon } from "astro-icon/components";
 import { members, type Member } from "../../data";
 import EventFeatured from "../../components/EventFeatured.astro";
+import Link from "../../components/Link.astro";
 
 export function getStaticPaths() {
   return members.map((member) => ({
@@ -26,20 +27,20 @@ const nextMember = currentIndex < members.length - 1 ? members[currentIndex + 1]
       <div class="flex gap-4">
         {
           prevMember && (
-            <a href={`/member/${prevMember.id}`} class="btn btn-soft gap-2">
+            <Link href={`/member/${prevMember.id}`} class="btn btn-soft gap-2">
               <Icon name="lucide:chevron-left" size={20} />
               Next Member
-            </a>
+            </Link>
           )
         }
       </div>
       <div class="flex gap-4">
         {
           nextMember && (
-            <a href={`/member/${nextMember.id}`} class="btn btn-soft gap-2">
+            <Link href={`/member/${nextMember.id}`} class="btn btn-soft gap-2">
               Previous Member
               <Icon name="lucide:chevron-right" size={20} />
-            </a>
+            </Link>
           )
         }
       </div>
