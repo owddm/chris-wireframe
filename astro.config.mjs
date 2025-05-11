@@ -7,7 +7,8 @@ import icon from "astro-icon";
 // https://astro.build/config
 export default defineConfig({
   site: "https://owddm.com/chris-wireframe/",
-  base: "/chris-wireframe/",
+  base: "chris-wireframe",
+  trailingSlash: "never",
   vite: {
     plugins: [tailwindcss()],
   },
