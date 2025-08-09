@@ -21,6 +21,7 @@ const siteUrl = process.env.SITE_URL || localSite;
 const isProd = process.env.NODE_ENV === "production";
 const isDev = process.env.NODE_ENV === "development";
 
+// refactor this. my head hurts.
 const getSiteConfig = () => {
   if (isVercel) {
     return {
@@ -30,8 +31,6 @@ const getSiteConfig = () => {
 
   if (isProd && siteUrl === localSite) {
     console.warn(`SITE_URL is not set, using ${localSite}.`);
-  } else {
-    console.log(`URL: ${site}${base}`);
   }
 
   return {
@@ -41,6 +40,7 @@ const getSiteConfig = () => {
 
 const { site } = getSiteConfig();
 
+console.log(`URL: ${site}${base}`);
 
 // https://astro.build/config
 export default defineConfig({
