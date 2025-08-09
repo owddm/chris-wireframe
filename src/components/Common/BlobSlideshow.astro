@@ -1,0 +1,67 @@
+---
+import BlobSlideshowReact from "./BlobSlideshow";
+import type { ImageMetadata } from "astro";
+import { generateResponsiveImage } from "@/utils/responsiveImage";
+
+interface ImageConfig {
+  path: string;
+}
+
+interface Props {
+  images: (string | ImageConfig)[];
+  transitionSpeed?: number;
+  slideDelay?: number;
+  blobs?: string[];
+  className?: string;
+  blobOffset?: number;
+  startTimeOffset?: number;
+}
+
+const {
+  images: imageConfigs,
+  transitionSpeed,
+  slideDelay,
+  blobs,
+  className,
+  blobOffset,
+  startTimeOffset,
+} = Astro.props;
+
+// Import all images from content directory
+const imageModules = import.meta.glob<{ default: ImageMetadata }>(
+  "/content/events/*/gallery/*.webp",
+);
+
+// Process the requested images
+const images = await Promise.all(
+  imageConfigs.map(async (config) => {
+    const isString = typeof config === "string";
+    const path = isString ? config : config.path;
+
+    const resolver = imageModules[path];
+    if (!resolver) {
+      console.warn(`Image not found: ${path}`);
+      return null;
+    }
+    const module = await resolver();
+
+    // Generate responsive images for the slideshow
+    const responsive = await generateResponsiveImage(module.default, "blobSlideshow");
+    return responsive;
+  }),
+);
+
+// Filter out any null values
+const validImages = images.filter((img): img is NonNullable<typeof img> => img !== null);
+---
+
+<BlobSlideshowReact
+  images={validImages}
+  transitionSpeed={transitionSpeed}
+  slideDelay={slideDelay}
+  blobs={blobs}
+  containerClassName={className}
+  blobOffset={blobOffset}
+  startTimeOffset={startTimeOffset}
+  client:visible
+/>

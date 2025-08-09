@@ -1,0 +1,75 @@
+import { useEffect, useState } from "react";
+
+import clsx from "clsx";
+
+import Brand from "@/components/Common/Brand";
+import Container from "@/components/Common/Container";
+import LinkReact from "@/components/Common/LinkReact";
+import { MENU } from "@/constants";
+
+function GlassCell({
+  children,
+  showBackground,
+  testId,
+  className,
+}: {
+  children: React.ReactNode;
+  showBackground: boolean;
+  testId?: string;
+  className?: string;
+}) {
+  return (
+    <div className={clsx("soft-glass", !showBackground && "no-bg", className)} data-testid={testId}>
+      {children}
+    </div>
+  );
+}
+
+export default function TopBar() {
+  const items = MENU.filter((item) => item.header === true);
+  const [showBackground, setShowBackground] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setShowBackground(scrollY > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Set initial state
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <div data-testid="top-bar" className="fixed top-0 z-50 w-full">
+      <Container>
+        <div className="-mx-2 flex items-start justify-between pt-2 sm:-mx-5 sm:pt-4">
+          <GlassCell showBackground={showBackground} testId="navbar-logo">
+            <LinkReact href="/" className="group btn btn-glass sm:btn-lg rounded-full">
+              <Brand />
+            </LinkReact>
+          </GlassCell>
+          <GlassCell showBackground={showBackground} testId="navbar-menu">
+            <div className="flex items-center">
+              {items.map((item, i) => (
+                <LinkReact
+                  key={item.label}
+                  href={item.href}
+                  className={clsx(
+                    "btn btn-glass btn-md sm:btn-lg rounded-full font-bold",
+                    // "-mr-1 -ml-1",
+                    i > 0 && "-ml-2",
+                    // i === items.length - 1 && "-mr-0",
+                  )}
+                >
+                  {item.label}
+                </LinkReact>
+              ))}
+            </div>
+          </GlassCell>
+        </div>
+      </Container>
+    </div>
+  );
+}

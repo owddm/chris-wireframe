@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@import "./fonts.css";
+@import "./utils.css";
+@import "./themes.css";
+
+@source "../**/*.{astro,html,js,jsx,ts,tsx}";
+@source not "../../test/**";
+
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --breakpoint-2xl: 1536px;
+}
+
+/* Text selection highlight using DaisyUI primary color */
+::selection {
+  background-color: color-mix(in srgb, var(--color-primary) 70%, transparent);
+  color: var(--color-primary-content);
+}
+
+::-moz-selection {
+  background-color: color-mix(in srgb, var(--color-primary) 70%, transparent);
+  color: var(--color-primary-content);
+}
+
+code {
+  @apply bg-base-100/50 rounded-field px-2;
+}

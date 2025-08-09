@@ -1,0 +1,34 @@
+---
+import SimpleSection from "@/components/Common/SimpleSection";
+import EventsUpcoming from "@/components/Events/EventsUpcoming";
+import EventsRecent from "@/components/Events/EventsRecent";
+import PageLayout from "@/layouts/PageLayout.astro";
+import LandingHero from "@/components/Landing/LandingHero.astro";
+import LandingAbout from "@/components/Landing/LandingAbout.astro";
+import GetInvolved from "@/components/Landing/GetInvolved";
+import { getEvents } from "@/content";
+import Container from "@/components/Common/Container";
+import Cut from "@/components/Common/Cut";
+
+const events = await getEvents();
+---
+
+<PageLayout flush className="flex flex-col gap-32 pb-24">
+  <LandingHero />
+
+  <SimpleSection title="Upcoming Events">
+    <EventsUpcoming client:visible events={events} />
+  </SimpleSection>
+
+  <Cut>
+    <LandingAbout />
+  </Cut>
+
+  <SimpleSection title="Recent Events" wide button={{ text: "All Events", href: "/events" }}>
+    <EventsRecent events={events} />
+  </SimpleSection>
+
+  <Container>
+    <GetInvolved client:visible />
+  </Container>
+</PageLayout>

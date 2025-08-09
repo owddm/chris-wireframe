@@ -1,0 +1,79 @@
+---
+import "@/styles/global.css";
+import { SITE } from "@/constants";
+import { resolveInternalHref } from "@/utils/urlResolver";
+import SEO from "./SEO.astro";
+import { ClientRouter } from "astro:transitions";
+
+import "@fontsource/noto-sans/400.css";
+import "@fontsource/noto-sans/700.css";
+import "@fontsource/lexend/700.css";
+import "@fontsource/space-mono/400.css";
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+  type?: "website" | "article" | "profile";
+  article?: {
+    author?: string;
+    publishedTime?: string;
+    modifiedTime?: string;
+    tags?: string[];
+  };
+  noindex?: boolean;
+  nofollow?: boolean;
+}
+
+const { title, ...seoProps } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <SEO title={title} {...seoProps} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${SITE.name} - Events RSS Feed`}
+      href={resolveInternalHref(`/rss.xml`)}
+    />
+    <link
+      rel="alternate"
+      type="text/calendar"
+      title={`${SITE.name} - Events Calendar Feed`}
+      href={resolveInternalHref(`/oktech-events.ics`)}
+    />
+    <script is:inline>
+      // Apply theme from localStorage or system preference
+      function applyTheme(targetDocument) {
+        const storedTheme = localStorage.getItem("theme");
+        if (storedTheme === "light" || storedTheme === "dark") {
+          targetDocument.documentElement.setAttribute("data-theme", storedTheme);
+        } else {
+          // Check system preference
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const defaultTheme = prefersDark ? "dark" : "light";
+          targetDocument.documentElement.setAttribute("data-theme", defaultTheme);
+          localStorage.setItem("theme", defaultTheme);
+        }
+      }
+
+      // Apply theme immediately to current document
+      applyTheme(document);
+
+      // Handle theme persistence during view transitions
+      document.addEventListener("astro:before-swap", (event) => {
+        // Apply theme to the incoming document
+        applyTheme(event.newDocument);
+      });
+    </script>
+  </head>
+  <body class="bg-base-100 max-w-full overflow-x-hidden">
+    <ClientRouter />
+    <slot />
+  </body>
+</html>

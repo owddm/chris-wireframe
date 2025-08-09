@@ -1,0 +1,16 @@
+---
+import SiteMapTree from "@/components/Common/SiteMapTree";
+import SitemapSwitcher from "@/components/Sitemap/SitemapSwitcher";
+import Link from "@/components/Common/LinkAstro.astro";
+import ArticleLayout from "@/layouts/ArticleLayout.astro";
+---
+
+<ArticleLayout title="Sitemap">
+  <SitemapSwitcher slot="header" currentView="list" client:visible />
+  <div>
+    This page lists every accessible route on the website for easy navigation. You can also download
+    the
+    <Link href="/sitemap.xml">machine-readable XML sitemap</Link>.
+    <SiteMapTree />
+  </div>
+</ArticleLayout>

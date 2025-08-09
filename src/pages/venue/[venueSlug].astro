@@ -1,0 +1,90 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import { EventCardList } from "@/components/EventCard/EventCard";
+import SidebarPageLayout from "@/layouts/SidebarPageLayout.astro";
+import { getVenue, getEvents } from "@/content";
+import SimpleSection from "@/components/Common/SimpleSection";
+import LocationCardVenue from "@/components/LocationCard/LocationCardVenue";
+
+export async function getStaticPaths() {
+  const venues = await getCollection("venues");
+
+  // Only create pages for venues with hasPage: true
+  const venuePaths = venues
+    .filter((venue) => venue.data.hasPage)
+    .map((venue) => ({
+      params: { venueSlug: venue.id },
+    }));
+
+  return venuePaths;
+}
+
+const { venueSlug } = Astro.params;
+const venue = await getVenue(venueSlug);
+const allEvents = await getEvents();
+const venueEvents = allEvents.filter(
+  (event) => event.data.venue?.id === venue.data.meetupId.toString(),
+);
+
+// Get markdown content
+let Content: any = null;
+try {
+  const markdownFile = await getEntry("venuesMarkdown", venueSlug);
+  if (markdownFile) {
+    const rendered = await render(markdownFile);
+    Content = rendered.Content;
+  }
+} catch (e) {
+  // No markdown file found, which is fine
+}
+
+// Create description
+const description =
+  venue.data.description ||
+  `${venue.data.title} - Event venue in ${venue.data.city || "Osaka"}. ${venueEvents.length} events hosted.`;
+---
+
+<SidebarPageLayout title={`${venue.data.title} - Venues`} description={description} type="article">
+  <Fragment slot="sidebar">
+    <LocationCardVenue venue={venue} client:visible />
+  </Fragment>
+
+  <Fragment slot="main-content">
+    {
+      venue.data.cover && (
+        <figure class="glass-border rounded-box aspect-video overflow-hidden bg-white">
+          <img
+            src={venue.data.cover.src}
+            alt={`${venue.data.title} cover`}
+            class="h-full w-full object-contain p-8"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </figure>
+      )
+    }
+    <div class="flex flex-col gap-6 lg:hidden">
+      <LocationCardVenue venue={venue} horizontal client:visible />
+    </div>
+    <h1 class="mt-10 text-4xl font-bold" data-testid="venue-title-page">
+      {venue.data.title}
+    </h1>
+    {
+      Content && (
+        <div class="prose prose-lg max-w-none">
+          <Content />
+        </div>
+      )
+    }
+  </Fragment>
+
+  <Fragment slot="after-content">
+    {
+      venueEvents.length > 0 && (
+        <SimpleSection title={`Events Hosted Here`}>
+          <EventCardList events={venueEvents} />
+        </SimpleSection>
+      )
+    }
+  </Fragment>
+</SidebarPageLayout>

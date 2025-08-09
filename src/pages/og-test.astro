@@ -1,0 +1,142 @@
+---
+import Layout from "@/layouts/PageLayout.astro";
+import { getEvents, getVenues } from "@/content";
+
+// Get one event and one venue for testing
+const events = await getEvents();
+const venues = await getVenues();
+
+const sampleEvent = events[0];
+const sampleVenue = venues[0];
+
+// Add cache-busting parameter for dev mode
+const isDev = import.meta.env.DEV;
+const cacheBuster = isDev ? `?v=${Date.now()}` : "";
+---
+
+<Layout title="OG Image Test" description="Test page for OG images">
+  <div class="container mx-auto p-8">
+    <h1 class="mb-8 text-4xl font-bold">OG Image Test Page</h1>
+
+    <div class="space-y-12">
+      <!-- Default OG Image -->
+      <section>
+        <h2 class="mb-4 text-2xl font-semibold">Default OG Image</h2>
+        <div class="bg-base-200 rounded-lg p-4">
+          <p class="mb-2 text-sm opacity-70">Used for: Homepage and general pages</p>
+          <img
+            src={`/og.png${cacheBuster}`}
+            alt="Default OG Image"
+            class="border-base-300 rounded border"
+            width="1200"
+            height="630"
+          />
+        </div>
+      </section>
+
+      <!-- Event OG Image -->
+      {
+        sampleEvent && (
+          <section>
+            <h2 class="mb-4 text-2xl font-semibold">Event OG Image</h2>
+            <div class="bg-base-200 rounded-lg p-4">
+              <p class="mb-2 text-sm opacity-70">Example: {sampleEvent.data.title}</p>
+              <img
+                src={`/event/${sampleEvent.id}/og.png${cacheBuster}`}
+                alt={`OG Image for ${sampleEvent.data.title}`}
+                class="border-base-300 rounded border"
+                width="1200"
+                height="630"
+              />
+            </div>
+          </section>
+        )
+      }
+
+      <!-- Venue OG Image -->
+      {
+        sampleVenue && (
+          <section>
+            <h2 class="mb-4 text-2xl font-semibold">Venue OG Image</h2>
+            <div class="bg-base-200 rounded-lg p-4">
+              <p class="mb-2 text-sm opacity-70">Example: {sampleVenue.data.title}</p>
+              <img
+                src={`/venue/${sampleVenue.id}/og.png${cacheBuster}`}
+                alt={`OG Image for ${sampleVenue.data.title}`}
+                class="border-base-300 rounded border"
+                width="1200"
+                height="630"
+              />
+            </div>
+          </section>
+        )
+      }
+
+      <!-- About Page OG Image -->
+      <section>
+        <h2 class="mb-4 text-2xl font-semibold">About Page OG Image</h2>
+        <div class="bg-base-200 rounded-lg p-4">
+          <p class="mb-2 text-sm opacity-70">Used for: /about page (uses default OG image)</p>
+          <img
+            src={`/og.png${cacheBuster}`}
+            alt="About Page OG Image"
+            class="border-base-300 rounded border"
+            width="1200"
+            height="630"
+          />
+        </div>
+      </section>
+
+      <!-- Additional test cases -->
+      <section>
+        <h2 class="mb-4 text-2xl font-semibold">Quick Links to Other Examples</h2>
+        <div class="flex flex-wrap gap-4">
+          {
+            events.slice(1, 4).map((event) => (
+              <a
+                href={`/event/${event.id}/og.png${cacheBuster}`}
+                target="_blank"
+                class="btn btn-sm btn-outline"
+              >
+                Event: {event.data.title.slice(0, 30)}...
+              </a>
+            ))
+          }
+          {
+            venues.slice(1, 4).map((venue) => (
+              <a
+                href={`/venue/${venue.id}/og.png${cacheBuster}`}
+                target="_blank"
+                class="btn btn-sm btn-outline"
+              >
+                Venue: {venue.data.title}
+              </a>
+            ))
+          }
+        </div>
+      </section>
+
+      <!-- Cache info -->
+      {
+        isDev && (
+          <div class="alert alert-info">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              class="h-6 w-6 shrink-0 stroke-current"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>Development mode: Cache-busting enabled.</span>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</Layout>

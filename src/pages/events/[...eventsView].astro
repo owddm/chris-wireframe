@@ -1,0 +1,32 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import EventsOrganizer from "@/components/Events/EventsOrganizer";
+import { getEvents } from "@/content";
+
+const { eventsView } = Astro.params;
+// Map "list" URL to "compact" view internally
+const viewParam = eventsView === "list" ? "compact" : eventsView;
+const view = (viewParam || "grid") as "grid" | "compact" | "album";
+
+// Validate view
+const validViews = ["grid", "compact", "album"];
+if (!validViews.includes(view)) {
+  return Astro.redirect("/events");
+}
+
+const events = await getEvents();
+
+export async function getStaticPaths() {
+  return [
+    { params: { eventsView: undefined } },
+    { params: { eventsView: "list" } },
+    { params: { eventsView: "album" } },
+  ];
+}
+---
+
+<PageLayout title="Events">
+  <div class="py-10">
+    <EventsOrganizer events={events} view={view} client:load />
+  </div>
+</PageLayout>
