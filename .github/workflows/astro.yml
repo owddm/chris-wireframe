@@ -62,6 +62,16 @@ jobs:
           node-version: "22"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
           cache-dependency-path: ${{ env.BUILD_PATH }}/${{ steps.detect-package-manager.outputs.lockfile }}
+      - name: Cache Astro build and images
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ env.BUILD_PATH }}/.astro
+            ${{ env.BUILD_PATH }}/node_modules/.astro
+            ${{ env.BUILD_PATH }}/dist/_astro
+          key: ${{ runner.os }}-astro-build-${{ hashFiles('**/package-lock.json', '**/content/**/*', '**/src/**/*') }}
+          restore-keys: |
+            ${{ runner.os }}-astro-build-
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
