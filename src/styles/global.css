@@ -27,3 +27,7 @@
 code {
   @apply bg-base-100/50 rounded-field px-2;
 }
+
+body {
+  @apply w-[100vw] overflow-x-hidden;
+}
