@@ -53,7 +53,7 @@ export class OGImageCache {
 
   constructor() {
     // Use the same cache directory as Astro for consistency
-    this.cacheDir = path.join(process.cwd(), ".cache", "og-images");
+    this.cacheDir = path.join(process.cwd(), "node_modules", ".astro", "assets", "og-images");
   }
 
   /**

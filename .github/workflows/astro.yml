@@ -66,23 +66,19 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            ${{ env.BUILD_PATH }}/.cache
-          key: ${{ runner.os }}-astro-cache-v1-${{ hashFiles('**/package-lock.json') }}
+            ${{ env.BUILD_PATH }}/node_modules/.astro
+            ${{ env.BUILD_PATH }}/.astro
+          key: ${{ runner.os }}-astro-cache-v2-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-astro-cache-v1-
-      - name: Cache generated assets (maps and images)
+            ${{ runner.os }}-astro-cache-v2-
+      - name: Cache import script output (content directory)
         uses: actions/cache@v4
         with:
           path: |
-            ${{ env.BUILD_PATH }}/content/**/*.png
-            ${{ env.BUILD_PATH }}/content/**/*.jpg
-            ${{ env.BUILD_PATH }}/content/**/*.jpeg
-            ${{ env.BUILD_PATH }}/content/**/*.webp
-            ${{ env.BUILD_PATH }}/content/**/map.jpg
-            ${{ env.BUILD_PATH }}/content/**/map-dark.jpg
-          key: ${{ runner.os }}-generated-assets-${{ hashFiles('**/scripts/import-data/**/*') }}
+            ${{ env.BUILD_PATH }}/content
+          key: ${{ runner.os }}-import-content-v1-${{ hashFiles('**/scripts/import-data/**/*', '**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-generated-assets-
+            ${{ runner.os }}-import-content-v1-
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5

@@ -18,7 +18,6 @@ const base = process.env.BASE_PATH || "";
 
 const localSite = `http://localhost:${port}`;
 const siteUrl = process.env.SITE_URL || localSite;
-const isProd = process.env.NODE_ENV === "production";
 const isDev = process.env.NODE_ENV === "development";
 
 // refactor this. my head hurts.
@@ -27,10 +26,6 @@ const getSiteConfig = () => {
     return {
       site: `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`,
     };
-  }
-
-  if (isProd && siteUrl === localSite) {
-    console.warn(`SITE_URL is not set, using ${localSite}.`);
   }
 
   return {
@@ -46,7 +41,6 @@ console.log(`URL: ${site}${base}`);
 export default defineConfig({
   site,
   base,
-  cacheDir: "./.cache/astro",
   trailingSlash: "never",
   devToolbar: {
     enabled: false,
