@@ -28,7 +28,6 @@ code {
   @apply bg-base-100/50 rounded-field px-2;
 }
 
-html,
-body {
-  @apply w-full overflow-x-hidden;
+html {
+ @apply overflow-x-hidddem;
 }
