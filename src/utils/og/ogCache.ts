@@ -52,8 +52,8 @@ export class OGImageCache {
   private cacheDir: string;
 
   constructor() {
-    // Hijack astro's cache directory to save the cache so it's used by vercel etc.
-    this.cacheDir = path.join(process.cwd(), "node_modules", ".astro", "assets", "og-images");
+    // Use the same cache directory as Astro for consistency
+    this.cacheDir = path.join(process.cwd(), ".cache", "og-images");
   }
 
   /**

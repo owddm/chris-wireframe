@@ -30,6 +30,8 @@ const getSiteConfig = () => {
 
   if (isProd && siteUrl === localSite) {
     console.warn(`SITE_URL is not set, using ${localSite}.`);
+  } else {
+    console.log(`URL: ${site}${base}`);
   }
 
   return {
@@ -39,12 +41,12 @@ const getSiteConfig = () => {
 
 const { site } = getSiteConfig();
 
-console.log(`URL: ${site}${base}`);
 
 // https://astro.build/config
 export default defineConfig({
   site,
   base,
+  cacheDir: "./.cache/astro",
   trailingSlash: "never",
   devToolbar: {
     enabled: false,

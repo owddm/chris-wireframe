@@ -62,17 +62,27 @@ jobs:
           node-version: "22"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
           cache-dependency-path: ${{ env.BUILD_PATH }}/${{ steps.detect-package-manager.outputs.lockfile }}
-      - name: Cache Astro build and images
+      - name: Cache Astro build artifacts
         uses: actions/cache@v4
         with:
           path: |
-            ${{ env.BUILD_PATH }}/.astro
-            ${{ env.BUILD_PATH }}/node_modules/.astro
-            ${{ env.BUILD_PATH }}/dist/_astro
-            ${{ env.BUILD_PATH }}/content
-          key: ${{ runner.os }}-astro-build-${{ hashFiles('**/package-lock.json', '**/content/**/*', '**/src/**/*') }}
+            ${{ env.BUILD_PATH }}/.cache
+          key: ${{ runner.os }}-astro-cache-v1-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-astro-build-
+            ${{ runner.os }}-astro-cache-v1-
+      - name: Cache generated assets (maps and images)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ env.BUILD_PATH }}/content/**/*.png
+            ${{ env.BUILD_PATH }}/content/**/*.jpg
+            ${{ env.BUILD_PATH }}/content/**/*.jpeg
+            ${{ env.BUILD_PATH }}/content/**/*.webp
+            ${{ env.BUILD_PATH }}/content/**/map.jpg
+            ${{ env.BUILD_PATH }}/content/**/map-dark.jpg
+          key: ${{ runner.os }}-generated-assets-${{ hashFiles('**/scripts/import-data/**/*') }}
+          restore-keys: |
+            ${{ runner.os }}-generated-assets-
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
