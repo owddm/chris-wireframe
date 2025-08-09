@@ -69,16 +69,10 @@ jobs:
             ${{ env.BUILD_PATH }}/.astro
             ${{ env.BUILD_PATH }}/node_modules/.astro
             ${{ env.BUILD_PATH }}/dist/_astro
+            ${{ env.BUILD_PATH }}/content
           key: ${{ runner.os }}-astro-build-${{ hashFiles('**/package-lock.json', '**/content/**/*', '**/src/**/*') }}
           restore-keys: |
             ${{ runner.os }}-astro-build-
-      - name: Cache imported content
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.BUILD_PATH }}/content
-          key: ${{ runner.os }}-content-${{ hashFiles('**/scripts/import-data/**/*') }}
-          restore-keys: |
-            ${{ runner.os }}-content-
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
