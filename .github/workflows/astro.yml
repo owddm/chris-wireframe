@@ -1,25 +1,15 @@
-# Sample workflow for building and deploying an Astro site to GitHub Pages
-#
-# To get started with Astro see: https://docs.astro.build/en/getting-started/
-#
 name: Deploy Astro site to Pages
 
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -37,84 +27,121 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Detect package manager
         id: detect-package-manager
         run: |
-          if [ -f "${{ github.workspace }}/yarn.lock" ]; then
+          if [ -f "${{ github.workspace }}/${{ env.BUILD_PATH }}/yarn.lock" ]; then
             echo "manager=yarn" >> $GITHUB_OUTPUT
             echo "command=install" >> $GITHUB_OUTPUT
             echo "runner=yarn" >> $GITHUB_OUTPUT
             echo "lockfile=yarn.lock" >> $GITHUB_OUTPUT
-            exit 0
-          elif [ -f "${{ github.workspace }}/package.json" ]; then
+          elif [ -f "${{ github.workspace }}/${{ env.BUILD_PATH }}/package-lock.json" ]; then
             echo "manager=npm" >> $GITHUB_OUTPUT
             echo "command=ci" >> $GITHUB_OUTPUT
             echo "runner=npx --no-install" >> $GITHUB_OUTPUT
             echo "lockfile=package-lock.json" >> $GITHUB_OUTPUT
-            exit 0
           else
-            echo "Unable to determine package manager"
+            echo "Unable to determine package manager" >&2
             exit 1
           fi
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
           cache-dependency-path: ${{ env.BUILD_PATH }}/${{ steps.detect-package-manager.outputs.lockfile }}
-      - name: Cache Astro build artifacts
-        uses: actions/cache@v4
+
+      # ===== Astro image/asset cache (default: node_modules/.astro) =====
+      - name: Restore Astro cache
+        id: astro-cache
+        uses: actions/cache/restore@v4
         with:
-          path: |
-            ${{ env.BUILD_PATH }}/node_modules/.astro
-            ${{ env.BUILD_PATH }}/.astro
-          key: ${{ runner.os }}-astro-cache-v2-${{ hashFiles('**/package-lock.json') }}
+          path: ${{ env.BUILD_PATH }}/node_modules/.astro
+          key: ${{ runner.os }}-astro-cache-${{ hashFiles(
+            '**/astro.config.*',
+            '**/package-lock.json','**/pnpm-lock.yaml','**/yarn.lock',
+            'public/**/*.{png,jpg,jpeg,webp,avif,gif,svg}',
+            'src/assets/**/*.{png,jpg,jpeg,webp,avif,gif,svg}',
+            'content/**/*.{png,jpg,jpeg,webp,avif,gif,svg}'
+          ) }}
           restore-keys: |
-            ${{ runner.os }}-astro-cache-v2-
-      - name: Cache import script output (content directory)
-        uses: actions/cache@v4
+            ${{ runner.os }}-astro-cache-
+
+      # ===== /content cache keyed by content/meta.json (source commit) =====
+      - name: Restore content cache
+        id: content-cache
+        uses: actions/cache/restore@v4
         with:
-          path: |
-            ${{ env.BUILD_PATH }}/content
-          key: ${{ runner.os }}-import-content-v1-${{ hashFiles('**/scripts/import-data/**/*', '**/package-lock.json') }}
+          path: ${{ env.BUILD_PATH }}/content
+          key: ${{ runner.os }}-content-${{ hashFiles('content/meta.json') }}-primary
           restore-keys: |
-            ${{ runner.os }}-import-content-v1-
+            ${{ runner.os }}-content-${{ hashFiles('content/meta.json') }}-
+            ${{ runner.os }}-content-
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
+
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
         working-directory: ${{ env.BUILD_PATH }}
+
+      # Always run; import should reuse restored files and fetch only updates
       - name: Fetch data
         run: npm run import
         working-directory: ${{ env.BUILD_PATH }}
         env:
           STADIA_MAPS_API_KEY: ${{ secrets.STADIA_MAPS_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Save refreshed /content with a unique key to avoid collisions
+      - name: Save content cache
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.BUILD_PATH }}/content
+          key: ${{ runner.os }}-content-${{ hashFiles('content/meta.json') }}-${{ github.run_id }}
+
       - name: Print env
         run: |
           echo "vars.SITE_URL='${{ vars.SITE_URL }}'"
           echo "env SITE_URL='$SITE_URL'"
           echo "env BASE_PATH='$BASE_PATH'"
+
       - name: Build with Astro
-        run: |
-          ${{ steps.detect-package-manager.outputs.runner }} astro build \
+        run: ${{ steps.detect-package-manager.outputs.runner }} astro build
         working-directory: ${{ env.BUILD_PATH }}
         env:
           SITE_URL: ${{ vars.SITE_URL }}
           BASE_PATH: ${{ vars.BASE_PATH }}
+
+      # Save Astro cache only if we missed on restore
+      - name: Save Astro cache (on miss)
+        if: steps.astro-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.BUILD_PATH }}/node_modules/.astro
+          key: ${{ runner.os }}-astro-cache-${{ hashFiles(
+            '**/astro.config.*',
+            '**/package-lock.json','**/pnpm-lock.yaml','**/yarn.lock',
+            'public/**/*.{png,jpg,jpeg,webp,avif,gif,svg}',
+            'src/assets/**/*.{png,jpg,jpeg,webp,avif,gif,svg}',
+            'content/**/*.{png,jpg,jpeg,webp,avif,gif,svg}'
+          ) }}
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ env.BUILD_PATH }}/dist
 
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     needs: build
     runs-on: ubuntu-latest
     name: Deploy
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
