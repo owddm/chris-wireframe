@@ -156,7 +156,6 @@ export async function processVenue(
       overwriteMapsTheme === "dark";
 
     if (lightMapExists && darkMapExists && !overwriteMaps) {
-      logger.debug(`Maps already exist for venue ${venue.id} (${venue.name})`);
       stats.mapsUnchanged += 2;
     } else {
       // Generate light mode map if needed
