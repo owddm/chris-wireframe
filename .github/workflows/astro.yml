@@ -59,15 +59,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.BUILD_PATH }}/node_modules/.astro
-          key: ${{ runner.os }}-astro-cache-${{ hashFiles(
-            '**/astro.config.*',
-            '**/package-lock.json','**/pnpm-lock.yaml','**/yarn.lock',
-            'public/**/*.{png,jpg,jpeg,webp,avif,gif,svg}',
-            'src/assets/**/*.{png,jpg,jpeg,webp,avif,gif,svg}',
-            'content/**/*.{png,jpg,jpeg,webp,avif,gif,svg}'
-          ) }}
+          key: ${{ runner.os }}-astro-cache-v3-${{ hashFiles('**/astro.config.*','**/package-lock.json','**/pnpm-lock.yaml','**/yarn.lock','public/**/*.{png,jpg,jpeg,webp,avif,gif,svg}','src/assets/**/*.{png,jpg,jpeg,webp,avif,gif,svg}','content/**/*.{png,jpg,jpeg,webp,avif,gif,svg}') }}
           restore-keys: |
-            ${{ runner.os }}-astro-cache-
+            ${{ runner.os }}-astro-cache-v3-
 
       # ===== /content cache keyed by content/meta.json (source commit) =====
       - name: Restore content cache
@@ -75,10 +69,10 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.BUILD_PATH }}/content
-          key: ${{ runner.os }}-content-${{ hashFiles('content/meta.json') }}-primary
+          key: ${{ runner.os }}-content-v5-${{ hashFiles('content/meta.json') }}-primary
           restore-keys: |
-            ${{ runner.os }}-content-${{ hashFiles('content/meta.json') }}-
-            ${{ runner.os }}-content-
+            ${{ runner.os }}-content-v5-${{ hashFiles('content/meta.json') }}-
+            ${{ runner.os }}-content-v5-
 
       - name: Setup Pages
         id: pages
@@ -101,7 +95,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: ${{ env.BUILD_PATH }}/content
-          key: ${{ runner.os }}-content-${{ hashFiles('content/meta.json') }}-${{ github.run_id }}
+          key: ${{ runner.os }}-content-v5-${{ hashFiles('content/meta.json') }}-${{ github.run_id }}
 
       - name: Print env
         run: |
@@ -122,13 +116,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: ${{ env.BUILD_PATH }}/node_modules/.astro
-          key: ${{ runner.os }}-astro-cache-${{ hashFiles(
-            '**/astro.config.*',
-            '**/package-lock.json','**/pnpm-lock.yaml','**/yarn.lock',
-            'public/**/*.{png,jpg,jpeg,webp,avif,gif,svg}',
-            'src/assets/**/*.{png,jpg,jpeg,webp,avif,gif,svg}',
-            'content/**/*.{png,jpg,jpeg,webp,avif,gif,svg}'
-          ) }}
+          key: ${{ runner.os }}-astro-cache-v3-${{ hashFiles('**/astro.config.*','**/package-lock.json','**/pnpm-lock.yaml','**/yarn.lock','public/**/*.{png,jpg,jpeg,webp,avif,gif,svg}','src/assets/**/*.{png,jpg,jpeg,webp,avif,gif,svg}','content/**/*.{png,jpg,jpeg,webp,avif,gif,svg}') }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
