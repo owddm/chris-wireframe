@@ -1,10 +1,12 @@
 import { getEvents, getVenues } from "@/content";
 
+import { isLegacyEvent } from "./eventFilters";
 import { resolveFullUrl } from "./urlResolver";
 
 export interface PageEntry {
   href: string;
   title: string;
+  ogImage?: string; // Optional override for OG image
 }
 
 export interface Entry {
@@ -38,6 +40,8 @@ export async function buildSitemapSections(): Promise<Entry[]> {
     .map((e) => ({
       href: `/event/${e.id}`,
       title: e.data.title,
+      // For legacy events, use their cover image if available
+      ogImage: isLegacyEvent(e) && e.data.cover?.src ? e.data.cover.src : undefined,
     }))
     .sort((a, b) => a.title.localeCompare(b.title));
 

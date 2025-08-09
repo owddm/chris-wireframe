@@ -137,7 +137,7 @@ export const getEvents = memoize(async (): Promise<EventEnriched[]> => {
   const filteredEvents = DEV_MODE ? allEvents : allEvents.filter((event) => !event.data.devOnly);
 
   // Enrich each event with venue and gallery data using getEvent logic
-  const enrichedEvents = await Promise.all(filteredEvents.map((event) => getEvent(event.id)));
+  const enrichedEvents = await Promise.all(filteredEvents.map((event) => getEvent(event.id, true)));
 
   // Sort events by date (newest first) and add priority flag for first 16
   const sortedEvents = enrichedEvents.sort((a, b) => {
@@ -153,7 +153,7 @@ export const getEvents = memoize(async (): Promise<EventEnriched[]> => {
   }));
 });
 
-export const getEvent = memoize(async (eventSlug: string): Promise<EventEnriched> => {
+export const getEvent = memoize(async (eventSlug: string, multiple: boolean = false): Promise<EventEnriched> => {
 
   const event = await getEntry("events", eventSlug);
 
@@ -181,7 +181,7 @@ export const getEvent = memoize(async (eventSlug: string): Promise<EventEnriched
   // Generate responsive cover image
   const cover = await generateResponsiveImage(
     event.data.cover,
-    "eventPolaroid"
+    multiple ? "eventPolaroid" : "sidebarLayoutHero"
   );
 
   return {

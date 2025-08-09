@@ -4,10 +4,10 @@ import TopBar from "@/components/Common/TopBar";
 import Footer from "@/components/Common/Footer";
 import clsx from "clsx";
 
-const { flush, className, ...rest } = Astro.props;
+const { flush, className, og, ...rest } = Astro.props;
 ---
 
-<RootLayout {...rest}>
+<RootLayout {...rest} og={og}>
   <div class="flex min-h-screen flex-col">
     <header>
       <TopBar client:load />

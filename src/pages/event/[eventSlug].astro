@@ -7,6 +7,7 @@ import EntryMarkdown from "@/components/Common/EntryMarkdown.astro";
 import EventImageBig from "@/components/Event/EventImageBig";
 import LocationCardEvent from "@/components/LocationCard/LocationCardEvent";
 import EventTags from "@/components/Event/EventTags";
+import { isLegacyEvent } from "@/utils/eventFilters";
 
 export async function getStaticPaths() {
   const events = await getEvents();
@@ -28,7 +29,12 @@ const description = event.data.topics?.length
   : "Join us for this exciting tech meetup event!";
 ---
 
-<SidebarPageLayout title={`${event.data.title} - Events`} description={description} type="article">
+<SidebarPageLayout
+  title={`${event.data.title} - Events`}
+  description={description}
+  type="article"
+  og={isLegacyEvent(event) ? event.data.cover?.src : undefined}
+>
   <Fragment slot="sidebar">
     <LocationCardEvent event={event} client:load />
   </Fragment>

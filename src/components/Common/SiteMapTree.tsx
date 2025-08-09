@@ -56,7 +56,7 @@ function SitemapSection({
               {showOGImages && (
                 <div className="mb-2">
                   <img
-                    src={getOGImageWithFallback(child.href)}
+                    src={child.ogImage || getOGImageWithFallback(child.href)}
                     alt={`OG image for ${child.title}`}
                     className="rounded-box aspect-[1200/630] h-auto w-full object-cover shadow-md"
                     loading="lazy"

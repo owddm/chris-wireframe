@@ -51,3 +51,12 @@ export function filterRecentEvents(
 ): EventEnriched[] {
   return events.filter((event) => isEventRecent(event, currentTime));
 }
+
+/**
+ * Checks if an event is a legacy event (2025.10.10 or earlier)
+ */
+export function isLegacyEvent(event: EventEnriched): boolean {
+  const eventDate = new Date(event.data.dateTime);
+  const legacyCutoff = new Date("2025-10-10T23:59:59");
+  return eventDate <= legacyCutoff;
+}

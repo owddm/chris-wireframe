@@ -12,8 +12,9 @@ export async function safeGetImage(options: any): Promise<{ src: string }> {
     return { src: options.src?.src || options.src || "" };
   }
 }
-// Default breakpoints as fallback
-export const OUTPUT_SIZES = [420, 720, 1200] as const;
+
+// most of the legacy event images are 1198 wide
+export const DEFAULT_OUTPUT_SIZES = [420, 1198] as const;
 
 // Tailwind CSS breakpoint values
 const BP = {
@@ -76,6 +77,7 @@ export const IMAGE_CONFIGS: Record<ImageType, ImageConfig> = {
   galleryLightbox: {
     // Full viewport at key breakpoints
     sizes: "100vw",
+    breakpoints: [1920],
   },
   blobSlideshow: {
     sizes: `(max-width: ${BP.md}px) 100vw, 50vw`,
@@ -122,10 +124,9 @@ export async function generateResponsiveImage(
 
   // Get the config for this image type
   const config = IMAGE_CONFIGS[imageType];
-  const { sizes, cropAspectRatio } = config;
+  const { sizes, cropAspectRatio, breakpoints } = config;
 
-  // Only use breakpoints smaller than or equal to original image width
-  const widths = OUTPUT_SIZES.filter((w) => w <= image.width);
+  const widths = breakpoints || DEFAULT_OUTPUT_SIZES; // .filter((w) => w <= image.width);
 
   // If no valid widths, use the original width
   const candidateWidths = widths.length > 0 ? widths : [image.width];

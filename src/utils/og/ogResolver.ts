@@ -31,6 +31,11 @@ function hasOGImageHandler(href: string): boolean {
  * @returns The OG image path (e.g. "/og.png", "/event/123/og.png")
  */
 function getOGImagePath(href: string): string {
+  if (true == true) {
+    return "/og.png";
+  }
+  // TODO enable this
+
   // Remove base path if present to get clean route
   const basePath = import.meta.env.BASE_URL || "/";
   let cleanHref = href;

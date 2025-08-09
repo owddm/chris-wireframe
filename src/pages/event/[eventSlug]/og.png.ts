@@ -3,6 +3,7 @@ import path from "path";
 
 import OGEvent from "@/components/OG/OGEvent";
 import { getEvents } from "@/content";
+import { isLegacyEvent } from "@/utils/eventFilters";
 import { createOGImageHandler, loadImageAsBase64 } from "@/utils/og";
 
 export const GET: APIRoute = async ({ params }) => {
@@ -17,6 +18,11 @@ export const GET: APIRoute = async ({ params }) => {
   const event = events.find((e) => e.id === eventSlug);
 
   if (!event) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  // Skip generation for legacy events
+  if (isLegacyEvent(event)) {
     return new Response("Not found", { status: 404 });
   }
 
