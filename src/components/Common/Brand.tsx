@@ -1,23 +1,22 @@
-import { OKTechLogoRound } from "@/components/Common/OKTechLogo";
-import { SITE } from "@/constants";
+import clsx from "clsx";
 
-interface BrandProps {
-  fullText?: boolean;
-  neutral?: boolean;
-}
+import { OKTechLogoIcon, OKTechLogoText } from "@/components/Common/OKTechLogo";
 
-export default function Brand({ fullText = false }: BrandProps) {
+export default function Brand({
+  className = "w-28",
+  active = false,
+}: {
+  className?: string;
+  active?: boolean;
+}) {
   return (
-    <div className="flex flex-col gap-4 md:flex-row md:items-center">
-      <div className="flex items-center gap-3">
-        <OKTechLogoRound
-          className={
-            "h-6 w-6 transition-transform duration-[1000ms] ease-in-out group-hover:-rotate-12 sm:h-8 sm:w-8"
-          }
-        />
-        <h1 className="text-lg font-bold tracking-tighter sm:text-2xl">OKTech</h1>
+    <div className={clsx("grid max-w-full grid-cols-4 items-center justify-center", className)}>
+      <div>
+        <OKTechLogoIcon active={active} />
       </div>
-      {fullText && <span className="font-header text-sm">{SITE.longName}</span>}
+      <div className="col-span-3">
+        <OKTechLogoText />
+      </div>
     </div>
   );
 }

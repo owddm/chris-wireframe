@@ -6,6 +6,7 @@ import { SITE } from "@/constants";
 import { formatDate } from "@/utils/formatDate";
 import { meta } from "@/utils/meta";
 
+import Brand from "./Brand";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Footer() {
@@ -40,11 +41,13 @@ export default function Footer() {
         </div>
       </Container>
       <div
-        className="fade-out font-header -mb-[4vw] overflow-hidden text-center text-[24vw] leading-none tracking-tighter opacity-50 select-none lg:-mb-16 lg:text-[20em]"
+        className="fade-out overflow-hidden opacity-40 select-none"
         aria-hidden="true"
         role="presentation"
       >
-        OKTech
+        <Container wide className="-mb-[6vw] 2xl:-mb-32">
+          <Brand className="w-full" active />
+        </Container>
       </div>
     </footer>
   );

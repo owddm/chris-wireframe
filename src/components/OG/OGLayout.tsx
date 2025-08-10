@@ -3,7 +3,7 @@ import React from "react";
 import { themeColorsHex } from "@/utils/og/theme-colors";
 import { twMerge, twStyle } from "@/utils/og/tw";
 
-import OGBrand from "./OGBrand";
+import { OKTechLogoIcon, OKTechLogoText } from "../Common/OKTechLogo";
 
 interface OGLayoutProps {
   children: React.ReactNode;
@@ -11,80 +11,41 @@ interface OGLayoutProps {
   subtitle?: string;
 }
 
+function scale(scale: number, type: "icon" | "text"): { width: number; height: number } {
+  const dimensions = {
+    icon: { width: 100, height: 100 },
+    text: { width: 274.88, height: 70.53 },
+  };
+  return {
+    width: Math.round(dimensions[type].width * scale),
+    height: Math.round(dimensions[type].height * scale),
+  };
+}
+
 export default function OGLayout({ children, title, subtitle }: OGLayoutProps) {
   // Use light theme colors for OG images
-  const colors = themeColorsHex.light;
+  // TODO use theme
+  // const colors = themeColorsHex.light;
 
   return (
     <div
-      style={twMerge("h-full w-full flex flex-col", {
-        height: "100%",
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        backgroundColor: colors["base-100"],
-        color: colors.baseContent,
-        fontFamily: "'Noto Sans', sans-serif",
-      })}
+      style={twMerge(
+        "h-full w-full flex flex-col justify-center items-center gap-10 text-slate-800",
+        { background: "linear-gradient(to bottom, #ffe, #dde)" },
+      )}
     >
-      {/* Main container */}
-      <div style={twStyle("flex flex-col flex-1 p-[60px]")}>
-        {/* Header */}
-        {/* Header with Brand component */}
-        <div style={twStyle("flex justify-start items-center mb-8")}>
-          <OGBrand size={40} showText={true} theme="light" />
+      {/* Header with Brand component */}
+      <div style={twStyle("flex items-center justify-center")}>
+        <div style={twStyle("flex justify-start items-center")}>
+          <OKTechLogoIcon active style={scale(2.35, "icon")} />
+          <OKTechLogoText style={scale(2.35, "text")} />
         </div>
+      </div>
+      {/* Content area */}
 
-        {/* Content area */}
-        <div style={twStyle("flex-1 flex flex-col justify-center max-w-[1000px]")}>
-          {/* Title if provided */}
-          {title && (
-            <h1
-              style={twMerge(
-                `font-bold leading-tight tracking-tight ${
-                  title.length > 50 ? "text-[48px]" : "text-[64px]"
-                } ${subtitle ? "mb-6" : "mb-8"}`,
-                {
-                  color: colors.baseContent,
-                  fontFamily: "'Lexend', sans-serif",
-                  fontWeight: 700,
-                },
-              )}
-            >
-              {title}
-            </h1>
-          )}
-
-          {/* Subtitle if provided */}
-          {subtitle && (
-            <p
-              style={twMerge("text-[24px] leading-relaxed mb-8", {
-                color: colors.baseContent,
-                opacity: 0.8,
-                fontFamily: "'Noto Sans', sans-serif",
-                fontWeight: 400,
-              })}
-            >
-              {subtitle}
-            </p>
-          )}
-
-          {/* Children content */}
-          <div style={twStyle("flex flex-col")}>{children}</div>
-        </div>
-
-        {/* Simple footer */}
-        <div style={twStyle("flex items-center justify-between mt-auto pt-8")}>
-          <span
-            style={twMerge("text-sm", {
-              color: colors.baseContent,
-              opacity: 0.5,
-              fontFamily: "'Noto Sans', sans-serif",
-            })}
-          >
-            Technology Meetup Group in Kansai - Osaka, Kyoto, Kobe, Hyogo
-          </span>
-        </div>
+      {/* Simple footer */}
+      <div style={twStyle("flex flex-col items-center justify-between ")}>
+        <div style={twStyle("flex text-5xl")}>Technology Meetup Group in Kansai</div>
       </div>
     </div>
   );

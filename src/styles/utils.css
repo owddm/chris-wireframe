@@ -15,7 +15,7 @@
 .btn-glass {
   @apply bg-base-100/0 border-none shadow-none;
   &:hover {
-    @apply bg-base-100/50;
+    @apply bg-base-100/90;
   }
 }
 
@@ -41,6 +41,6 @@
 }
 
 .fade-out {
-  mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
+  mask-image: linear-gradient(to bottom, black 0%, transparent 98%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 98%);
 }
