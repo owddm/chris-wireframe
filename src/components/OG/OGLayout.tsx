@@ -22,7 +22,7 @@ function scale(scale: number, type: "icon" | "text"): { width: number; height: n
   };
 }
 
-export default function OGLayout({ children, title, subtitle }: OGLayoutProps) {
+export default function OGLayout({}: OGLayoutProps) {
   // Use light theme colors for OG images
   // TODO use theme
   // const colors = themeColorsHex.light;

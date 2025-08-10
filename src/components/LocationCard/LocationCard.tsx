@@ -40,15 +40,11 @@ export default function LocationCard({
         )}
         <div className="flex w-full flex-grow flex-col">
           <div className="flex flex-col justify-center gap-2 p-8">{children}</div>
-          {info && (
-            <div className="bg-primary/30 text-primary-content hidden px-8 py-4 text-sm md:block">
-              {info}
-            </div>
-          )}
+          {info && <div className="chat-bubble-info hidden px-8 py-4 text-sm md:block">{info}</div>}
         </div>
       </div>
       {info && (
-        <div className="bg-primary/30 text-primary-content rounded-box glass-border px-8 py-4 text-sm md:hidden">
+        <div className="chat-bubble-info rounded-box glass-border px-8 py-4 text-sm md:hidden">
           {info}
         </div>
       )}
