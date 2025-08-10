@@ -53,6 +53,14 @@ jobs:
           cache: ${{ steps.detect-package-manager.outputs.manager }}
           cache-dependency-path: ${{ env.BUILD_PATH }}/${{ steps.detect-package-manager.outputs.lockfile }}
 
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Install dependencies
+        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+        working-directory: ${{ env.BUILD_PATH }}
+
       # ===== Astro image/asset cache (default: node_modules/.astro) =====
       - name: Restore Astro cache
         id: astro-cache
@@ -73,14 +81,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-content-v5-${{ hashFiles('content/meta.json') }}-
             ${{ runner.os }}-content-v5-
-
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v5
-
-      - name: Install dependencies
-        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-        working-directory: ${{ env.BUILD_PATH }}
 
       # Always run; import should reuse restored files and fetch only updates
       - name: Fetch data
