@@ -34,7 +34,7 @@ function GridItem({
   Icon: IconType;
 }) {
   return (
-    <div className="text-primary-content group-hover:text-primary-content -mt-10 flex flex-col items-center justify-center gap-4 text-center transition-all group-hover:-mt-24 group-hover:scale-110 group-hover:gap-8">
+    <div className="text-base-content -mt-10 flex flex-col items-center justify-center gap-4 text-center transition-all group-hover:-mt-24 group-hover:scale-110 group-hover:gap-8">
       <div className="bg-base-100/50 group-hover:bg-base-100/100 flex aspect-square items-center justify-center rounded-full p-4 transition-all group-hover:scale-125">
         <Icon className="text-5xl" />
       </div>
