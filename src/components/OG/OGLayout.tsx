@@ -24,7 +24,6 @@ function scale(scale: number, type: "icon" | "text"): { width: number; height: n
 }
 
 export default function OGLayout({}: OGLayoutProps) {
-  // Use light theme colors for OG images
   // TODO use theme
   // const colors = themeColorsHex.light;
 
@@ -48,6 +47,7 @@ export default function OGLayout({}: OGLayoutProps) {
       <div style={twj("flex flex-col items-center justify-between ")}>
         <div style={twj("flex text-5xl")}>Technology Meetup Group in Kansai</div>
       </div>
+      {/* TODO {children} */}
     </div>
   );
 }

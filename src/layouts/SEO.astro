@@ -42,8 +42,7 @@ if (!ogImage) {
   // Use current page path to determine OG image
   const currentPath = new URL(Astro.url).pathname;
   // Meta tags need absolute URLs
-  const ogPath = getOGImageWithFallback(currentPath);
-  ogImage = resolveFullUrl(ogPath);
+  ogImage = getOGImageWithFallback(currentPath);
 }
 
 const robotsContent = [noindex ? "noindex" : "index", nofollow ? "nofollow" : "follow"].join(", ");
@@ -65,7 +64,7 @@ const robotsContent = [noindex ? "noindex" : "index", nofollow ? "nofollow" : "f
 {
   ogImage && (
     <>
-      <meta property="og:image" content={ogImage} />
+      <meta property="og:image" content={resolveFullUrl(ogImage)} />
       <meta property="og:image:alt" content={title || SITE.name} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />

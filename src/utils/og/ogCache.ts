@@ -76,7 +76,7 @@ export class OGImageCache {
     if (cleanHref !== "/sitemap.xml") {
       // Check if this route has a specific OG image handler
       const isHomePage = cleanHref === "/";
-      const isEventPage = cleanHref.startsWith("/event/") && cleanHref !== "/events";
+      const isEventPage = cleanHref.startsWith("/events/") && cleanHref !== "/events";
       const isVenuePage = cleanHref.startsWith("/venue/");
 
       if (isEventPage || isVenuePage || (isHomePage && cleanHref !== "/")) {
