@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 import { animate, createScope, createSpring, svg, utils } from "animejs";
+import clsx from "clsx";
 
 interface Props {
   id: string;
@@ -10,18 +11,19 @@ interface Props {
 }
 
 export default function BlobMask({ id, blobPath, className = "", children }: Props) {
-  const stiffness = 120;
-  const damping = 8;
+  const stiffness = 180;
+  const damping = 9;
   const mass = 0.8;
   const clipPathUnits = "objectBoundingBox";
-  const offset = { x: 0, y: 0 };
+  const offset = { x: 0.05, y: 0.05 };
   const maskId = `blob-mask-${id}`;
-  const scale = 1 / 100;
+  const scale = 1 / 110;
   const transform = `translate(${offset.x} ${offset.y}) scale(${scale})`;
 
   const svgRef = useRef<SVGSVGElement | null>(null);
   const pathRef = useRef<SVGPathElement | null>(null);
   const tmpTargetRef = useRef<SVGPathElement | null>(null);
+  const initialPathRef = useRef<string | null>(null);
 
   // Scope Anime to the hidden SVG (no wrapper div)
   useEffect(() => {
@@ -34,6 +36,12 @@ export default function BlobMask({ id, blobPath, className = "", children }: Pro
 
   useEffect(() => {
     if (!pathRef.current || !tmpTargetRef.current) return;
+
+    // Store initial path on first render
+    if (initialPathRef.current === null) {
+      initialPathRef.current = blobPath;
+      return;
+    }
 
     // Update hidden target for morphTo
     utils.set(tmpTargetRef.current, { d: blobPath });
@@ -63,16 +71,21 @@ export default function BlobMask({ id, blobPath, className = "", children }: Pro
         <defs>
           <clipPath id={maskId} clipPathUnits={clipPathUnits}>
             {/* animated path (scaled into 0–1 space) */}
-            <path ref={pathRef} d={blobPath} transform={transform} />
+            <path ref={pathRef} d={initialPathRef.current || blobPath} transform={transform} />
           </clipPath>
 
           {/* hidden morph target with same transform */}
-          <path ref={tmpTargetRef} d={blobPath} transform={transform} style={{ display: "none" }} />
+          <path
+            ref={tmpTargetRef}
+            d={initialPathRef.current || blobPath}
+            transform={transform}
+            style={{ display: "none" }}
+          />
         </defs>
       </svg>
 
       <div
-        className={className}
+        className={clsx(className, "-m-8")}
         style={{
           clipPath: `url(#${maskId})`,
           WebkitClipPath: `url(#${maskId})`,
