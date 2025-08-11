@@ -1,16 +1,16 @@
-import type { APIRoute, GetStaticPaths } from "astro";
+import type { GetStaticPaths } from "astro";
 import path from "path";
 
 import OGEvent from "@/components/OG/OGEvent";
 import { getEvents } from "@/content";
 import { isLegacyEvent } from "@/utils/eventFilters";
-import { createOGImageHandler, loadImageAsBase64 } from "@/utils/og";
+import { createOGImageRoute, loadImageAsBase64 } from "@/utils/og";
 
-export const GET: APIRoute = async ({ params }) => {
+export const GET = createOGImageRoute(async ({ params }) => {
   const eventSlug = params.eventSlug;
 
   if (!eventSlug) {
-    return new Response("Event slug is required", { status: 400 });
+    return null; // Will return 404
   }
 
   // Get event data
@@ -18,12 +18,12 @@ export const GET: APIRoute = async ({ params }) => {
   const event = events.find((e) => e.id === eventSlug);
 
   if (!event) {
-    return new Response("Not found", { status: 404 });
+    return null; // Will return 404
   }
 
   // Skip generation for legacy events
   if (isLegacyEvent(event)) {
-    return new Response("Not found", { status: 404 });
+    return null; // Will return 404
   }
 
   // Get local map image if venue has one
@@ -45,15 +45,26 @@ export const GET: APIRoute = async ({ params }) => {
     }
   }
 
-  return createOGImageHandler({
+  return {
     component: OGEvent,
     props: {
       event,
       mapImageBase64,
       coverImageBase64,
     },
-  });
-};
+    cacheKeyData: {
+      id: event.id,
+      title: event.data.title,
+      dateTime: event.data.dateTime,
+      topics: event.data.topics,
+      venueId: event.venue?.id,
+      venueTitle: event.venue?.title,
+      venueCity: event.venue?.city,
+      hasMapImage: !!mapImageBase64,
+      hasCoverImage: !!coverImageBase64,
+    },
+  };
+});
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const events = await getEvents();

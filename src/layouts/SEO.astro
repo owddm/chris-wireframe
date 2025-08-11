@@ -28,6 +28,7 @@ const {
 
 import { SITE } from "@/constants";
 import { getOGImageWithFallback } from "@/utils/og";
+import { resolveFullUrl } from "@/utils/urlResolver";
 import logoRoundSvg from "@/assets/oktech-logo-round.svg?raw";
 
 const pageTitle = title ? SITE.title.template.replace("%s", title) : SITE.title.default;
@@ -41,7 +42,8 @@ if (!ogImage) {
   // Use current page path to determine OG image
   const currentPath = new URL(Astro.url).pathname;
   // Meta tags need absolute URLs
-  ogImage = getOGImageWithFallback(currentPath, true);
+  const ogPath = getOGImageWithFallback(currentPath);
+  ogImage = resolveFullUrl(ogPath);
 }
 
 const robotsContent = [noindex ? "noindex" : "index", nofollow ? "nofollow" : "follow"].join(", ");

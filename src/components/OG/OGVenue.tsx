@@ -1,5 +1,6 @@
+import { twj } from "tw-to-css";
+
 import { themeColorsHex } from "@/utils/og/theme-colors";
-import { twMerge, twStyle } from "@/utils/og/tw";
 
 import OGLayout, { IconWrapper, LocationIcon } from "./OGLayout";
 
@@ -30,37 +31,40 @@ export default function OGVenue({ venue }: OGVenueProps) {
 
   return (
     <OGLayout title={venue.data.title} subtitle="Event Venue">
-      <div style={twStyle("flex flex-col gap-6")}>
+      <div style={twj("flex flex-col gap-6")}>
         {location && (
-          <div style={twStyle("flex items-center gap-4")}>
+          <div style={twj("flex items-center gap-4")}>
             <IconWrapper>
               <LocationIcon />
             </IconWrapper>
             <span
-              style={twMerge("text-[20px]", {
+              style={{
+                ...twj("text-[20px]"),
                 color: colors.baseContent,
                 opacity: 0.8,
-              })}
+              }}
             >
               {location}
             </span>
           </div>
         )}
 
-        <div style={twStyle("flex flex-col gap-3")}>
+        <div style={twj("flex flex-col gap-3")}>
           <p
-            style={twMerge("text-xl leading-relaxed", {
+            style={{
+              ...twj("text-xl leading-relaxed"),
               color: colors.baseContent,
               opacity: 0.7,
-            })}
+            }}
           >
             Host venue for OKTech community events and meetups.
           </p>
           <p
-            style={twMerge("text-lg", {
+            style={{
+              ...twj("text-lg"),
               color: colors.baseContent,
               opacity: 0.6,
-            })}
+            }}
           >
             Join us at this location for networking, learning, and collaboration.
           </p>

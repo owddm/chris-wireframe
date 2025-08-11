@@ -72,3 +72,21 @@ export function resolveFullUrl(href: string): string {
 
   return `${origin}${internalHref}`;
 }
+
+/**
+ * Remove base path from href to get clean route
+ * @param href - The path that may include base path
+ * @returns The path without base path prefix
+ */
+export function removeBasePath(href: string): string {
+  const basePath = import.meta.env.BASE_URL || "/";
+  if (basePath === "/" || !href.startsWith(basePath)) {
+    return href;
+  }
+
+  let cleanHref = href.slice(basePath.length);
+  if (!cleanHref.startsWith("/")) {
+    cleanHref = "/" + cleanHref;
+  }
+  return cleanHref;
+}

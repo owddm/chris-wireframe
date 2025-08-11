@@ -1,7 +1,8 @@
 import React from "react";
 
+import { twj } from "tw-to-css";
+
 import { themeColorsHex } from "@/utils/og/theme-colors";
-import { twMerge, twStyle } from "@/utils/og/tw";
 
 import { OKTechLogoIcon, OKTechLogoText } from "../Common/OKTechLogo";
 
@@ -29,14 +30,14 @@ export default function OGLayout({}: OGLayoutProps) {
 
   return (
     <div
-      style={twMerge(
-        "h-full w-full flex flex-col justify-center items-center gap-10 text-slate-800",
-        { background: "linear-gradient(to bottom, #ffe, #dde)" },
-      )}
+      style={{
+        ...twj("h-full w-full flex flex-col justify-center items-center gap-10 text-slate-800"),
+        background: "linear-gradient(to bottom, #ffe, #dde)",
+      }}
     >
       {/* Header with Brand component */}
-      <div style={twStyle("flex items-center justify-center")}>
-        <div style={twStyle("flex justify-start items-center")}>
+      <div style={twj("flex items-center justify-center")}>
+        <div style={twj("flex justify-start items-center")}>
           <OKTechLogoIcon active style={scale(2.35, "icon")} />
           <OKTechLogoText style={scale(2.35, "text")} />
         </div>
@@ -44,8 +45,8 @@ export default function OGLayout({}: OGLayoutProps) {
       {/* Content area */}
 
       {/* Simple footer */}
-      <div style={twStyle("flex flex-col items-center justify-between ")}>
-        <div style={twStyle("flex text-5xl")}>Technology Meetup Group in Kansai</div>
+      <div style={twj("flex flex-col items-center justify-between ")}>
+        <div style={twj("flex text-5xl")}>Technology Meetup Group in Kansai</div>
       </div>
     </div>
   );
@@ -79,5 +80,5 @@ export const LocationIcon = ({
 );
 
 export const IconWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div style={twStyle("flex items-center gap-3")}>{children}</div>
+  <div style={twj("flex items-center gap-3")}>{children}</div>
 );

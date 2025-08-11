@@ -1,5 +1,6 @@
+import { twj } from "tw-to-css";
+
 import { themeColorsHex } from "@/utils/og/theme-colors";
-import { twMerge, twStyle } from "@/utils/og/tw";
 
 import OGLayout, { CalendarIcon, IconWrapper, LocationIcon } from "./OGLayout";
 
@@ -48,42 +49,45 @@ export default function OGEvent({ event }: OGEventProps) {
 
   return (
     <OGLayout title={event.data.title} subtitle={subtitle}>
-      <div style={twStyle("flex flex-col gap-6")}>
-        <div style={twStyle("flex items-center gap-4")}>
+      <div style={twj("flex flex-col gap-6")}>
+        <div style={twj("flex items-center gap-4")}>
           <IconWrapper>
             <CalendarIcon />
           </IconWrapper>
           <span
-            style={twMerge("text-[20px]", {
+            style={{
+              ...twj("text-[20px]"),
               color: colors.baseContent,
               opacity: 0.8,
-            })}
+            }}
           >
             {formattedDate}
           </span>
         </div>
 
-        <div style={twStyle("flex items-center gap-4")}>
+        <div style={twj("flex items-center gap-4")}>
           <IconWrapper>
             <LocationIcon />
           </IconWrapper>
           <span
-            style={twMerge("text-[20px]", {
+            style={{
+              ...twj("text-[20px]"),
               color: colors.baseContent,
               opacity: 0.8,
-            })}
+            }}
           >
             {venueLocation}
           </span>
         </div>
 
         {event.data.topics && event.data.topics.length > 2 && (
-          <div style={twStyle("flex mt-2")}>
+          <div style={twj("flex mt-2")}>
             <p
-              style={twMerge("text-lg", {
+              style={{
+                ...twj("text-lg"),
                 color: colors.baseContent,
                 opacity: 0.6,
-              })}
+              }}
             >
               Also featuring: {event.data.topics.slice(2).join(", ")}
             </p>

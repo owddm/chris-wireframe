@@ -2,54 +2,31 @@ import crypto from "crypto";
 import fs from "fs/promises";
 import path from "path";
 
-interface EventData {
-  id: string;
-  data: {
-    title: string;
-    dateTime: string;
-    topics?: string[];
-  };
-  venue?: {
-    id: string;
-    title: string;
-    city?: string;
-  };
-}
+import { removeBasePath, resolveInternalHref } from "../urlResolver";
+import { themeColorsHex } from "./theme-colors";
 
-interface PersonData {
-  id: string;
-  name?: string;
-  bio?: string;
-  title?: string;
-  data?: {
-    name?: string;
-    bio?: string;
-    title?: string;
-  };
-}
+// ============================================================================
+// Cache Key Data Type
+// ============================================================================
 
-interface VenueData {
-  id: string;
-  name?: string;
-  description?: string;
-  city?: string;
-  data?: {
-    name?: string;
-    description?: string;
-    city?: string;
-  };
-}
+/**
+ * Cache key data passed from the template handler
+ * This allows the handler to specify exactly which fields should
+ * invalidate the cache, avoiding hardcoded field extraction
+ */
+export type CacheKeyData = Record<string, unknown>;
 
-export interface CacheableContent {
-  event?: EventData;
-  person?: PersonData;
-  venue?: VenueData;
-  mapImageBase64?: string | null;
-  coverImageBase64?: string | null;
-}
+// ============================================================================
+// OG Image Caching
+// ============================================================================
 
+/**
+ * Manages caching of generated OG images to avoid regeneration
+ */
 export class OGImageCache {
   private cacheDir: string;
+  private static OG_VERSION = "v1";
+  private static themeHash: string | null = null;
 
   constructor() {
     // Use the same cache directory as Astro for consistency
@@ -57,66 +34,64 @@ export class OGImageCache {
   }
 
   /**
-   * Generate a cache key based on the content that affects the OG image
+   * Get hash of theme colors for cache invalidation
    */
-  private generateCacheKey(content: CacheableContent): string {
-    const hashContent: Record<string, unknown> = {};
-
-    // Handle event data
-    if (content.event) {
-      hashContent.eventId = content.event.id;
-      hashContent.title = content.event.data.title;
-      hashContent.dateTime = content.event.data.dateTime;
-      hashContent.topics = content.event.data.topics;
-      hashContent.venueId = content.event.venue?.id;
-      hashContent.venueTitle = content.event.venue?.title;
-      hashContent.venueCity = content.event.venue?.city;
-    }
-
-    // Handle person data
-    if (content.person) {
-      hashContent.personId = content.person.id;
-      // Handle both person.data.name and person.name structures
-      hashContent.personName = content.person.data?.name || content.person.name;
-      hashContent.personBio = content.person.data?.bio || content.person.bio;
-      hashContent.personTitle = content.person.data?.title || content.person.title;
-    }
-
-    // Handle venue data
-    if (content.venue) {
-      hashContent.venueId = content.venue.id;
-      // Handle both venue.data.name and venue.name structures
-      hashContent.venueName = content.venue.data?.name || content.venue.name;
-      hashContent.venueDescription = content.venue.data?.description || content.venue.description;
-      hashContent.venueCity = content.venue.data?.city || content.venue.city;
-    }
-
-    // Handle images
-    hashContent.hasMapImage = !!content.mapImageBase64;
-    hashContent.hasCoverImage = !!content.coverImageBase64;
-
-    // Hash the actual image content if present
-    if (content.mapImageBase64) {
-      hashContent.mapImageHash = crypto
-        .createHash("md5")
-        .update(content.mapImageBase64)
+  private static getThemeHash(): string {
+    if (!OGImageCache.themeHash) {
+      // Create a stable hash of the theme colors
+      const themeContent = JSON.stringify(themeColorsHex);
+      OGImageCache.themeHash = crypto
+        .createHash("sha256")
+        .update(themeContent)
         .digest("hex")
         .substring(0, 8);
     }
+    return OGImageCache.themeHash;
+  }
 
-    if (content.coverImageBase64) {
-      hashContent.coverImageHash = crypto
-        .createHash("md5")
-        .update(content.coverImageBase64)
-        .digest("hex")
-        .substring(0, 8);
+  /**
+   * Generate a cache key from data
+   * Includes OG version and theme hash to invalidate on changes
+   */
+  static generateCacheKey(data: any): string {
+    const content = JSON.stringify(data, Object.keys(data).sort());
+    // Include OG version, theme hash, and content in the cache key
+    const combinedContent = OGImageCache.OG_VERSION + OGImageCache.getThemeHash() + content;
+    return crypto.createHash("sha256").update(combinedContent).digest("hex").substring(0, 12);
+  }
+
+  /**
+   * Get the OG image path for a given route
+   * @param href - The route path (e.g. "/about", "/event/123")
+   * @param data - Optional data to generate cache key from
+   * @returns The OG image path (e.g. "/og.png?v=abc123", "/event/123/og.png?v=def456")
+   */
+  static getOGImagePath(href: string, data?: any): string {
+    const cleanHref = removeBasePath(href);
+
+    // Default path
+    let ogPath = "/og.png";
+
+    // Special handling for routes with custom OG handlers
+    if (cleanHref !== "/sitemap.xml") {
+      // Check if this route has a specific OG image handler
+      const isHomePage = cleanHref === "/";
+      const isEventPage = cleanHref.startsWith("/event/") && cleanHref !== "/events";
+      const isVenuePage = cleanHref.startsWith("/venue/");
+
+      if (isEventPage || isVenuePage || (isHomePage && cleanHref !== "/")) {
+        // For non-home pages with handlers, append og.png to the path
+        ogPath = cleanHref.endsWith("/") ? `${cleanHref}og.png` : `${cleanHref}/og.png`;
+      }
     }
 
-    return crypto
-      .createHash("sha256")
-      .update(JSON.stringify(hashContent))
-      .digest("hex")
-      .substring(0, 16);
+    // Add cache key if data provided
+    if (data) {
+      const cacheKey = OGImageCache.generateCacheKey(data);
+      return `${ogPath}?v=${cacheKey}`;
+    }
+
+    return ogPath;
   }
 
   /**
@@ -129,9 +104,9 @@ export class OGImageCache {
   /**
    * Check if a cached version exists and is still valid
    */
-  async isCached(content: CacheableContent): Promise<boolean> {
+  async isCached(cacheKeyData: CacheKeyData): Promise<boolean> {
     try {
-      const cacheKey = this.generateCacheKey(content);
+      const cacheKey = OGImageCache.generateCacheKey(cacheKeyData);
       const cachePath = this.getCacheFilePath(cacheKey);
 
       await fs.access(cachePath);
@@ -144,9 +119,9 @@ export class OGImageCache {
   /**
    * Get cached image buffer if it exists
    */
-  async getCachedImage(content: CacheableContent): Promise<Buffer | null> {
+  async getCachedImage(cacheKeyData: CacheKeyData): Promise<Buffer | null> {
     try {
-      const cacheKey = this.generateCacheKey(content);
+      const cacheKey = OGImageCache.generateCacheKey(cacheKeyData);
       const cachePath = this.getCacheFilePath(cacheKey);
 
       return await fs.readFile(cachePath);
@@ -158,9 +133,9 @@ export class OGImageCache {
   /**
    * Cache a generated image buffer
    */
-  async cacheImage(content: CacheableContent, imageBuffer: Buffer): Promise<void> {
+  async cacheImage(cacheKeyData: CacheKeyData, imageBuffer: Buffer): Promise<void> {
     try {
-      const cacheKey = this.generateCacheKey(content);
+      const cacheKey = OGImageCache.generateCacheKey(cacheKeyData);
       const cachePath = this.getCacheFilePath(cacheKey);
 
       // Ensure cache directory exists
@@ -222,4 +197,21 @@ export class OGImageCache {
       return { count: 0, totalSize: 0 };
     }
   }
+}
+
+// ============================================================================
+// Public API
+// ============================================================================
+
+/**
+ * Get the OG image URL for a given route, with fallback to default
+ * @param href - The route path (e.g. "/about", "/event/123")
+ * @param data - Optional data to generate cache key from
+ * @returns The OG image URL with base path
+ */
+export function getOGImageWithFallback(href: string, data?: any): string {
+  // Always generate a cache key based on the route at minimum
+  const cacheData = data || { route: href };
+  const ogPath = OGImageCache.getOGImagePath(href, cacheData);
+  return resolveInternalHref(ogPath);
 }

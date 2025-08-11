@@ -1,11 +1,10 @@
-import type { APIRoute } from "astro";
-
 import OGDefault from "../components/OG/OGDefault";
-import { createOGImageHandler } from "../utils/og";
+import { createOGImageRoute } from "../utils/og";
 
-export const GET: APIRoute = async () => {
-  return createOGImageHandler({
+export const GET = createOGImageRoute(async () => {
+  return {
     component: OGDefault,
+    cacheKeyData: { page: "default" },
     props: {},
-  });
-};
+  };
+});

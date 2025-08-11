@@ -2,6 +2,11 @@
 
 @plugin "daisyui";
 
+/* 
+ * To update OG image colors after modifying theme colors:
+ * Run: npm run extract-themes
+ */
+
 @plugin "daisyui/theme" {
   name: "dark";
   default: false;

@@ -1,24 +1,30 @@
-import type { APIRoute, GetStaticPaths } from "astro";
+import type { GetStaticPaths } from "astro";
 
 import OGVenue from "@/components/OG/OGVenue";
 import { getVenue, getVenues } from "@/content";
-import { createOGImageHandler } from "@/utils/og";
+import { createOGImageRoute } from "@/utils/og";
 
-export const GET: APIRoute = async ({ params }) => {
+export const GET = createOGImageRoute(async ({ params }) => {
   const venueSlug = params.venueSlug;
 
   // Get venue data
   const venue = await getVenue(venueSlug);
 
   if (!venue) {
-    return new Response("Not found", { status: 404 });
+    return null; // Will return 404
   }
 
-  return createOGImageHandler({
+  return {
     component: OGVenue,
     props: { venue },
-  });
-};
+    cacheKeyData: {
+      id: venue.id,
+      name: venue.data?.title,
+      address: venue.data?.address,
+      city: venue.data?.city,
+    },
+  };
+});
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const venues = await getVenues();
