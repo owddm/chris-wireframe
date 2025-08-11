@@ -27,10 +27,8 @@ export default function BlobMask({
         aria-hidden="true"
       >
         <defs>
-          <mask id={maskId} maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
-            <rect x="0" y="0" width="1" height="1" fill="black" />
+          <clipPath id={maskId} clipPathUnits="objectBoundingBox">
             <path
-              fill="white"
               transform="translate(0 0) scale(0.01)"
               d={blobPath}
               style={{
@@ -38,20 +36,14 @@ export default function BlobMask({
                 WebkitTransition: `d ${transitionSpeed}ms cubic-bezier(0.68,-0.55,0.265,1.55)`,
               }}
             />
-          </mask>
+          </clipPath>
         </defs>
       </svg>
       <div
         className={className}
         style={{
-          mask: `url(#${maskId})`,
-          WebkitMask: `url(#${maskId})`,
-          maskSize: "cover",
-          WebkitMaskSize: "cover",
-          maskRepeat: "no-repeat",
-          WebkitMaskRepeat: "no-repeat",
-          maskPosition: "center",
-          WebkitMaskPosition: "center",
+          clipPath: `url(#${maskId})`,
+          WebkitClipPath: `url(#${maskId})`,
         }}
       >
         {children}
