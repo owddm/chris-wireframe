@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import clsx from "clsx";
 import { PiArrowArcRightBold } from "react-icons/pi";
 
+import BlobMask from "@/components/Common/BlobMask";
 import useBloop from "@/hooks/useBloop";
 import { BLOBS } from "@/utils/blobs";
 
@@ -33,7 +34,7 @@ export default function BlobCard({
   transitionSpeed = 300,
   showTip = false,
 }: BlobCardProps) {
-  const maskId = `blob-card-${React.useId()}`;
+  const uniqueId = React.useId();
   const [currentState, setCurrentState] = useState<"default" | "hover" | "active">("default");
   const [isHovering, setIsHovering] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -125,33 +126,15 @@ export default function BlobCard({
         onMouseDown={handleInteractionStart}
         onTouchStart={handleInteractionStart}
       >
-        {/* Hidden SVG with mask definition */}
-        <svg width={0} height={0} className="absolute">
-          <defs>
-            <mask id={maskId} maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
-              <rect x="0" y="0" width="1" height="1" fill="black" />
-              <path
-                fill="white"
-                transform="translate(0 0) scale(0.01)"
-                d={getCurrentPath()}
-                style={{
-                  transition: `d ${transitionSpeed}ms cubic-bezier(0.68,-0.55,0.265,1.55)`,
-                }}
-              />
-            </mask>
-          </defs>
-        </svg>
-
         {/* Background layer with clipping mask */}
-        <div
+        <BlobMask
+          id={uniqueId}
+          blobPath={getCurrentPath()}
+          transitionSpeed={transitionSpeed}
           className={clsx(
             "pointer-events-none absolute inset-0 z-0 transition-all duration-300",
             bgClass,
           )}
-          style={{
-            mask: `url(#${maskId})`,
-            WebkitMask: `url(#${maskId})`,
-          }}
         />
 
         {/* Content layer */}

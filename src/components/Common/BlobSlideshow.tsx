@@ -2,6 +2,7 @@ import "@/styles/animations.css";
 
 import React, { useEffect, useState } from "react";
 
+import BlobMask from "@/components/Common/BlobMask";
 import { BLOBS } from "@/utils/blobs";
 
 interface ImageData {
@@ -83,34 +84,18 @@ export default function BlobSlideshow<T = string | ImageData>({
 
   if (items.length === 0) return null;
 
-  // Create unique mask ID to avoid conflicts
-  const maskId = `blob-mask-${React.useId()}`;
+  // Create unique ID for this instance
+  const uniqueId = React.useId();
 
   return (
     <div className={`relative z-10 h-full w-full ${containerClassName || "aspect-[4/3]"}`}>
       <div className="absolute inset-0 -mx-20 -my-10 md:-mx-16 md:-my-16 lg:-mx-12 lg:-my-12">
-        <svg width={0} height={0}>
-          <defs>
-            <mask
-              id={maskId}
-              maskUnits="objectBoundingBox"
-              maskContentUnits="objectBoundingBox"
-              x="0"
-              y="0"
-              width="1"
-              height="1"
-            >
-              <rect x="0" y="0" width="1" height="1" fill="black" />
-              <path
-                fill="white"
-                transform="translate(0 0) scale(0.01)"
-                d={blobs[(currentBlob + blobOffset) % blobs.length]}
-                style={{ transition: `d ${transitionSpeed}ms cubic-bezier(0.68,-0.55,0.265,1.55)` }}
-              />
-            </mask>
-          </defs>
-        </svg>
-        <div className={`absolute inset-0 ${className}`} style={{ mask: `url(#${maskId})` }}>
+        <BlobMask
+          id={uniqueId}
+          blobPath={blobs[(currentBlob + blobOffset) % blobs.length]}
+          transitionSpeed={transitionSpeed}
+          className={`absolute inset-0 ${className}`}
+        >
           {isDataMode
             ? // Render custom data with renderer
               data!.map((item, index) => (
@@ -150,7 +135,7 @@ export default function BlobSlideshow<T = string | ImageData>({
                   </div>
                 );
               })}
-        </div>
+        </BlobMask>
       </div>
     </div>
   );
