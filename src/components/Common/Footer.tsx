@@ -45,8 +45,8 @@ export default function Footer() {
         aria-hidden="true"
         role="presentation"
       >
-        <Container wide className="-mb-[6vw] 2xl:-mb-32">
-          <Brand className="w-full" active />
+        <Container wide className="group -mb-[6vw] 2xl:-mb-32">
+          <Brand className="w-full" />
         </Container>
       </div>
     </footer>

@@ -1,9 +1,18 @@
-import { defineCollection, reference, z, type CollectionEntry, getEntry, getCollection } from "astro:content";
+import {
+  type CollectionEntry,
+  defineCollection,
+  getCollection,
+  getEntry,
+  reference,
+  z,
+} from "astro:content";
 import path from "path";
-import { memoize } from "@/utils/memoize";
+
 import { DEV_MODE } from "@/constants";
-import { processVenue, type ProcessedVenue } from "./venues";
-import { generateResponsiveImage, type ResponsiveImageData } from "@/utils/responsiveImage";
+import { memoize } from "@/utils/memoize";
+import { type ResponsiveImageData, getResponsiveImage } from "@/utils/responsiveImage";
+
+import { type ProcessedVenue, processVenue } from "./venues";
 
 // Type definitions
 export type GalleryImage = CollectionEntry<"eventGalleryImage"> & {
@@ -21,7 +30,6 @@ export type EventEnriched = Omit<CollectionEntry<"events">, "data"> & {
   galleryImages?: GalleryImage[];
   priority?: boolean; // For image loading optimization
 };
-
 
 // Events collection definition
 export const eventsCollection = defineCollection({
@@ -56,13 +64,13 @@ export const eventsCollection = defineCollection({
       };
     });
   },
-  schema: ({ image }) =>
+  schema: () =>
     z.object({
       id: z.string(),
       title: z.string(),
       dateTime: z.date(),
       duration: z.number().optional(),
-      cover: image(),
+      cover: z.string(), // Changed from image() to z.string()
       devOnly: z.boolean().optional().default(false),
       venue: reference("venues").optional(),
       topics: z.array(z.string()).optional(),
@@ -75,9 +83,7 @@ export const eventsCollection = defineCollection({
 export const eventGalleryImageCollection = defineCollection({
   loader: async () => {
     const [images, metadata] = await Promise.all([
-      import.meta.glob("/content/events/**/gallery/*.{webp,jpg,jpeg,png,gif,svg}", {
-        eager: true,
-      }),
+      import.meta.glob("/content/events/**/gallery/*.{webp,jpg,jpeg,png,gif,svg}", { eager: true }),
       import.meta.glob("/content/events/**/gallery/*.yaml", { eager: true }),
     ]);
 
@@ -91,41 +97,34 @@ export const eventGalleryImageCollection = defineCollection({
       return { ...imageMetadata, id, event, image: id };
     });
   },
-  schema: ({ image }) =>
+  schema: () =>
     z.object({
       id: z.string(),
-      image: image(),
+      image: z.string(), // Changed from image() to z.string()
       event: reference("events"),
       caption: z.string().optional(), // todo add more metadatas?
     }),
 });
 
-
 // Helper function to get gallery images with responsive data
 export const getGalleryImages = memoize(async (eventId: string): Promise<GalleryImage[]> => {
   const allGalleryImages = await getCollection("eventGalleryImage");
   const eventGalleryImages = allGalleryImages.filter((img) => img.data.event.id === eventId);
-  
+
   return await Promise.all(
     eventGalleryImages.map(async (img) => {
-      // Generate responsive data for thumbnail and full images
+      // Generate responsive data for thumbnail and full images directly from path
       const [thumbnail, full] = await Promise.all([
-        generateResponsiveImage(
-          img.data.image,
-          "galleryThumbnail"
-        ),
-        generateResponsiveImage(
-          img.data.image,
-          "galleryLightbox"
-        )
+        getResponsiveImage(img.data.image, "galleryThumbnail"),
+        getResponsiveImage(img.data.image, "galleryLightbox"),
       ]);
-      
+
       return {
         ...img,
         thumbnail,
         full,
       };
-    })
+    }),
   );
 });
 
@@ -149,50 +148,50 @@ export const getEvents = memoize(async (): Promise<EventEnriched[]> => {
   // Add priority flag to first 16 events for optimized image loading
   return sortedEvents.map((event, index) => ({
     ...event,
-    priority: index < 16
+    priority: index < 16,
   }));
 });
 
-export const getEvent = memoize(async (eventSlug: string, multiple: boolean = false): Promise<EventEnriched> => {
+export const getEvent = memoize(
+  async (eventSlug: string, multiple: boolean = false): Promise<EventEnriched> => {
+    const event = await getEntry("events", eventSlug);
 
-  const event = await getEntry("events", eventSlug);
-
-  if (!event) {
-    throw `No event found for slug ${eventSlug}`;
-  }
-
-  // Get venue data if the event has a venue reference
-  let processedVenue: ProcessedVenue | undefined;
-  let venueSlug: string | undefined;
-  if (event.data.venue) {
-    const venues = await getCollection("venues");
-    // Handle both object with id and plain number/string
-    const venueId = typeof event.data.venue === "object" ? event.data.venue.id : event.data.venue;
-    const venue = venues.find((v) => v.data.meetupId.toString() === venueId?.toString());
-    if (venue) {
-      processedVenue = await processVenue(venue);
-      venueSlug = venue.id;
+    if (!event) {
+      throw `No event found for slug ${eventSlug}`;
     }
-  }
 
-  // Get gallery images for this event with responsive data
-  const galleryImages = await getGalleryImages(event.id);
-  
-  // Generate responsive cover image
-  const cover = await generateResponsiveImage(
-    event.data.cover,
-    multiple ? "eventPolaroid" : "sidebarLayoutHero"
-  );
+    // Get venue data if the event has a venue reference
+    let processedVenue: ProcessedVenue | undefined;
+    let venueSlug: string | undefined;
+    if (event.data.venue) {
+      const venues = await getCollection("venues");
+      // Handle both object with id and plain number/string
+      const venueId = typeof event.data.venue === "object" ? event.data.venue.id : event.data.venue;
+      const venue = venues.find((v) => v.data.meetupId.toString() === venueId?.toString());
+      if (venue) {
+        processedVenue = await processVenue(venue);
+        venueSlug = venue.id;
+      }
+    }
 
-  return {
-    ...event,
-    data: {
-      ...event.data,
-      cover,
-    },
-    venue: processedVenue,
-    venueSlug,
-    galleryImages,
-  };
-});
+    // Get gallery images for this event with responsive data
+    const galleryImages = await getGalleryImages(event.id);
 
+    // Generate responsive cover image directly from path
+    const cover = await getResponsiveImage(
+      event.data.cover,
+      multiple ? "eventPolaroid" : "sidebarLayoutHero",
+    );
+
+    return {
+      ...event,
+      data: {
+        ...event.data,
+        cover,
+      },
+      venue: processedVenue,
+      venueSlug,
+      galleryImages,
+    };
+  },
+);

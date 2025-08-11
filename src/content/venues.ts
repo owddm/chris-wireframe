@@ -1,13 +1,22 @@
-import { defineCollection, z, type InferEntrySchema, type CollectionEntry, getEntry, getCollection } from "astro:content";
+import {
+  type CollectionEntry,
+  type InferEntrySchema,
+  defineCollection,
+  getCollection,
+  getEntry,
+  z,
+} from "astro:content";
 import path from "path";
+
 import { memoize } from "@/utils/memoize";
-import { generateResponsiveImage, type ResponsiveImageData } from "@/utils/responsiveImage";
+import { type ResponsiveImageData, getResponsiveImage } from "@/utils/responsiveImage";
 
 // Type definitions
 export type Venue = InferEntrySchema<"venues">;
 
-// Enhanced venue type with processed map images
-export type ProcessedVenue = Omit<Venue, "mapImage" | "mapDarkImage"> & {
+// Enhanced venue type with processed images
+export type ProcessedVenue = Omit<Venue, "cover" | "mapImage" | "mapDarkImage"> & {
+  cover?: ResponsiveImageData;
   mapImage?: ResponsiveImageData;
   mapDarkImage?: ResponsiveImageData;
 };
@@ -44,7 +53,7 @@ export const venuesCollection = defineCollection({
 
       const mapImagePath = path.join(basePath, "map.jpg");
       const mapImage = mapImages[mapImagePath] ? mapImagePath : undefined;
-      
+
       const mapDarkImagePath = path.join(basePath, "map-dark.jpg");
       const mapDarkImage = mapDarkImages[mapDarkImagePath] ? mapDarkImagePath : undefined;
 
@@ -68,7 +77,7 @@ export const venuesCollection = defineCollection({
       };
     });
   },
-  schema: ({ image }) =>
+  schema: () =>
     z.object({
       id: z.string(),
       title: z.string(),
@@ -88,35 +97,35 @@ export const venuesCollection = defineCollection({
       meetupId: z.number(),
       hasPage: z.boolean().optional(),
       description: z.string().optional(),
-      cover: image().optional(),
-      mapImage: image().optional(),
-      mapDarkImage: image().optional(),
+      cover: z.string().optional(), // Changed from image() to z.string()
+      mapImage: z.string().optional(), // Changed from image() to z.string()
+      mapDarkImage: z.string().optional(), // Changed from image() to z.string()
     }),
 });
 
-// Helper function to process venue with map image
+// Helper function to process venue with images
 const processVenue = memoize(async function processVenue(
   venue: CollectionEntry<"venues">,
 ): Promise<ProcessedVenue> {
+  // Generate responsive images for paths that exist
+  let cover: ResponsiveImageData | undefined;
   let mapImage: ResponsiveImageData | undefined;
   let mapDarkImage: ResponsiveImageData | undefined;
 
-  if (venue.data.mapImage) {
-    mapImage = await generateResponsiveImage(
-      venue.data.mapImage,
-      "venueMap"
-    );
+  // Only process images that actually exist
+  if (venue.data.cover) {
+    cover = await getResponsiveImage(venue.data.cover, "sidebarLayoutHero");
   }
-
+  if (venue.data.mapImage) {
+    mapImage = await getResponsiveImage(venue.data.mapImage, "venueMap");
+  }
   if (venue.data.mapDarkImage) {
-    mapDarkImage = await generateResponsiveImage(
-      venue.data.mapDarkImage,
-      "venueMap"
-    );
+    mapDarkImage = await getResponsiveImage(venue.data.mapDarkImage, "venueMap");
   }
 
   return {
     ...venue.data,
+    cover,
     mapImage,
     mapDarkImage,
   };
@@ -129,8 +138,7 @@ export const getVenues = memoize(async (): Promise<CollectionEntry<"venues">[]> 
   return venues.filter((venue) => venue.data.hasPage);
 });
 
-export const getVenue = memoize(
-  async (venueSlug: string | undefined): Promise<VenueEnriched> => {
+export const getVenue = memoize(async (venueSlug: string | undefined): Promise<VenueEnriched> => {
   if (!venueSlug) {
     throw "Venue slug not defined";
   }
@@ -142,11 +150,10 @@ export const getVenue = memoize(
   // Process venue to include map image
   const processedVenueData = await processVenue(venue);
 
-    return {
-      ...venue,
-      data: processedVenueData,
-    };
-  },
-);
+  return {
+    ...venue,
+    data: processedVenueData,
+  };
+});
 
 export { processVenue };

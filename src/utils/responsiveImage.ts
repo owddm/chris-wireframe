@@ -1,5 +1,7 @@
-// responsive-images.ts
+// Responsive image utility that works with string paths instead of ImageMetadata
 import type { ImageMetadata } from "astro";
+
+import { memoize } from "@/utils/memoize";
 
 export async function safeGetImage(options: any): Promise<{ src: string }> {
   try {
@@ -13,7 +15,7 @@ export async function safeGetImage(options: any): Promise<{ src: string }> {
   }
 }
 
-// most of the legacy event images are 1198 wide
+// Most of the legacy event images are 1198 wide
 export const DEFAULT_OUTPUT_SIZES = [420, 1198] as const;
 
 // Tailwind CSS breakpoint values
@@ -23,8 +25,6 @@ const BP = {
   lg: 1024,
   xl: 1280,
 } as const;
-
-const imageCache = new Map<string, ResponsiveImageData>();
 
 export interface ResponsiveImageData {
   src: string;
@@ -88,82 +88,86 @@ export const IMAGE_CONFIGS: Record<ImageType, ImageConfig> = {
   },
 };
 
+// Import all images using glob - LAZY loading to avoid including all images in build
+const eventImages = import.meta.glob<{ default: ImageMetadata }>(
+  "/content/events/**/*.{jpg,jpeg,png,webp,svg}",
+);
+
+const venueImages = import.meta.glob<{ default: ImageMetadata }>(
+  "/content/venues/**/*.{jpg,jpeg,png,webp,svg}",
+);
+
+// Combine all image loaders
+const imageLoaders: Record<string, () => Promise<{ default: ImageMetadata }>> = {
+  ...eventImages,
+  ...venueImages,
+};
+
 /**
- * Creates a cache key based on image metadata and image type
- */
-function createCacheKey(image: ImageMetadata, imageType: ImageType): string {
-  // Use the image source path and image type to create a unique key
-  const imagePath = (image as any).src || String(image);
-  return `${imagePath}:${imageType}`;
-}
-
-/*
-srcset="
-/_astro/PXL_20250719_0946379792.Dotqtig7_ZoBrEI.webp 420w, 
-/_astro/PXL_20250719_0946379792.Dotqtig7_1RxIhl.webp 720w, 
-/_astro/PXL_20250719_0946379792.Dotqtig7_2jEGBn.webp 1200w"
-
-
-/**
- * Generate responsive image data for an Astro ImageMetadata input and an image type.
+ * Generate responsive image data from a string path and an image type.
+ * This combines the image loading and responsive generation into one step.
  *
  * - Uses BREAKPOINTS, capped to the original image width
  * - Produces WebP variants at quality 80
  * - Applies cropping if specified in the image config
  * - Returns { src, srcSet, sizes } ready to spread onto <img>
  */
-export async function generateResponsiveImage(
-  image: ImageMetadata,
-  imageType: ImageType = "galleryLightbox",
-): Promise<ResponsiveImageData> {
-  // Check cache first
-  const cacheKey = createCacheKey(image, imageType);
-  if (imageCache.has(cacheKey)) {
-    return imageCache.get(cacheKey)!;
-  }
+export const getResponsiveImage = memoize(
+  async (
+    imagePath: string,
+    imageType: ImageType = "galleryLightbox",
+  ): Promise<ResponsiveImageData> => {
+    // Normalize the path to match import.meta.glob format
+    const normalizedPath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
 
-  // Get the config for this image type
-  const config = IMAGE_CONFIGS[imageType];
-  const { sizes, cropAspectRatio, breakpoints } = config;
+    const loader = imageLoaders[normalizedPath];
 
-  const widths = breakpoints || DEFAULT_OUTPUT_SIZES; // .filter((w) => w <= image.width);
+    if (!loader) {
+      console.error(`Image loader not found: ${normalizedPath}`);
+      throw new Error(`Unable to load image at path: ${imagePath}`);
+    }
 
-  // If no valid widths, use the original width
-  const candidateWidths = widths.length > 0 ? widths : [image.width];
+    // Load the image lazily - only when requested
+    const module = await loader();
+    const image = module.default;
 
-  // Generate all variants
-  const variants = await Promise.all(
-    candidateWidths.map(async (width) => {
-      const imageOptions: any = {
-        src: image,
-        width,
-        format: "webp",
-        quality: 80,
-      };
+    // Get the config for this image type
+    const config = IMAGE_CONFIGS[imageType];
+    const { sizes, cropAspectRatio, breakpoints } = config;
 
-      // Apply cropping if aspect ratio is specified
-      if (cropAspectRatio) {
-        imageOptions.height = Math.round(width / cropAspectRatio);
-        imageOptions.fit = "cover";
-      }
+    const widths = breakpoints || DEFAULT_OUTPUT_SIZES;
 
-      // reutrn nul lfor debugging
-      const optimized = await safeGetImage(imageOptions);
-      return { url: optimized.src, width };
-    }),
-  );
+    // If no valid widths, use the original width
+    const candidateWidths = widths.length > 0 ? widths : [image.width];
 
-  // Largest variant (last in array) → sensible fallback `src`
-  const largest = variants[variants.length - 1];
+    // Generate all variants
+    const variants = await Promise.all(
+      candidateWidths.map(async (width) => {
+        const imageOptions: any = {
+          src: image,
+          width,
+          format: "webp",
+          quality: 80,
+        };
 
-  const result: ResponsiveImageData = {
-    src: largest.url, // URL only (not "url 1200w")
-    srcSet: variants.map((v) => `${v.url} ${v.width}w`).join(", "),
-    sizes,
-  };
+        // Apply cropping if aspect ratio is specified
+        if (cropAspectRatio) {
+          imageOptions.height = Math.round(width / cropAspectRatio);
+          imageOptions.fit = "cover";
+        }
 
-  // Cache the result
-  imageCache.set(cacheKey, result);
+        const optimized = await safeGetImage(imageOptions);
+        return { url: optimized.src, width };
+      }),
+    );
 
-  return result;
-}
+    // Largest variant (last in array) → sensible fallback `src`
+    const largest = variants[variants.length - 1];
+
+    return {
+      src: largest.url, // URL only (not "url 1200w")
+      srcSet: variants.map((v) => `${v.url} ${v.width}w`).join(", "),
+      sizes,
+    };
+  },
+);

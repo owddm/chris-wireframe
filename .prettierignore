@@ -1,5 +1,5 @@
 # Ignore content directory
-content/
+/content/
 
 # Dependencies
 node_modules/
