@@ -38,7 +38,7 @@ export async function buildSitemapSections(): Promise<Entry[]> {
   const events = await getEvents();
   const eventPages: PageEntry[] = events
     .map((e) => ({
-      href: `/event/${e.id}`,
+      href: `/events/${e.id}`,
       title: e.data.title,
       // For legacy events, use their cover image if available
       ogImage: isLegacyEvent(e) && e.data.cover?.src ? e.data.cover.src : undefined,

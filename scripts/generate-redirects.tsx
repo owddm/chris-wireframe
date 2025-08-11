@@ -3,7 +3,7 @@
  * Generate redirects.json file from content/events directory
  *
  * Run this script after adding new events to generate updated redirects
- * for migrating from old owddm.com URL format (/events/[id]) to new format (/event/[slug])
+ * for migrating from old owddm.com URL format (/events/[id]) to new format (/events/[slug])
  *
  * Usage: npm run generate-redirects (add this to package.json scripts)
  *        or: npx tsx scripts/generate-redirects.tsx
@@ -44,7 +44,8 @@ async function generateRedirects() {
       const eventId = eventDir.split("-")[0]; // Get just the numeric ID
       if (eventId && /^\d+$/.test(eventId)) {
         // Ensure it's numeric
-        redirects[`/events/${eventId}`] = `/event/${eventDir}`;
+        // Redirect from old owddm.com URL format
+        redirects[`/events/${eventId}`] = `/events/${eventDir}`;
       }
     });
 
@@ -53,7 +54,7 @@ async function generateRedirects() {
 
     // First add non-event redirects
     Object.entries(redirects)
-      .filter(([key]) => !key.startsWith("/events/"))
+      .filter(([key]) => !key.startsWith("/events/") && !key.startsWith("/event/"))
       .sort(([a], [b]) => a.localeCompare(b))
       .forEach(([key, value]) => {
         sortedRedirects[key] = value;
@@ -61,10 +62,11 @@ async function generateRedirects() {
 
     // Then add event redirects sorted by ID
     Object.entries(redirects)
-      .filter(([key]) => key.startsWith("/events/"))
+      .filter(([key]) => key.startsWith("/events/") || key.startsWith("/event/"))
       .sort(([a], [b]) => {
-        const idA = parseInt(a.replace("/events/", ""));
-        const idB = parseInt(b.replace("/events/", ""));
+        // Extract ID from either format
+        const idA = parseInt(a.replace(/\/events?\//, "").split("-")[0]);
+        const idB = parseInt(b.replace(/\/events?\//, "").split("-")[0]);
         return idB - idA; // Sort descending (newest first)
       })
       .forEach(([key, value]) => {
@@ -75,14 +77,18 @@ async function generateRedirects() {
     const outputPath = resolve(process.cwd(), "redirects.json");
     writeFileSync(outputPath, JSON.stringify(sortedRedirects, null, 2));
 
-    const eventRedirectCount = Object.keys(redirects).filter((k) =>
+    const owddmRedirectCount = Object.keys(redirects).filter((k) =>
       k.startsWith("/events/"),
+    ).length;
+    const oldEventRedirectCount = Object.keys(redirects).filter((k) =>
+      k.startsWith("/event/"),
     ).length;
 
     console.log(`✅ Generated redirects.json with ${Object.keys(redirects).length} redirects`);
     console.log(`   - 1 external redirect (discord)`);
     console.log(`   - 3 static page redirects`);
-    console.log(`   - ${eventRedirectCount} event redirects`);
+    console.log(`   - ${owddmRedirectCount} owddm.com event redirects (/events/[id])`);
+    console.log(`   - ${oldEventRedirectCount} old route redirects (/event/[slug])`);
     console.log(`📁 Output: ${outputPath}`);
   } catch (error) {
     console.error("❌ Error generating redirects:", error);

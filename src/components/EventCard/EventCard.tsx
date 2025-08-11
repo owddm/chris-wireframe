@@ -21,7 +21,7 @@ export default function EventCard({
 }) {
   const odd = index !== undefined && index % 2 === 1;
   const border = index === undefined;
-  const eventUrl = `/event/${event.id}`;
+  const eventUrl = `/events/${event.id}`;
   // Only enable prefetching in production
   const isProd = typeof window !== "undefined" && window.location.hostname !== "localhost";
   const prefetchRef = useViewportPrefetch(eventUrl, isProd);

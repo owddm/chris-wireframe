@@ -67,7 +67,7 @@ export default function AddToCalendarDropdown({ event }: AddToCalendarDropdownPr
 
   // Generate calendar URLs
   const baseUrl = resolveBaseUrl();
-  const eventUrl = `${baseUrl}/event/${event.id}`;
+  const eventUrl = `${baseUrl}/events/${event.id}`;
 
   // Format dates for calendar links
   const startDate = new Date(event.data.dateTime);
@@ -112,7 +112,7 @@ export default function AddToCalendarDropdown({ event }: AddToCalendarDropdownPr
       <div className="dropdown-content bg-base-100 rounded-box z-50 mt-1 flex min-w-max flex-col gap-6 p-6 shadow">
         <Subsection title="Add Single Event">
           <Button
-            href={`/event/${event.id}.ics`}
+            href={`/events/${event.id}.ics`}
             icon={<LuCalendar className="h-4 w-4" />}
             text="Outlook / iCal"
             testId="calendar-ical"

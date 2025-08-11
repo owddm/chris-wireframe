@@ -18,12 +18,12 @@ function EventsOrganizerInner({
   const { availableFilters } = useEventsFilter();
 
   return (
-    <>
+    <div className="py-10">
       <Container>
         <EventsFilter availableFilters={availableFilters} currentView={view} />
       </Container>
       <EventsView events={events} view={view} />
-    </>
+    </div>
   );
 }
 
