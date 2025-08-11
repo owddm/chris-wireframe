@@ -15,7 +15,6 @@ interface BlobSlideshowProps<T = string | ImageData> {
   images?: (string | ImageData)[];
   data?: T[];
   renderer?: (item: T, index: number) => React.ReactNode;
-  transitionSpeed?: number; // milliseconds for blob morph
   slideDelay?: number; // milliseconds between slides
   className?: string;
   blobs?: string[];
@@ -28,7 +27,6 @@ export default function BlobSlideshow<T = string | ImageData>({
   images,
   data,
   renderer,
-  transitionSpeed = 1000,
   slideDelay = 2000,
   className = "",
   blobs = BLOBS,
@@ -93,7 +91,6 @@ export default function BlobSlideshow<T = string | ImageData>({
         <BlobMask
           id={uniqueId}
           blobPath={blobs[(currentBlob + blobOffset) % blobs.length]}
-          transitionSpeed={transitionSpeed}
           className={`absolute inset-0 ${className}`}
         >
           {isDataMode

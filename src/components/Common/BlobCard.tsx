@@ -12,7 +12,6 @@ interface BlobCardProps {
   preset?: number;
   className?: string;
   bgClass?: string;
-  transitionSpeed?: number;
   showTip?: boolean;
 }
 
@@ -31,7 +30,6 @@ export default function BlobCard({
   preset = 0,
   className = "",
   bgClass = "bg-primary/20 group-hover:bg-primary/40 group-active:bg-primary/60",
-  transitionSpeed = 300,
   showTip = false,
 }: BlobCardProps) {
   const uniqueId = React.useId();
@@ -130,7 +128,6 @@ export default function BlobCard({
         <BlobMask
           id={uniqueId}
           blobPath={getCurrentPath()}
-          transitionSpeed={transitionSpeed}
           className={clsx(
             "pointer-events-none absolute inset-0 z-0 transition-all duration-300",
             bgClass,

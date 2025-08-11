@@ -61,7 +61,6 @@ export default function LandingStatsSlideshow({
       blobOffset={1}
       renderer={renderer}
       slideDelay={1500}
-      transitionSpeed={500}
       containerClassName="aspect-square"
     />
   );
