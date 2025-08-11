@@ -21,14 +21,14 @@ test.describe("Navigation Buttons", () => {
 
       // Verify we're on a different event page
       const currentUrl = page.url();
-      expect(currentUrl).toContain("/event/");
+      expect(currentUrl).toContain("/events/");
 
       // Click next button to go back
       await page.getByTestId("nav-button-next").first().click();
       await page.waitForLoadState("networkidle");
 
       // Should still be on an event page
-      expect(page.url()).toContain("/event/");
+      expect(page.url()).toContain("/events/");
     });
 
     test("should navigate using keyboard arrows on event pages", async ({ page }) => {
@@ -52,7 +52,7 @@ test.describe("Navigation Buttons", () => {
       // Verify navigation happened
       const urlAfterLeft = page.url();
       expect(urlAfterLeft).not.toBe(initialUrl);
-      expect(urlAfterLeft).toContain("/event/");
+      expect(urlAfterLeft).toContain("/events/");
 
       // Press right arrow key
       await page.keyboard.press("ArrowRight");
@@ -71,7 +71,7 @@ test.describe("Navigation Buttons", () => {
       await page.waitForLoadState("networkidle");
 
       // Verify we're on an event page
-      expect(page.url()).toContain("/event/");
+      expect(page.url()).toContain("/events/");
 
       // Check that back button exists and is visible
       const backButton = page.getByTestId("nav-button-back").first();

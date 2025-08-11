@@ -33,7 +33,7 @@ test.describe("Dynamic Routes", () => {
   });
 
   test("Individual event page loads with correct title", async ({ page }) => {
-    await page.goto(`/event/${TEST_EVENTS.PRIMARY}`);
+    await page.goto(`/events/${TEST_EVENTS.PRIMARY}`);
     await page.waitForLoadState("networkidle");
     // Event pages typically have the event name in the title
     await expect(page).toHaveTitle(/Future Test Event 1.*OKTech/);
@@ -68,7 +68,7 @@ test.describe("Special Routes", () => {
   });
 
   test("Event OG image is accessible", async ({ page }) => {
-    const response = await page.goto(`/event/${TEST_EVENTS.PRIMARY}/og.png`);
+    const response = await page.goto(`/events/${TEST_EVENTS.PRIMARY}/og.png`);
     expect(response?.status()).toBe(200);
     expect(response?.headers()["content-type"]).toContain("image/png");
   });

@@ -7,7 +7,7 @@ test.describe("Events Page Prefetching", () => {
 
     await page.route("**/*", (route, request) => {
       const headers = request.headers();
-      if (headers["purpose"] === "prefetch" || request.url().includes("/event/")) {
+      if (headers["purpose"] === "prefetch" || request.url().includes("/events/")) {
         prefetchRequests.push(request.url());
       }
       route.continue();
@@ -66,7 +66,7 @@ test.describe("Events Page Prefetching", () => {
     const eventCardLink = await page.$('a[data-testid*="event-card"]');
     if (eventCardLink) {
       const href = await eventCardLink.getAttribute("href");
-      expect(href).toContain("/event/");
+      expect(href).toContain("/events/");
     }
   });
 
@@ -94,7 +94,7 @@ test.describe("Events Page Prefetching", () => {
       const eventCardLink = await page.$('a[data-testid*="event-card"]');
       if (eventCardLink) {
         const href = await eventCardLink.getAttribute("href");
-        expect(href).toContain("/event/");
+        expect(href).toContain("/events/");
       }
     }
   });

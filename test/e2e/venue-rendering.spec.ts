@@ -7,7 +7,7 @@ test.describe("Venue Rendering on Event Pages", () => {
   test.use({ viewport: { width: 1280, height: 720 } });
 
   test("Test Venue 1 is rendered on primary test event page", async ({ page }) => {
-    await page.goto(`/event/${TEST_EVENTS.PRIMARY}`);
+    await page.goto(`/events/${TEST_EVENTS.PRIMARY}`);
     await page.waitForLoadState("networkidle");
 
     // Check that venue title exists on the page
@@ -22,7 +22,7 @@ test.describe("Venue Rendering on Event Pages", () => {
   });
 
   test("Test Venue 2 is rendered on secondary test event page", async ({ page }) => {
-    await page.goto(`/event/${TEST_EVENTS.SECONDARY}`);
+    await page.goto(`/events/${TEST_EVENTS.SECONDARY}`);
     await page.waitForLoadState("networkidle");
 
     // Check that venue title link exists on the page (Test Venue 2 has hasPage=true)
@@ -37,7 +37,7 @@ test.describe("Venue Rendering on Event Pages", () => {
   });
 
   test("Venue information includes address and city", async ({ page }) => {
-    await page.goto(`/event/${TEST_EVENTS.PRIMARY}`);
+    await page.goto(`/events/${TEST_EVENTS.PRIMARY}`);
     await page.waitForLoadState("networkidle");
 
     // Check for venue address
@@ -52,7 +52,7 @@ test.describe("Venue Rendering on Event Pages", () => {
   });
 
   test("Venue section contains venue information", async ({ page }) => {
-    await page.goto(`/event/${TEST_EVENTS.PRIMARY}`);
+    await page.goto(`/events/${TEST_EVENTS.PRIMARY}`);
     await page.waitForLoadState("networkidle");
 
     // Check that event info section exists
@@ -68,7 +68,7 @@ test.describe("Venue Rendering on Event Pages", () => {
 
   test("Venue title link behavior on event page depends on hasPage property", async ({ page }) => {
     // Test Venue 1 (no hasPage) - venue title should NOT be a link
-    await page.goto(`/event/${TEST_EVENTS.PRIMARY}`);
+    await page.goto(`/events/${TEST_EVENTS.PRIMARY}`);
     await page.waitForLoadState("networkidle");
 
     // Venue 1 should show as text, not link
@@ -82,7 +82,7 @@ test.describe("Venue Rendering on Event Pages", () => {
     expect(venueTitleLinkCount).toBe(0);
 
     // Test Venue 2 (hasPage=true) - venue title should be a link
-    await page.goto(`/event/${TEST_EVENTS.SECONDARY}`);
+    await page.goto(`/events/${TEST_EVENTS.SECONDARY}`);
     await page.waitForLoadState("networkidle");
 
     // Venue 2 should show as link
@@ -94,7 +94,7 @@ test.describe("Venue Rendering on Event Pages", () => {
 
   test("Venue maps link to Google Maps", async ({ page }) => {
     // Test that maps link to Google Maps
-    await page.goto(`/event/${TEST_EVENTS.PRIMARY}`);
+    await page.goto(`/events/${TEST_EVENTS.PRIMARY}`);
     await page.waitForLoadState("networkidle");
 
     // Check for venue map link using data-testid
@@ -105,7 +105,7 @@ test.describe("Venue Rendering on Event Pages", () => {
     await expect(mapLink).toHaveAttribute("target", "_blank");
 
     // Test venue 2
-    await page.goto(`/event/${TEST_EVENTS.SECONDARY}`);
+    await page.goto(`/events/${TEST_EVENTS.SECONDARY}`);
     await page.waitForLoadState("networkidle");
 
     const mapLink2 = page.locator('[data-testid="venue-map-link"]:visible');
