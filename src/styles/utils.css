@@ -44,3 +44,18 @@
   mask-image: linear-gradient(to bottom, black 0%, transparent 98%);
   -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 98%);
 }
+
+
+.rounded-box-inner-margin {
+  margin: calc(var(--spacing) * 2);
+}
+.rounded-box-inner-radius {
+  border-radius: calc(var(--radius-box) - calc(var(--spacing) * 2));
+}
+
+.rounded-box-inner-margin-sm {
+  margin: calc(var(--spacing) * 1);
+}
+.rounded-box-inner-radius-sm {
+  border-radius: calc(var(--radius-box) - calc(var(--spacing) * 1));
+}

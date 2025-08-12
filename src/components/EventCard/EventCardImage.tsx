@@ -16,8 +16,10 @@ export default function EventCardImage({ event, variant }: EventCardImageProps) 
   return (
     <div
       className={clsx(
-        "relative m-2 overflow-hidden",
-        variant === "compact" ? "hidden rounded-2xl sm:block" : "rounded-box",
+        "relative overflow-hidden",
+        variant === "compact"
+          ? "rounded-box-inner-radius-sm rounded-box-inner-margin-sm hidden sm:block"
+          : "rounded-box-inner-radius rounded-box-inner-margin",
       )}
     >
       {variant !== "compact" && (
