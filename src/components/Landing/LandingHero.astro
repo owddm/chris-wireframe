@@ -6,25 +6,29 @@ import Cut from "../Common/Cut";
 ---
 
 <Cut
-  className="mb-12 flex min-h-[40rem] max-w-full items-center pt-32"
+  className="mb-12 flex min-h-[40rem] max-w-full items-center pt-24 pb-6 lg:pt-32"
   bottom="up"
   bgClass="bg-base-content/10"
 >
   <Container wide>
-    <div class="flex flex-col gap-20 md:grid md:grid-cols-2 2xl:px-32">
-      <div class="flex flex-col justify-center gap-8 text-center md:pl-1 md:text-left">
-        <h2 class="text-5xl font-bold xl:text-6xl 2xl:text-7xl">
-          Together<br />in tech and life
-        </h2>
+    <div class="flex flex-col gap-20 md:grid md:grid-cols-2 md:items-center 2xl:px-32">
+      <div class="flex flex-col items-center">
+        <div
+          class="flex max-w-[40rem] flex-col justify-center gap-8 text-center md:pl-1 md:text-left"
+        >
+          <h2 class="text-5xl font-bold xl:text-6xl 2xl:text-7xl">
+            Together<br />in tech and life
+          </h2>
 
-        <p class="text-2xl">Build cool things, share life hacks, and meet kind minds.</p>
-        <p class="text-lg">
-          With over 2,000 attendees, OKTech is Kaisai's largest English speaking Technology Meetup
-          Group.
-        </p>
+          <p class="text-2xl">Build cool things, share life hacks, and meet kind minds.</p>
+          <p class="text-lg">
+            With over 2,000 attendees, OKTech is Kaisai's largest English speaking Technology Meetup
+            Group.
+          </p>
+        </div>
       </div>
       <div>
-        <Parallax client:idle>
+        <Parallax client:idle className="md:-my-10 md:-mr-10 md:-mb-30 lg:-mr-20">
           <BlobSlideshow
             startTimeOffset={1000}
             images={[
