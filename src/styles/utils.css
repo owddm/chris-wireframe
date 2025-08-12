@@ -60,11 +60,11 @@
   margin-top: calc(var(--gap) / 2);
   margin-bottom: calc(var(--gap) / 2);
 
-  &.first{
+  &.first {
     border-top-left-radius: var(--radius);
     margin-top: var(--gap);
   }
-  &.last{
+  &.last {
     border-bottom-left-radius: var(--radius);
     margin-bottom: var(--gap);
   }
