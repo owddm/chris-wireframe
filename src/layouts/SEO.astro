@@ -29,7 +29,6 @@ const {
 import { SITE } from "@/constants";
 import { getOGImageWithFallback } from "@/utils/og";
 import { resolveFullUrl } from "@/utils/urlResolver";
-import logoRoundSvg from "@/assets/oktech-logo-round.svg?raw";
 
 const pageTitle = title ? SITE.title.template.replace("%s", title) : SITE.title.default;
 const resolvedCanonical = canonical || Astro.url.href;
@@ -100,8 +99,4 @@ const robotsContent = [noindex ? "noindex" : "index", nofollow ? "nofollow" : "f
   )
 }
 
-<link
-  rel="icon"
-  type="image/svg+xml"
-  href={`data:image/svg+xml,${encodeURIComponent(logoRoundSvg)}`}
-/>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />

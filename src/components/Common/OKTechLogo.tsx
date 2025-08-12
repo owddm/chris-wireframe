@@ -1,14 +1,19 @@
 import { clsx } from "clsx";
 
+import { themeColorsHex } from "@/utils/og/theme-colors";
+
 interface OKTechLogoProps {
   className?: string;
   active?: boolean;
 }
 
+// TODO use colors picked from wintle's image
 const colors = {
   RED: "#fd4d69",
   GREEN: "#49d773",
   BLUE: "#459bc9",
+  BASE_LIGHT: themeColorsHex.light["baseContent"],
+  BASE_DARK: themeColorsHex.dark["baseContent"],
 };
 
 type OKTechLogoItemProps = OKTechLogoProps & {
@@ -30,7 +35,27 @@ export function OKTechLogoIcon({ className, style, active }: OKTechLogoItemProps
         style={{ transform: active ? "rotate(-10deg)" : "none", ...style }}
         fill="currentColor"
       >
-        <path d="M44.64,15.92v68.17c-16.51-2.57-29.15-16.85-29.15-34.08s12.64-31.52,29.15-34.09Z" />
+        <defs>
+          <style>
+            {`
+              .base-responsive { fill: ${colors.BASE_LIGHT}; }
+              
+              @media (prefers-color-scheme: dark) {
+                .base-responsive { fill: ${colors.BASE_DARK}; }
+              }
+              @media (prefers-color-scheme: light) {
+                .base-responsive { fill: ${colors.BASE_LIGHT}; }
+              }
+              
+              [data-theme="light"] .base-responsive { fill: currentColor !important; }
+              [data-theme="dark"] .base-responsive { fill: currentColor !important; }
+            `}
+          </style>
+        </defs>
+        <path
+          className="base-responsive"
+          d="M44.64,15.92v68.17c-16.51-2.57-29.15-16.85-29.15-34.08s12.64-31.52,29.15-34.09Z"
+        />
         <g>
           <path
             fill={active ? colors.RED : undefined}
