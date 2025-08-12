@@ -21,7 +21,7 @@ export function EventsFilter({ availableFilters, currentView }: EventsFilterProp
 
   return (
     <div className="flex flex-col-reverse items-center justify-between gap-8 md:flex-row">
-      <div className="join w-full max-w-[25em]">
+      <div className="join flex w-full max-w-[25em]">
         <EventsSearchInput />
 
         {availableFilters.locations.length > 0 && (

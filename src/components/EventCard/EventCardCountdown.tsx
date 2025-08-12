@@ -15,11 +15,13 @@ const LIVE_BADGE_CLASS = `${BADGE_BASE} badge-info`;
 interface EventCardCountdownProps {
   event: EventEnriched;
   className?: string;
+  wrapper?: (children: React.ReactNode) => React.ReactNode;
 }
 
 export default function EventCardCountdown({
   event,
   className = "badge-lg",
+  wrapper,
 }: EventCardCountdownProps) {
   const [timeString, setTimeString] = useState<string>("");
   const [badgeClass, setBadgeClass] = useState<string>(DEFAULT_BADGE_CLASS);
@@ -91,10 +93,12 @@ export default function EventCardCountdown({
 
   if (!timeString) return null;
 
-  return (
+  const content = (
     <div className={clsx(badgeClass, "flex items-center gap-2", className)}>
       <LuCalendarClock />
       {timeString}
     </div>
   );
+
+  return wrapper ? <>{wrapper(content)}</> : content;
 }

@@ -1,3 +1,5 @@
+import { Children } from "react";
+
 import clsx from "clsx";
 import { LuArrowUpRight, LuBuilding2, LuCalendar, LuClock } from "react-icons/lu";
 
@@ -18,7 +20,8 @@ function InfoItem({
   variant: Variant;
   Icon?: React.ElementType;
 }) {
-  if (!children) return null;
+  // Return null if children is falsy or if it's an empty React fragment/array
+  if (!children || Children.count(children) === 0) return null;
 
   return (
     <div
@@ -44,9 +47,11 @@ function Info({ event, variant }: { event: EventEnriched; variant: Variant }) {
       )}
     >
       {variant === "compact" && (
-        <InfoItem variant={variant}>
-          <EventCardCountdown event={event} className="badge-md" />
-        </InfoItem>
+        <EventCardCountdown
+          event={event}
+          className="badge-md"
+          wrapper={(content) => <InfoItem variant={variant}>{content}</InfoItem>}
+        />
       )}
       <InfoItem variant={variant} Icon={LuCalendar}>
         {formatDate(event.data.dateTime, "long")}

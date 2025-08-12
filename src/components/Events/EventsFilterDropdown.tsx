@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
+import clsx from "clsx";
 import { LuChevronDown } from "react-icons/lu";
 
 import { useEventsFilter } from "./EventsFilterProvider";
@@ -91,13 +92,18 @@ export default function EventsFilterDropdown({
           // className="absolute top-full -right-10 z-50 mt-2 flex w-[25em] items-end justify-end md:right-auto md:-left-10 md:w-[30em] md:justify-start lg:w-[40em]"
           className="absolute top-full right-0 mt-2 flex w-[25em] items-end justify-end"
         >
-          <div className="soft-glass inline-flex flex-wrap gap-2 p-4!">
-            {options.map((option) => (
+          {/* <div className="soft-glass inline-flex flex-wrap gap-2 p-4!"> */}
+          <div className="flex">
+            {options.map((option, i) => (
               <button
                 key={option}
                 type="button"
                 onClick={() => handleOptionChange(option)}
-                className={`btn btn-sm rounded-full ${selected.includes(option) ? "btn-accent" : ""}`}
+                className={clsx(`btn`, {
+                  "btn-accent": selected.includes(option),
+                  "rounded-l-full": i === 0,
+                  "rounded-r-full": i === options.length - 1,
+                })}
                 data-testid={`${id === "topics" ? "topic" : "location"}-option`}
               >
                 {id === "location" ? capitalizeFirst(option) : option}
