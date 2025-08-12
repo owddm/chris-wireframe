@@ -9,25 +9,28 @@ type Variant = "compact" | "polaroid" | "big";
 interface EventCardImageProps {
   event: EventEnriched;
   variant: Variant;
+  first?: boolean;
+  last?: boolean;
   cityComponent?: React.ReactNode;
 }
 
-export default function EventCardImage({ event, variant }: EventCardImageProps) {
+export default function EventCardImage({ event, variant, first, last }: EventCardImageProps) {
   return (
     <div
       className={clsx(
         "relative overflow-hidden",
-        variant === "compact"
-          ? "rounded-box-inner-radius-sm rounded-box-inner-margin-sm hidden sm:block"
-          : "rounded-box-inner-radius rounded-box-inner-margin",
+        variant === "compact" && "rounded-box-inner-tight hidden sm:block",
+        variant === "compact" && first && "first",
+        variant === "compact" && last && "last",
+        variant !== "compact" && "rounded-box-inner",
       )}
     >
+      {/* {JSON.stringify({ first, last })} */}
       {variant !== "compact" && (
         <div className="absolute top-3 left-3">
           <EventCardCountdown event={event} />
         </div>
       )}
-
       <figure
         className={clsx(
           "bg-base-300",

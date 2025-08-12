@@ -23,31 +23,25 @@ export default function LocationCard({
       <div className={clsx("glass-card flex", horizontal ? "flex-col sm:flex-row" : "flex-col")}>
         {venue && (
           <div className={clsx("flex", horizontal ? "h-50 sm:h-auto sm:w-90" : "h-60")}>
-            <div className="relative flex-grow">
+            <div className="rounded-box-inner relative flex-grow overflow-hidden sm:rounded-r-none">
               <div className="absolute inset-0 z-0 overflow-hidden">
                 <VenueMap venue={venue} marker={venue?.title} link={true} />
               </div>
               {venue.city && (
-                <div className="absolute right-0 bottom-0 z-10">
-                  <CityBadge
-                    city={venue.city}
-                    className="m-0 rounded-tr-none rounded-br-none rounded-bl-none pl-4"
-                  />
+                <div className="absolute right-2 bottom-2 z-10">
+                  <CityBadge city={venue.city} />
                 </div>
               )}
             </div>
           </div>
         )}
         <div className="flex w-full flex-grow flex-col">
-          <div className="flex flex-col justify-center gap-2 p-8">{children}</div>
-          {info && <div className="chat-bubble-info hidden px-8 py-4 text-sm md:block">{info}</div>}
+          <div className="flex flex-col justify-center gap-2 px-8 py-6">{children}</div>
+          {info && (
+            <div className="rounded-box-inner chat-bubble-info px-6 py-4 text-sm">{info}</div>
+          )}
         </div>
       </div>
-      {info && (
-        <div className="chat-bubble-info rounded-box glass-border px-8 py-4 text-sm md:hidden">
-          {info}
-        </div>
-      )}
       {below}
     </>
   );

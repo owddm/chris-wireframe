@@ -12,13 +12,17 @@ type Variant = "compact" | "polaroid" | "big";
 
 export default function EventCard({
   event,
-  index,
+  index = 0,
+  count = 1,
   variant = "compact",
 }: {
   event: EventEnriched;
   index?: number;
+  count?: number;
   variant?: Variant;
 }) {
+  const first = index === 0;
+  const last = index === count - 1;
   const odd = index !== undefined && index % 2 === 1;
   const border = index === undefined;
   const eventUrl = `/events/${event.id}`;
@@ -36,6 +40,7 @@ export default function EventCard({
         !border && "border-t-0 border-r-0 border-l-0",
         odd ? "bg-base-100/30" : "bg-base-100/60",
         variant === "compact" && "flex items-center",
+        variant !== "compact" && "rounded-box",
         variant === "polaroid" && "flex flex-col",
         variant === "big" && "flex flex-col sm:grid sm:grid-cols-2",
       )}
@@ -44,6 +49,8 @@ export default function EventCard({
       <EventCardImage
         event={event}
         variant={variant}
+        first={first}
+        last={last}
         cityComponent={
           <CityBadge
             city={event.venue?.city}
@@ -60,7 +67,13 @@ export function EventCardList({ events }: { events: EventEnriched[] }) {
   return (
     <div className={"glass-border rounded-box overflow-hidden"}>
       {events.map((event, index) => (
-        <EventCard key={event.id} variant="compact" event={event} index={index} />
+        <EventCard
+          key={event.id}
+          variant="compact"
+          event={event}
+          index={index}
+          count={events.length}
+        />
       ))}
     </div>
   );
