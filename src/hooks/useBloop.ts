@@ -357,7 +357,7 @@ export default function useBloop({
   const lastPlayedRef = useRef<number>(0);
   const throttleMs = 200;
 
-  const playBloop = useCallback(() => {
+  const playBloop = useCallback(async () => {
     const now = Date.now();
 
     // Throttle: if we played within the last throttleMs, don't play again
@@ -373,6 +373,11 @@ export default function useBloop({
         audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
       }
       const audioContext = audioContextRef.current;
+
+      // Resume AudioContext if suspended (required for iOS)
+      if (audioContext.state === "suspended") {
+        await audioContext.resume();
+      }
       const currentTime = audioContext.currentTime;
 
       // Generate base frequency
