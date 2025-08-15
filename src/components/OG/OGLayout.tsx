@@ -37,7 +37,7 @@ export default function OGLayout({}: OGLayoutProps) {
       {/* Header with Brand component */}
       <div style={twj("flex items-center justify-center")}>
         <div style={twj("flex justify-start items-center")}>
-          <OKTechLogoIcon active style={scale(2.35, "icon")} />
+          <OKTechLogoIcon active noStyle style={scale(2.35, "icon")} />
           <OKTechLogoText style={scale(2.35, "text")} />
         </div>
       </div>

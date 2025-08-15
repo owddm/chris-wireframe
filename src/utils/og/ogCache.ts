@@ -25,7 +25,7 @@ export type CacheKeyData = Record<string, unknown>;
  */
 export class OGImageCache {
   private cacheDir: string;
-  private static OG_VERSION = "v1.1";
+  private static OG_VERSION = "v1.2";
   private static themeHash: string | null = null;
 
   constructor() {
