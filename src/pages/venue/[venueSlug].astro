@@ -44,7 +44,11 @@ const description =
   `${venue.data.title} - Event venue in ${venue.data.city || "Osaka"}. ${venueEvents.length} events hosted.`;
 ---
 
-<SidebarPageLayout title={`${venue.data.title} - Venues`} description={description} type="article">
+<SidebarPageLayout
+  title={`${venue.data.title} - Venues`}
+  description={description}
+  og={venue.data.cover?.src}
+>
   <Fragment slot="sidebar">
     <LocationCardVenue venue={venue} client:visible />
   </Fragment>
