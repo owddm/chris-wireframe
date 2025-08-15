@@ -50,13 +50,15 @@ function BlobWrapper({
   children,
   preset,
   showTip = false,
+  className,
 }: {
   children: ReactNode;
   preset: number;
   showTip?: boolean;
+  className?: string;
 }) {
   return (
-    <div className="flex items-center justify-center">
+    <div className={clsx("flex items-center justify-center", className)}>
       <BlobCard preset={preset} showTip={showTip} className="mt-5 -mb-5 h-70 w-70">
         <div className="flex h-full w-full items-center justify-center">{children}</div>
       </BlobCard>
@@ -66,9 +68,14 @@ function BlobWrapper({
 
 export default function BlobIconGrid({ items, className = "" }: BlobIconGridProps) {
   return (
-    <div className={clsx("flex flex-wrap justify-center gap-16", className)}>
+    <div className={clsx("flex flex-wrap justify-center gap-28 pb-12 md:pb-24", className)}>
       {items.map((item, index) => (
-        <BlobWrapper key={`${item.title}-${index}`} preset={index} showTip={item.showTip}>
+        <BlobWrapper
+          key={`${item.title}-${index}`}
+          preset={index}
+          showTip={item.showTip}
+          className="-mb-12 md:-mb-24"
+        >
           {item.type === "link" ? (
             <Link href={item.href || "#"} className="">
               <GridItem title={item.title} description={item.description} Icon={item.icon} />
