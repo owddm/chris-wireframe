@@ -83,7 +83,7 @@ export const eventsCollection = defineCollection({
 export const eventGalleryImageCollection = defineCollection({
   loader: async () => {
     const [images, metadata] = await Promise.all([
-      import.meta.glob("/content/events/**/gallery/*.{webp,jpg,jpeg,png,gif,svg}", { eager: true }),
+      import.meta.glob("/content/events/**/gallery/*.{webp,jpg,jpeg,png,gif,svg}"),
       import.meta.glob("/content/events/**/gallery/*.yaml", { eager: true }),
     ]);
 

@@ -33,13 +33,9 @@ export const venuesCollection = defineCollection({
       eager: true,
     });
 
-    const mapImages = import.meta.glob("/content/venues/**/map.jpg", {
-      eager: true,
-    });
+    const mapImages = import.meta.glob("/content/venues/**/map.jpg");
 
-    const mapDarkImages = import.meta.glob("/content/venues/**/map-dark.jpg", {
-      eager: true,
-    });
+    const mapDarkImages = import.meta.glob("/content/venues/**/map-dark.jpg");
 
     return Object.entries(imports).map(([fileName, module]) => {
       const basePath = fileName.replace("/venue.md", "");
