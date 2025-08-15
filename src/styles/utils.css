@@ -24,7 +24,7 @@
 }
 .glass-border,
 .glass-card {
-  @apply border-base-100/60 hover:border-base-100/100 border-1 transition-all duration-200;
+  @apply border-base-100/60 hover:border-base-100/100 border transition-colors duration-200;
 }
 
 .text-link {
