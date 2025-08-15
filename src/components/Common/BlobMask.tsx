@@ -89,6 +89,8 @@ export default function BlobMask({ id, blobPath, className = "", children }: Pro
         style={{
           clipPath: `url(#${maskId})`,
           WebkitClipPath: `url(#${maskId})`,
+          WebkitTransform: "translateZ(0)",
+          transform: "translateZ(0)",
         }}
       >
         {children}
