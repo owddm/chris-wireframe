@@ -29,7 +29,7 @@ code {
 }
 
 body > div {
-  @apply overflow-x-hidden;
+  @apply overflow-x-clip;
 }
 
 body {
