@@ -6,6 +6,6 @@ import { getEvents } from "@/content";
 const events = await getEvents();
 ---
 
-<PageLayout title="Events">
+<PageLayout>
   <EventsOrganizer events={events} view={"album"} client:load />
 </PageLayout>

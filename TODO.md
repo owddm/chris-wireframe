@@ -1,36 +1,26 @@
-# CHRIS FINAL MEGA SPRINT CRUNCH DAILY GRIND SCHEDULE
+- Use color dropper for logo rgb
+- Manual visual checks on Safari iOS, and fix any issues.
+- Smaller font on mobile list view
 
-TARGET SOFT LAUNCH AUG 09.
+## vNext
 
-## Schedule
+- Pinch to zoom in gallery
+- Prettier touches like asanhoa / squares
+- Check content is caching right (added 1 event happening always?)
 
-### 9 SOFT RELEASE DAY (oktech.jp/chris-wireframe)
+## Public Codebase Release
 
-- Update logo
-- OG Image Styling
-- Manual checks on multiple browsers and devices.
-
-- Standardize importing of markdown to fix that css import.
+- Standardize importing of markdown to fix that stray css module.
+- Feedback integration
 - Clean up codebase, removing AI stuff.
 
-- Test automated builds
-- Resume github pages workflow with sync script trigger
-- Work with Martin or whoever controls domains to do manual release
+## Later
 
-### THEN
-
-- Pinch to zoom
-- Prettier touches like asanhoa
-- Feedback integration
-
-# Post Release Features
-
-- SEO test page / Keyword Stuffing
+- Replace extractMarkdownDescription with import step / LLM
+- Streamline logo style/props logic
+- Preprocess images on import, rotate, etc.?
 - Carousel for upcoming events
 - Tagging with LLMs and shit.
 - How to find us photos for hankyu etc.
-- Feed modal, instead of direct link
 - Members: with hasPage: true.
 - Scripts for LLM decoration ?
-- https://docs.astro.build/en/guides/view-transitions/
-- Create an issue for font loadiong strategy

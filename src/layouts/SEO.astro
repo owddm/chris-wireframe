@@ -1,61 +1,33 @@
 ---
-export interface Props {
-  title?: string;
-  description?: string;
-  canonical?: string;
-  og?: string;
-  type?: "website" | "article" | "profile";
-  article?: {
-    author?: string;
-    publishedTime?: string;
-    modifiedTime?: string;
-    tags?: string[];
-  };
-  noindex?: boolean;
-  nofollow?: boolean;
-}
+import { SITE } from "@/constants";
+import { getSEO } from "@/utils/seo";
+import { resolveFullUrl } from "@/utils/urlResolver";
+
+const seoData = await getSEO(Astro.url.href);
 
 const {
-  title,
-  description = "Join the Osaka Kyoto Tech Meetup Group - A vibrant community for web developers, designers, and tech enthusiasts in the Kansai region.",
+  fullTitle: title,
+  description,
   canonical,
-  og,
-  type = "website",
+  ogImage,
+  type,
   article,
   noindex = false,
   nofollow = false,
-} = Astro.props;
-
-import { SITE } from "@/constants";
-import { getOGImageWithFallback } from "@/utils/og";
-import { resolveFullUrl } from "@/utils/urlResolver";
-
-const pageTitle = title ? SITE.title.template.replace("%s", title) : SITE.title.default;
-const resolvedCanonical = canonical || Astro.url.href;
-
-// og image is overridden by the page
-let ogImage = og;
-
-// if none passed, use current page path to determine OG image
-if (!ogImage) {
-  // Use current page path to determine OG image
-  const currentPath = new URL(Astro.url).pathname;
-  // Meta tags need absolute URLs
-  ogImage = getOGImageWithFallback(currentPath);
-}
+} = seoData;
 
 const robotsContent = [noindex ? "noindex" : "index", nofollow ? "nofollow" : "follow"].join(", ");
 ---
 
-<title>{pageTitle}</title>
+<title>{title}</title>
 <meta name="description" content={description} />
-<link rel="canonical" href={resolvedCanonical} />
+<link rel="canonical" href={canonical} />
 
 <meta name="robots" content={robotsContent} />
 
-<meta property="og:title" content={pageTitle} />
+<meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:url" content={resolvedCanonical} />
+<meta property="og:url" content={canonical} />
 <meta property="og:type" content={type} />
 <meta property="og:site_name" content={SITE.name} />
 <meta property="og:locale" content="en_US" />
@@ -63,7 +35,10 @@ const robotsContent = [noindex ? "noindex" : "index", nofollow ? "nofollow" : "f
 {
   ogImage && (
     <>
-      <meta property="og:image" content={resolveFullUrl(ogImage)} />
+      <meta
+        property="og:image"
+        content={ogImage.startsWith("http") ? ogImage : resolveFullUrl(ogImage)}
+      />
       <meta property="og:image:alt" content={title || SITE.name} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
@@ -73,7 +48,7 @@ const robotsContent = [noindex ? "noindex" : "index", nofollow ? "nofollow" : "f
 
 <meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
 <meta name="twitter:site" content="@owddm" />
-<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 {
   ogImage && (

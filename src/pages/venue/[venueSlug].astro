@@ -37,18 +37,9 @@ try {
 } catch (e) {
   // No markdown file found, which is fine
 }
-
-// Create description
-const description =
-  venue.data.description ||
-  `${venue.data.title} - Event venue in ${venue.data.city || "Osaka"}. ${venueEvents.length} events hosted.`;
 ---
 
-<SidebarPageLayout
-  title={`${venue.data.title} - Venues`}
-  description={description}
-  og={venue.data.cover?.src}
->
+<SidebarPageLayout>
   <Fragment slot="sidebar">
     <LocationCardVenue venue={venue} client:visible />
   </Fragment>

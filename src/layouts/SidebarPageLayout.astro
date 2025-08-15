@@ -1,18 +1,9 @@
 ---
 import Container from "@/components/Common/Container";
 import PageLayout from "@/layouts/PageLayout.astro";
-
-interface Props {
-  title: string;
-  description?: string;
-  type?: string;
-  og?: string;
-}
-
-const { title, description, og } = Astro.props;
 ---
 
-<PageLayout title={title} description={description} og={og}>
+<PageLayout>
   <div class="flex flex-col gap-24 py-8 pb-32">
     <Container class="flex w-full flex-col gap-8">
       <!-- hidden on desktop -->

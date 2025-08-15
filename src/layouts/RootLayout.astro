@@ -10,23 +10,6 @@ import "@fontsource/noto-sans/700.css";
 import "@fontsource/lexend/700.css";
 import "@fontsource/space-mono/400.css";
 
-export interface Props {
-  title?: string;
-  description?: string;
-  og?: string;
-  canonical?: string;
-  type?: "website" | "article" | "profile";
-  article?: {
-    author?: string;
-    publishedTime?: string;
-    modifiedTime?: string;
-    tags?: string[];
-  };
-  noindex?: boolean;
-  nofollow?: boolean;
-}
-
-const { title, ...seoProps } = Astro.props;
 ---
 
 <!doctype html>
@@ -37,7 +20,7 @@ const { title, ...seoProps } = Astro.props;
       name="viewport"
       content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"
     />
-    <SEO title={title} {...seoProps} />
+    <SEO />
     <link
       rel="alternate"
       type="application/rss+xml"

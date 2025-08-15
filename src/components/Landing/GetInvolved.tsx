@@ -1,5 +1,5 @@
 import { FaDiscord } from "react-icons/fa6";
-import { LuCalendar, LuFileText } from "react-icons/lu";
+import { LuCalendarPlus, LuMessageCircleCode } from "react-icons/lu";
 
 import BlobIconGrid, { type BlobIconGridItem } from "@/components/Common/BlobIconGrid";
 
@@ -19,14 +19,14 @@ export default function GetInvolved() {
       type: "calendar",
       title: "Subscribe to Calendar",
       description: "Never miss an event",
-      icon: LuCalendar,
+      icon: LuCalendarPlus,
     },
     {
       type: "a",
-      title: "Submit a Proposal",
-      description: "Share your ideas",
-      icon: LuFileText,
-      href: "https://github.com/owddm/owddm.com/discussions/new?category=events",
+      title: "Make a Presnetation",
+      description: "Submit your talk proposal and share your ideas",
+      icon: LuMessageCircleCode,
+      href: "https://discord.com/channels/1034792577293094972/1034862103653257306",
       target: "_blank",
       rel: "noopener noreferrer",
       testId: "proposal-cta",

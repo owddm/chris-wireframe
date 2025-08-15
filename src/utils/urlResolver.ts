@@ -90,3 +90,25 @@ export function removeBasePath(href: string): string {
   }
   return cleanHref;
 }
+
+/**
+ * Extract and normalize pathname from a URL string
+ * @param url - The URL string (can be relative or absolute)
+ * @returns The normalized pathname without trailing slash (except for root)
+ */
+export function extractPathname(url: string): string {
+  try {
+    // Parse the URL (use a base for relative URLs)
+    const urlObj = new URL(url, "http://localhost");
+
+    // Get pathname and remove trailing slash (except for root)
+    const pathname = urlObj.pathname.replace(/\/$/, "") || "/";
+
+    // Remove base path if present
+    return removeBasePath(pathname);
+  } catch {
+    // If URL parsing fails, treat it as a pathname
+    const pathname = url.replace(/\/$/, "") || "/";
+    return removeBasePath(pathname);
+  }
+}

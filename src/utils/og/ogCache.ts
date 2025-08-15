@@ -76,10 +76,21 @@ export class OGImageCache {
     if (cleanHref !== "/sitemap.xml") {
       // Check if this route has a specific OG image handler
       const isHomePage = cleanHref === "/";
-      const isEventPage = cleanHref.startsWith("/events/") && cleanHref !== "/events";
+      const isEventsPage = cleanHref === "/events";
+      const isEventsListPage = cleanHref === "/events/list";
+      const isEventsAlbumPage = cleanHref === "/events/album";
+      const isEventPage =
+        cleanHref.startsWith("/events/") && !isEventsListPage && !isEventsAlbumPage;
       const isVenuePage = cleanHref.startsWith("/venue/");
 
-      if (isEventPage || isVenuePage || (isHomePage && cleanHref !== "/")) {
+      if (
+        isEventsPage ||
+        isEventsListPage ||
+        isEventsAlbumPage ||
+        isEventPage ||
+        isVenuePage ||
+        (isHomePage && cleanHref !== "/")
+      ) {
         // For non-home pages with handlers, append og.png to the path
         ogPath = cleanHref.endsWith("/") ? `${cleanHref}og.png` : `${cleanHref}/og.png`;
       }

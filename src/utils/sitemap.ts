@@ -1,117 +1,111 @@
+import { SEO_DATA } from "@/constants";
 import { getEvents, getVenues } from "@/content";
 
-import { isLegacyEvent } from "./eventFilters";
+import { getSEO } from "./seo";
 import { resolveFullUrl } from "./urlResolver";
-
-export interface PageEntry {
-  href: string;
-  title: string;
-  ogImage?: string; // Optional override for OG image
-}
 
 export interface Entry {
   title: string;
   href?: string;
-  children: PageEntry[];
+  fullUrl?: string;
+  description?: string;
+  keywords?: string[];
+  ogImage?: string;
 }
 
 /**
- * Build organized sections for the sitemap
+ * Create a sitemap entry from a path
  */
-export async function buildSitemapSections(): Promise<Entry[]> {
-  const sections: Entry[] = [];
-
-  // Home section (single link)
-  sections.push({
-    title: "Home",
-    href: "/",
-    children: [],
-  });
-  // About and other static pages
-  sections.push({
-    title: "About",
-    href: "/about",
-    children: [],
-  });
-
-  // Events section
-  const events = await getEvents();
-  const eventPages: PageEntry[] = events
-    .map((e) => ({
-      href: `/events/${e.id}`,
-      title: e.data.title,
-      // For legacy events, use their cover image if available
-      ogImage: isLegacyEvent(e) && e.data.cover?.src ? e.data.cover.src : undefined,
-    }))
-    .sort((a, b) => a.title.localeCompare(b.title));
-
-  sections.push({
-    title: "Events",
-    href: "/events",
-    children: [
-      { href: "/events/list", title: "Events (List View)" },
-      { href: "/events/album", title: "Photo Album" },
-      ...eventPages,
-    ],
-  });
-
-  // Venues section
-  const venues = await getVenues();
-  const venuePages: PageEntry[] = venues
-    .map((v) => ({
-      href: `/venue/${v.id}`,
-      title: v.data.title,
-    }))
-    .sort((a, b) => a.title.localeCompare(b.title));
-
-  sections.push({
-    title: "Venues",
-    children: venuePages,
-  });
-
-  sections.push({
-    title: "Code of Conduct",
-    href: "/code-of-conduct",
-    children: [],
-  });
-
-  sections.push({
-    title: "RSS Feed",
-    href: "/rss.xml",
-    children: [],
-  });
-
-  sections.push({
-    title: "ICS Calendar Feed",
-    href: "/oktech-events.ics",
-    children: [],
-  });
-
-  sections.push({
-    title: "Sitemap",
-    href: "/sitemap",
-    children: [{ href: "/sitemap.xml", title: "XML Sitemap" }],
-  });
-
-  return sections;
-}
-
-/**
- * Extract all URLs from sitemap sections (recursively)
- */
-export function extractUrlsFromSections(sections: Entry[]): string[] {
-  const urls: string[] = [];
-
-  for (const section of sections) {
-    if (section.href) {
-      urls.push(section.href);
-    }
-    for (const child of section.children) {
-      urls.push(child.href);
-    }
+async function getSitemapItem(path: string, overrideTitle?: string): Promise<Entry> {
+  // For non-HTML resources, use SEO_DATA directly
+  const isNonHtml = path.endsWith(".xml") || path.endsWith(".ics");
+  if (isNonHtml) {
+    const seoData = SEO_DATA[path];
+    return {
+      title: overrideTitle || seoData?.title || path,
+      href: path,
+      fullUrl: resolveFullUrl(path),
+      description: seoData?.description,
+      keywords: seoData?.keywords,
+    };
   }
 
-  return urls;
+  // For HTML pages, use getSEO
+  const seo = await getSEO(path);
+  return {
+    title: overrideTitle || seo.title,
+    href: path,
+    fullUrl: resolveFullUrl(path),
+    description: seo.description,
+    keywords: seo.keywords,
+    ogImage: seo.ogImage,
+  };
+}
+
+/**
+ * Build all sitemap entries as a flat list
+ */
+export async function buildSitemapEntries(): Promise<Entry[]> {
+  const entries: Entry[] = [];
+
+  // Static pages
+  entries.push(await getSitemapItem("/"));
+  entries.push(await getSitemapItem("/about"));
+  entries.push(await getSitemapItem("/events"));
+  entries.push(await getSitemapItem("/events/list"));
+  entries.push(await getSitemapItem("/events/album"));
+  entries.push(await getSitemapItem("/code-of-conduct"));
+  entries.push(await getSitemapItem("/sitemap"));
+
+  // Non-HTML resources
+  entries.push(await getSitemapItem("/rss.xml"));
+  entries.push(await getSitemapItem("/oktech-events.ics"));
+  entries.push(await getSitemapItem("/sitemap.xml"));
+
+  // Dynamic event pages
+  const events = await getEvents();
+  const eventPages: Entry[] = await Promise.all(
+    events.map(async (e) => {
+      const href = `/events/${e.id}`;
+      const seo = await getSEO(href);
+      return {
+        href,
+        title: e.data.title,
+        fullUrl: resolveFullUrl(href),
+        ogImage: seo.ogImage,
+        description: seo.description,
+        keywords: seo.keywords,
+      };
+    }),
+  );
+  entries.push(...eventPages);
+
+  // Dynamic venue pages
+  const venues = await getVenues();
+  const venuePages: Entry[] = await Promise.all(
+    venues.map(async (v) => {
+      const href = `/venue/${v.id}`;
+      const seo = await getSEO(href);
+      return {
+        href,
+        title: v.data.title,
+        fullUrl: resolveFullUrl(href),
+        description: seo.description,
+        keywords: seo.keywords,
+        ogImage: seo.ogImage,
+      };
+    }),
+  );
+  entries.push(...venuePages);
+
+  return entries;
+}
+
+/**
+ * Extract all URLs from sitemap entries
+ */
+export function extractUrlsFromEntries(entries: Entry[]): string[] {
+  return entries.filter((entry) => entry.href).map((entry) => entry.href!);
 }
 
 /**
@@ -121,8 +115,8 @@ export function extractUrlsFromSections(sections: Entry[]): string[] {
  * @returns Array of URL strings.
  */
 export async function generateSitemapURLs(): Promise<string[]> {
-  const sections = await buildSitemapSections();
-  const paths = extractUrlsFromSections(sections);
+  const entries = await buildSitemapEntries();
+  const paths = extractUrlsFromEntries(entries);
 
   // Filter out non-HTML paths (XML, RSS, ICS)
   const htmlPaths = paths.filter((path) => !path.endsWith(".xml") && !path.endsWith(".ics"));

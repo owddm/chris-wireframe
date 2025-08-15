@@ -5,6 +5,7 @@ import { themeColorsHex } from "@/utils/og/theme-colors";
 interface OKTechLogoProps {
   className?: string;
   active?: boolean;
+  noStyle?: boolean;
 }
 
 // TODO use colors picked from wintle's image
@@ -20,7 +21,7 @@ type OKTechLogoItemProps = OKTechLogoProps & {
   style?: React.CSSProperties;
 };
 
-export function OKTechLogoIcon({ className, style, active }: OKTechLogoItemProps) {
+export function OKTechLogoIcon({ noStyle, className, style, active }: OKTechLogoItemProps) {
   return (
     <>
       <svg
@@ -36,21 +37,23 @@ export function OKTechLogoIcon({ className, style, active }: OKTechLogoItemProps
         fill="currentColor"
       >
         <defs>
-          <style>
-            {`
+          {!noStyle && (
+            <style>
+              {`
               .base-responsive { fill: ${colors.BASE_LIGHT}; }
               
               @media (prefers-color-scheme: dark) {
                 .base-responsive { fill: ${colors.BASE_DARK}; }
-              }
-              @media (prefers-color-scheme: light) {
-                .base-responsive { fill: ${colors.BASE_LIGHT}; }
-              }
-              
-              [data-theme="light"] .base-responsive { fill: currentColor !important; }
-              [data-theme="dark"] .base-responsive { fill: currentColor !important; }
-            `}
-          </style>
+                }
+                @media (prefers-color-scheme: light) {
+                  .base-responsive { fill: ${colors.BASE_LIGHT}; }
+                  }
+                  
+                  [data-theme="light"] .base-responsive { fill: currentColor !important; }
+                  [data-theme="dark"] .base-responsive { fill: currentColor !important; }
+                  `}
+            </style>
+          )}
         </defs>
         <path
           className="base-responsive"

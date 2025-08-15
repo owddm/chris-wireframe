@@ -1,16 +1,57 @@
 ---
-import SiteMapTree from "@/components/Common/SiteMapTree";
-import SitemapSwitcher from "@/components/Sitemap/SitemapSwitcher";
-import Link from "@/components/Common/LinkAstro.astro";
-import ArticleLayout from "@/layouts/ArticleLayout.astro";
+import Container from "@/components/Common/Container";
+import PageLayout from "@/layouts/PageLayout.astro";
+import SitemapSection from "@/components/Sitemap/SitemapSection";
+import { buildSitemapEntries } from "@/utils/sitemap";
+
+const allEntries = await buildSitemapEntries();
+
+// Group entries by type
+const mainRoutes = allEntries.filter(
+  (e) =>
+    e.href === "/" ||
+    e.href === "/events" ||
+    e.href === "/events/list" ||
+    e.href === "/events/album" ||
+    e.href === "/about" ||
+    e.href === "/code-of-conduct" ||
+    e.href === "/sitemap" ||
+    e.href === "/sitemap.xml" ||
+    e.href === "/rss.xml" ||
+    e.href === "/oktech-events.ics",
+);
+
+const eventPages = allEntries.filter(
+  (e) => e.href?.startsWith("/events/") && e.href !== "/events/list" && e.href !== "/events/album",
+);
+
+const venuePages = allEntries.filter((e) => e.href?.startsWith("/venue/"));
+
+// Sort events and venues alphabetically
+eventPages.sort((a, b) => a.title.localeCompare(b.title));
+venuePages.sort((a, b) => a.title.localeCompare(b.title));
 ---
 
-<ArticleLayout title="Sitemap">
-  <SitemapSwitcher slot="header" currentView="list" client:visible />
-  <div>
-    This page lists every accessible route on the website for easy navigation. You can also download
-    the
-    <Link href="/sitemap.xml">machine-readable XML sitemap</Link>.
-    <SiteMapTree />
+<PageLayout>
+  <div class="flex flex-col gap-24 py-8 pb-32">
+    <Container class="flex w-full flex-col gap-8">
+      <div class="prose max-w-none">
+        <h1>Sitemap</h1>
+        <p>
+          This page displays every route on the website. A machine readable
+          <a href="/sitemap.xml" target="_blank">sitemap.xml</a>
+          is also available.
+        </p>
+      </div>
+    </Container>
+
+    <!-- Main Routes Section -->
+    <SitemapSection title="Main Routes" entries={mainRoutes} client:load />
+
+    <!-- Events Section -->
+    <SitemapSection title="Events" entries={eventPages} client:load />
+
+    <!-- Venues Section -->
+    <SitemapSection title="Venues" entries={venuePages} client:load />
   </div>
-</ArticleLayout>
+</PageLayout>
