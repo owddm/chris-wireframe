@@ -23,7 +23,7 @@ export default function GetInvolved() {
     },
     {
       type: "a",
-      title: "Make a Presnetation",
+      title: "Make a Presentation",
       description: "Submit your talk proposal and share your ideas",
       icon: LuMessageCircleCode,
       href: "https://discord.com/channels/1034792577293094972/1034862103653257306",
