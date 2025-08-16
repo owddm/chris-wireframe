@@ -11,6 +11,24 @@ interface Props {
 
 export default function EventsViewGrid({ events }: Props) {
   const { currentFilters } = useEventsFilter();
+
+  // Reason: Skip year grouping when search filter is active (but not for location filter)
+  const hasSearchFilter = !!currentFilters.search;
+
+  if (hasSearchFilter) {
+    // No grouping when search is active - show all results in one grid
+    return (
+      <SimpleSection title="Search Results" wide grid>
+        {events.map((event) => (
+          <div key={event.id} data-testid="event-card">
+            <EventCard event={event} variant="polaroid" />
+          </div>
+        ))}
+      </SimpleSection>
+    );
+  }
+
+  // Apply year grouping when no search filter or only location/topic filters
   const eventGroups = groupEventsByYearAndUpcoming(events, currentFilters.sort);
 
   return (
