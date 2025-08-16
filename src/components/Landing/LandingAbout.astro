@@ -2,20 +2,17 @@
 import LandingStatsSlideshow from "@/components/Landing/LandingStatsSlideshow";
 
 import Container from "@/components/Common/Container";
-import { getCollection } from "astro:content";
+import { getEvents } from "@/content/events";
+import { getVenues } from "@/content/venues";
 import SimpleSection from "../Common/SimpleSection";
 
-const allEvents = await getCollection("events");
-const venues = await getCollection("venues");
-
-// Filter out dev-only events and test events for production
-const realEvents = allEvents.filter(
-  (event) => !event.data.devOnly && !event.id.startsWith("999999"),
-);
+// Use the filtered getters which already handle devOnly filtering
+const events = await getEvents();
+const venues = await getVenues();
 
 // Calculate stats
-const totalEvents = realEvents.length;
-const uniqueVenues = venues.filter((venue) => !venue.id.startsWith("999999")).length;
+const totalEvents = events.length;
+const uniqueVenues = venues.length;
 ---
 
 <Container>

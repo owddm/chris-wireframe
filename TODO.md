@@ -1,7 +1,3 @@
-- Use color dropper for logo rgb
-- Manual visual checks on Safari iOS, and fix any issues.
-- Smaller font on mobile list view
-
 ## vNext
 
 - Pinch to zoom in gallery

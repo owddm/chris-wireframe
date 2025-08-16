@@ -8,6 +8,7 @@ import {
 } from "astro:content";
 import path from "path";
 
+import { DEV_MODE } from "@/constants";
 import { memoize } from "@/utils/memoize";
 import { type ResponsiveImageData, getResponsiveImage } from "@/utils/responsiveImage";
 
@@ -53,6 +54,8 @@ export const venuesCollection = defineCollection({
       const mapDarkImagePath = path.join(basePath, "map-dark.jpg");
       const mapDarkImage = mapDarkImages[mapDarkImagePath] ? mapDarkImagePath : undefined;
 
+      const devOnly = frontmatter.devOnly as boolean | undefined;
+
       return {
         id: slug,
         title: frontmatter.title as string,
@@ -67,6 +70,7 @@ export const venuesCollection = defineCollection({
         meetupId: frontmatter.meetupId as number,
         hasPage: frontmatter.hasPage as boolean | undefined,
         description: frontmatter.description as string | undefined,
+        devOnly: devOnly ?? false,
         cover,
         mapImage,
         mapDarkImage,
@@ -93,6 +97,7 @@ export const venuesCollection = defineCollection({
       meetupId: z.number(),
       hasPage: z.boolean().optional(),
       description: z.string().optional(),
+      devOnly: z.boolean().optional().default(false),
       cover: z.string().optional(), // Changed from image() to z.string()
       mapImage: z.string().optional(), // Changed from image() to z.string()
       mapDarkImage: z.string().optional(), // Changed from image() to z.string()
@@ -129,9 +134,13 @@ const processVenue = memoize(async function processVenue(
 
 // Export memoized functions
 export const getVenues = memoize(async (): Promise<CollectionEntry<"venues">[]> => {
-  const venues = await getCollection("venues");
+  const allVenues = await getCollection("venues");
+
+  // Filter out devOnly venues in production
+  const filteredVenues = DEV_MODE ? allVenues : allVenues.filter((venue) => !venue.data.devOnly);
+
   // Only return venues that have a page
-  return venues.filter((venue) => venue.data.hasPage);
+  return filteredVenues.filter((venue) => venue.data.hasPage);
 });
 
 export const getVenue = memoize(async (venueSlug: string | undefined): Promise<VenueEnriched> => {

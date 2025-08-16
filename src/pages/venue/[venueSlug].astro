@@ -1,20 +1,17 @@
 ---
-import { getCollection, getEntry, render } from "astro:content";
+import { getEntry, render } from "astro:content";
 import { EventCardList } from "@/components/EventCard/EventCard";
 import SidebarPageLayout from "@/layouts/SidebarPageLayout.astro";
-import { getVenue, getEvents } from "@/content";
+import { getVenue, getEvents, getVenues } from "@/content";
 import SimpleSection from "@/components/Common/SimpleSection";
 import LocationCardVenue from "@/components/LocationCard/LocationCardVenue";
 
 export async function getStaticPaths() {
-  const venues = await getCollection("venues");
+  const venues = await getVenues();
 
-  // Only create pages for venues with hasPage: true
-  const venuePaths = venues
-    .filter((venue) => venue.data.hasPage)
-    .map((venue) => ({
-      params: { venueSlug: venue.id },
-    }));
+  const venuePaths = venues.map((venue) => ({
+    params: { venueSlug: venue.id },
+  }));
 
   return venuePaths;
 }

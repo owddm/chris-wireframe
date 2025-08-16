@@ -4,8 +4,8 @@ import type { IconType } from "react-icons";
 import { FaDiscord, FaGithub, FaLinkedin, FaMeetup } from "react-icons/fa6";
 import { LuCalendar, LuFileText, LuHouse, LuInfo, LuMap } from "react-icons/lu";
 
-// Development mode flag - change this to false for production
-export const DEV_MODE = true;
+// Development mode flag - automatically detected based on environment
+export const DEV_MODE = import.meta.env.DEV;
 
 const shortName = "OKTech";
 const longName = "Technology Meetup Group in Kansai - Osaka, Kyoto, Kobe, Hyogo";
