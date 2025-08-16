@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import { FaGoogle, FaYahoo } from "react-icons/fa6";
-import { LuCalendar, LuCalendarPlus, LuChevronDown } from "react-icons/lu";
+import { LuCalendar, LuCalendarPlus } from "react-icons/lu";
 
 import CalendarFeeds from "@/components/Common/CalendarFeeds";
 import type { EventEnriched } from "@/content/events";
@@ -100,16 +100,15 @@ export default function AddToCalendarDropdown({ event }: AddToCalendarDropdownPr
 
   return (
     <details
-      className="dropdown dropdown-bottom dropdown-end w-full"
+      className="dropdown dropdown-bottom dropdown-end lg:dropdown-left w-full lg:[&_.dropdown-content]:top-auto lg:[&_.dropdown-content]:bottom-0"
       ref={dropdownRef}
       data-testid="add-to-calendar-dropdown"
     >
       <summary className="btn btn-lg w-full gap-4">
         Add to Calendar
         <LuCalendarPlus />
-        <LuChevronDown className="h-4 w-4" />
       </summary>
-      <div className="dropdown-content bg-base-100 rounded-box z-50 mt-1 flex min-w-max flex-col gap-6 p-6 shadow">
+      <div className="dropdown-content bg-base-100 rounded-box z-50 mt-1 flex min-w-max flex-col gap-6 p-6 shadow lg:mt-0 lg:mr-1">
         <Subsection title="Add Single Event">
           <Button
             href={`/events/${event.id}.ics`}
