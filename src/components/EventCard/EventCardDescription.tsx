@@ -103,7 +103,7 @@ export default function EventCardDescription({ event, variant }: EventCardDescri
           <h3
             className={clsx(
               "line-clamp-2",
-              variant === "compact" && "truncate text-lg sm:text-xl",
+              variant === "compact" && "truncate text-base sm:text-lg md:text-xl",
               smallPolaroid && "text-xl",
               variant === "big" && "sm:text-2xl",
             )}
