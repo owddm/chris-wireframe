@@ -32,9 +32,7 @@ export default function EventsViewAlbum({ events }: Props) {
               <EventCardList events={[event]} />
             </Container>
             <Container wide className="mt-6">
-              <Grid data-testid="event-gallery-images">
-                <EventGalleryImages event={event} />
-              </Grid>
+              <EventGalleryImages event={event} />
             </Container>
           </div>
         ))}

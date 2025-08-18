@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { LuImageOff } from "react-icons/lu";
 
+import Grid from "@/components/Common/Grid";
 import type { EventEnriched } from "@/content";
 import { isEventUpcoming } from "@/utils/eventFilters";
 
@@ -83,27 +84,29 @@ export default function EventGalleryImages({ event }: Props) {
 
   return (
     <>
-      {reversedImages.map((img, index) => (
-        <button
-          key={img.id}
-          onClick={() => handleImageClick(index)}
-          className="glass-border rounded-box w-full overflow-hidden"
-          type="button"
-          aria-label={`View larger image: ${img.data.caption ?? ""}`}
-          data-testid={`gallery-image-${index}`}
-        >
-          <img
-            src={img.thumbnail.src}
-            srcSet={img.thumbnail.srcSet}
-            sizes={img.thumbnail.sizes}
-            alt={img.data.caption ?? ""}
-            className="bg-base-300 aspect-[4/3] w-full cursor-pointer object-cover transition-opacity hover:opacity-90"
-            loading="lazy"
-            width={320}
-            height={240}
-          />
-        </button>
-      ))}
+      <Grid>
+        {reversedImages.map((img, index) => (
+          <button
+            key={img.id}
+            onClick={() => handleImageClick(index)}
+            className="glass-border rounded-box w-full overflow-hidden"
+            type="button"
+            aria-label={`View larger image: ${img.data.caption ?? ""}`}
+            data-testid={`gallery-image-${index}`}
+          >
+            <img
+              src={img.thumbnail.src}
+              srcSet={img.thumbnail.srcSet}
+              sizes={img.thumbnail.sizes}
+              alt={img.data.caption ?? ""}
+              className="bg-base-300 aspect-[4/3] w-full cursor-pointer object-cover transition-opacity hover:opacity-90"
+              loading="lazy"
+              width={320}
+              height={240}
+            />
+          </button>
+        ))}
+      </Grid>
       <EventImageModal
         allImages={galleryImages}
         isOpen={isModalOpen}

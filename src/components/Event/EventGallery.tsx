@@ -17,7 +17,7 @@ export default function EventGallery({ event }: Props) {
   }
 
   return (
-    <SimpleSection wide grid title={"Event Gallery"} element={<GalleryDisclaimer />}>
+    <SimpleSection wide title={"Event Gallery"} element={<GalleryDisclaimer />}>
       <EventGalleryImages event={event} />
     </SimpleSection>
   );
