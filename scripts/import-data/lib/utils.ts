@@ -1,13 +1,13 @@
 import { existsSync } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
+import sharp from "sharp";
 
+import { MAX_IMAGE_WIDTH } from "../../../src/constants";
 import { GITHUB_API_BASE, GITHUB_RAW_BASE } from "./constants";
 import { githubFetch, githubFetchJSON } from "./github-fetch";
 import { logger } from "./logger";
 import type { ImportStatistics } from "./statistics";
-
-const IMAGE_CACHE = new Map<string, Buffer>();
 
 export async function downloadImage(url: string, localPath: string): Promise<boolean> {
   const fullUrl = url.startsWith("http") ? url : `${GITHUB_RAW_BASE}${url}`;
@@ -22,27 +22,35 @@ export async function downloadImage(url: string, localPath: string): Promise<boo
       }
     }
 
-    // Check memory cache first
-    let imageBuffer = IMAGE_CACHE.get(fullUrl);
+    const response = await githubFetch(fullUrl);
 
-    if (!imageBuffer) {
-      // Download image using centralized GitHub fetch
-      const response = await githubFetch(fullUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to download: ${response.status} ${response.statusText}`);
-      }
-      imageBuffer = Buffer.from(await response.arrayBuffer());
-
-      // Cache for future use in this run
-      IMAGE_CACHE.set(fullUrl, imageBuffer);
+    if (!response.ok) {
+      throw new Error(`Failed to download: ${response.status} ${response.statusText}`);
     }
+
+    const imageBuffer = Buffer.from(await response.arrayBuffer());
 
     // Ensure directory exists
     await fs.mkdir(path.dirname(localPath), { recursive: true });
 
-    // Write image to disk
-    await fs.writeFile(localPath, imageBuffer);
-    return true; // Image was downloaded
+    // Process image with Sharp:
+    // 1. Auto-rotate based on EXIF orientation
+    // 2. Resize if width exceeds MAX_IMAGE_WIDTH
+    // 3. Convert to WebP format for better compression
+    const processedBuffer = await sharp(imageBuffer)
+      // TODO we should fix the exif metadata.
+      // the autoOrient is causing images to be mis-rotate.
+      // .autoOrient() // Automatically rotate based on EXIF orientation <- this is screwing thing up.
+      .resize(MAX_IMAGE_WIDTH, null, {
+        withoutEnlargement: true, // Don't upscale smaller images
+        fit: "inside", // Preserve aspect ratio
+      })
+      .webp({ quality: 85 }) // Convert to WebP with good quality
+      .toBuffer();
+
+    // Write processed image to disk
+    await fs.writeFile(localPath, processedBuffer);
+    return true; // Image was downloaded and processed
   } catch (err) {
     // Don't log here - let the caller handle logging
     throw err;

@@ -1,17 +1,17 @@
 // Responsive image utility that works with string paths instead of ImageMetadata
-import type { ImageMetadata } from "astro";
+import type { ImageMetadata, UnresolvedImageTransform } from "astro";
 
+import { MAX_IMAGE_WIDTH } from "@/constants";
 import { memoize } from "@/utils/memoize";
 
-export async function safeGetImage(options: any): Promise<{ src: string }> {
+export async function safeGetImage(options: UnresolvedImageTransform): Promise<{ src: string }> {
   try {
     // Try to dynamically import getImage
     const { getImage } = await import("astro:assets");
     return await getImage(options);
   } catch (error) {
-    // In test environment or when getImage is not available,
-    // return the original src
-    return { src: options.src?.src || options.src || "" };
+    // When getImage is not available, return the original src
+    return { src: (options.src as string) || "" };
   }
 }
 
@@ -77,7 +77,7 @@ export const IMAGE_CONFIGS: Record<ImageType, ImageConfig> = {
   galleryLightbox: {
     // Full viewport at key breakpoints
     sizes: "100vw",
-    breakpoints: [1920],
+    breakpoints: [MAX_IMAGE_WIDTH],
   },
   blobSlideshow: {
     sizes: `(max-width: ${BP.md}px) 100vw, 50vw`,
@@ -127,7 +127,6 @@ export const getResponsiveImage = memoize(
       throw new Error(`Unable to load image at path: ${imagePath}`);
     }
 
-    // Load the image lazily - only when requested
     const module = await loader();
     const image = module.default;
 
@@ -143,7 +142,7 @@ export const getResponsiveImage = memoize(
     // Generate all variants
     const variants = await Promise.all(
       candidateWidths.map(async (width) => {
-        const imageOptions: any = {
+        const imageOptions: UnresolvedImageTransform = {
           src: image,
           width,
           format: "webp",

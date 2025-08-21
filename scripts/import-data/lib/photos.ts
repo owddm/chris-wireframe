@@ -239,6 +239,18 @@ function redistributeInferredBatches(
   return redistributions;
 }
 
+// Helper function to process a batch of photos with concurrency control
+async function processBatch<T>(
+  items: T[],
+  batchSize: number,
+  processor: (item: T) => Promise<void>,
+): Promise<void> {
+  for (let i = 0; i < items.length; i += batchSize) {
+    const batch = items.slice(i, i + batchSize);
+    await Promise.all(batch.map(processor));
+  }
+}
+
 export async function processGallery(
   eventDir: string,
   photos: Photo[],
@@ -249,19 +261,28 @@ export async function processGallery(
   if (photos.length > 0) {
     await fs.mkdir(galleryDir, { recursive: true });
 
-    for (const photo of photos) {
+    // Process photos in parallel batches of 5
+    const PARALLEL_DOWNLOADS = 5;
+    
+    // Filter out invalid photos first
+    const validPhotos = photos.filter(photo => {
       if (!photo.location) {
         logger.warn(`Photo without location property found, skipping`);
-        continue;
+        return false;
       }
       if (photo.removed) {
-        continue; // Skip removed images silently
+        return false; // Skip removed images silently
       }
-      const galleryImageFileName = path.basename(photo.location);
+      return true;
+    });
+
+    // Process photos in parallel batches
+    await processBatch(validPhotos, PARALLEL_DOWNLOADS, async (photo) => {
+      const galleryImageFileName = path.basename(photo.location!);
       const galleryImageLocalPath = path.join(galleryDir, galleryImageFileName);
 
       try {
-        const wasDownloaded = await downloadImage(photo.location, galleryImageLocalPath);
+        const wasDownloaded = await downloadImage(photo.location!, galleryImageLocalPath);
         if (wasDownloaded) {
           stats.galleryImagesDownloaded++;
           logger.success(`Downloaded → ${galleryImageLocalPath}`);
@@ -275,6 +296,7 @@ export async function processGallery(
         // Don't count this as a failure, just skip it
       }
 
+      // Process caption/metadata
       if (photo.caption) {
         const yamlPath = `${galleryImageLocalPath}.yaml`;
         const yamlContent = yamlStringify(
@@ -297,7 +319,7 @@ export async function processGallery(
       } else {
         stats.metadataNotApplicable++;
       }
-    }
+    });
   }
 
   // Clean up any local files that are no longer part of the gallery

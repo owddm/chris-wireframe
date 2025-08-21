@@ -5,7 +5,10 @@ import { FaDiscord, FaGithub, FaLinkedin, FaMeetup } from "react-icons/fa6";
 import { LuCalendar, LuFileText, LuHouse, LuInfo, LuMap } from "react-icons/lu";
 
 // Development mode flag - automatically detected based on environment
-export const DEV_MODE = import.meta.env.DEV;
+export const DEV_MODE = process.env.NODE_ENV === "development";
+
+// Maximum width for images (they will be resized if larger during import)
+export const MAX_IMAGE_WIDTH = 1920;
 
 const shortName = "OKTech";
 const longName = "Technology Meetup Group in Kansai - Osaka, Kyoto, Kobe, Hyogo";

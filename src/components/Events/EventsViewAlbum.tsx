@@ -1,5 +1,4 @@
 import Container from "@/components/Common/Container";
-import Grid from "@/components/Common/Grid";
 import EventGalleryImages from "@/components/Event/EventGalleryImages";
 import { EventCardList } from "@/components/EventCard/EventCard";
 import type { EventEnriched } from "@/content";
