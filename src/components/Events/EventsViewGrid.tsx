@@ -18,7 +18,7 @@ export default function EventsViewGrid({ events }: Props) {
   if (hasSearchFilter) {
     // No grouping when search is active - show all results in one grid
     return (
-      <SimpleSection title={events.length > 1 ? "Search Results" : "No Results"} wide grid>
+      <SimpleSection title={events.length >= 1 ? "Search Results" : "No Results"} wide grid>
         {events.map((event) => (
           <div key={event.id} data-testid="event-card">
             <EventCard event={event} variant="polaroid" />
