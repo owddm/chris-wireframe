@@ -9,6 +9,7 @@ import {
 import path from "path";
 
 import { DEV_MODE } from "@/constants";
+import { isEventUpcoming } from "@/utils/eventFilters";
 import { memoize } from "@/utils/memoize";
 import { type ResponsiveImageData, getResponsiveImage } from "@/utils/responsiveImage";
 
@@ -129,28 +130,39 @@ export const getGalleryImages = memoize(async (eventId: string): Promise<Gallery
 });
 
 // Export memoized functions
-export const getEvents = memoize(async (): Promise<EventEnriched[]> => {
-  const allEvents = await getCollection("events");
+export const getEvents = memoize(
+  async (limitRecent: number | undefined = undefined): Promise<EventEnriched[]> => {
+    const allEvents = await getCollection("events");
 
-  // Filter out devOnly events in production
-  const filteredEvents = DEV_MODE ? allEvents : allEvents.filter((event) => !event.data.devOnly);
+    // Filter out devOnly events in production
+    const filteredEvents = DEV_MODE ? allEvents : allEvents.filter((event) => !event.data.devOnly);
 
-  // Enrich each event with venue and gallery data using getEvent logic
-  const enrichedEvents = await Promise.all(filteredEvents.map((event) => getEvent(event.id, true)));
+    // Enrich each event with venue and gallery data using getEvent logic
+    const enrichedEvents = await Promise.all(
+      filteredEvents.map((event) => getEvent(event.id, true)),
+    );
 
-  // Sort events by date (newest first) and add priority flag for first 16
-  const sortedEvents = enrichedEvents.sort((a, b) => {
-    const dateA = new Date(a.data.dateTime).getTime();
-    const dateB = new Date(b.data.dateTime).getTime();
-    return dateB - dateA;
-  });
+    // Sort events by date (newest first) and add priority flag for first 16
+    const sortedEvents = enrichedEvents.sort((a, b) => {
+      const dateA = new Date(a.data.dateTime).getTime();
+      const dateB = new Date(b.data.dateTime).getTime();
+      return dateB - dateA;
+    });
 
-  // Add priority flag to first 16 events for optimized image loading
-  return sortedEvents.map((event, index) => ({
-    ...event,
-    priority: index < 16,
-  }));
-});
+    // Add priority flag to first 16 events for optimized image loading
+    const mappedEvents = sortedEvents.map((event, index) => ({
+      ...event,
+      priority: index < 16,
+    }));
+
+    if (limitRecent !== undefined) {
+      const upcomingIndex = mappedEvents.findIndex((event) => !isEventUpcoming(event));
+      return mappedEvents.slice(0, upcomingIndex + limitRecent);
+    }
+
+    return mappedEvents;
+  },
+);
 
 export const getEvent = memoize(
   async (eventSlug: string, multiple: boolean = false): Promise<EventEnriched> => {
