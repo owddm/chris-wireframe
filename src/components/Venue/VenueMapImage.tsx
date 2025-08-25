@@ -61,7 +61,7 @@ export default function VenueMapImage({ mapImage, mapDarkImage, marker, classNam
                 </div>
               </div>
             )}
-            <div className="text-primary-dark bg-base-100/70 rounded-full p-2">
+            <div className="text-primary-dark bg-base-100/70 rounded-field p-2">
               <LuMapPin className="h-6 w-6" />
             </div>
           </div>

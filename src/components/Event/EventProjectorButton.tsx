@@ -18,7 +18,7 @@ export default function EventProjectorButton({ event }: EventProjectorButtonProp
     <>
       <TooltipButton
         onClick={() => setIsOpen(true)}
-        className="cursor-pointer rounded-full bg-black/30 p-2 text-white/80 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/50 hover:text-white/100"
+        className="rounded-field cursor-pointer bg-black/30 p-2 text-white/80 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/50 hover:text-white/100"
         aria-label="Open projector view"
         tooltip="Projector view"
         tooltipPosition="top"

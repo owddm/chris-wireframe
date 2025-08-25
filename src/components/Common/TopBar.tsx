@@ -46,7 +46,7 @@ export default function TopBar() {
       <Container>
         <div className="-mx-2 flex items-start justify-between pt-4 sm:-mx-2 lg:-mx-5">
           <GlassCell showBackground={showBackground} testId="navbar-logo">
-            <LinkReact href="/" className="group btn btn-glass sm:btn-lg md:btn-xl rounded-full">
+            <LinkReact href="/" className="group btn btn-glass sm:btn-lg md:btn-xl rounded-field">
               <div className="-mr-1 -ml-2">
                 <Brand active={showBackground} className="w-28 sm:w-32 md:w-42" />
               </div>
@@ -59,7 +59,7 @@ export default function TopBar() {
                   key={item.label}
                   href={item.href}
                   className={clsx(
-                    "btn btn-glass btn-md sm:btn-lg md:btn-xl rounded-full font-bold",
+                    "btn btn-glass btn-md sm:btn-lg md:btn-xl rounded-field font-bold",
                     // "-mr-1 -ml-1",
                     i > 0 && "-ml-2",
                     // i === items.length - 1 && "-mr-0",
