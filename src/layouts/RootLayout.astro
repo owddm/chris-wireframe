@@ -60,7 +60,7 @@ import "@fontsource/space-mono/400.css";
   </head>
   <body class="bg-base-100">
     <ClientRouter />
-    {import.meta.env.DEV && <ThemeEditor client:only="react" />}
+    <ThemeEditor client:only="react" />
     <slot />
   </body>
 </html>
