@@ -4,6 +4,11 @@ import type { ImageMetadata, UnresolvedImageTransform } from "astro";
 import { MAX_IMAGE_WIDTH } from "@/constants";
 import { memoize } from "@/utils/memoize";
 
+export interface ImageDimensions {
+  width: number;
+  height: number;
+}
+
 export async function safeGetImage(options: UnresolvedImageTransform): Promise<{ src: string }> {
   try {
     // Try to dynamically import getImage
@@ -71,8 +76,7 @@ export const IMAGE_CONFIGS: Record<ImageType, ImageConfig> = {
       `(min-width: ${BP.lg + 1}px) 25vw`,
       "100vw",
     ].join(", "),
-    cropAspectRatio: 4 / 3,
-    // Same as eventPolaroid
+    // Keep original aspect ratio for react-photo-album
   },
   galleryLightbox: {
     // Full viewport at key breakpoints
@@ -170,3 +174,26 @@ export const getResponsiveImage = memoize(
     };
   },
 );
+
+/**
+ * Get the original dimensions of an image from its path.
+ * Returns the width and height of the original image.
+ */
+export const getImageDimensions = memoize(async (imagePath: string): Promise<ImageDimensions> => {
+  const normalizedPath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
+  const loader = imageLoaders[normalizedPath];
+
+  if (!loader) {
+    console.error(`Image loader not found for dimensions: ${normalizedPath}`);
+    // Return default dimensions as fallback
+    return { width: 800, height: 600 };
+  }
+
+  const module = await loader();
+  const image = module.default;
+
+  return {
+    width: image.width,
+    height: image.height,
+  };
+});

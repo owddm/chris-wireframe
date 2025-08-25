@@ -263,9 +263,9 @@ export async function processGallery(
 
     // Process photos in parallel batches of 5
     const PARALLEL_DOWNLOADS = 5;
-    
+
     // Filter out invalid photos first
-    const validPhotos = photos.filter(photo => {
+    const validPhotos = photos.filter((photo) => {
       if (!photo.location) {
         logger.warn(`Photo without location property found, skipping`);
         return false;

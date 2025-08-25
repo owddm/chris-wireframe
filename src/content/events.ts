@@ -11,7 +11,12 @@ import path from "path";
 import { DEV_MODE } from "@/constants";
 import { isEventUpcoming } from "@/utils/eventFilters";
 import { memoize } from "@/utils/memoize";
-import { type ResponsiveImageData, getResponsiveImage } from "@/utils/responsiveImage";
+import {
+  type ImageDimensions,
+  type ResponsiveImageData,
+  getImageDimensions,
+  getResponsiveImage,
+} from "@/utils/responsiveImage";
 
 import { type ProcessedVenue, processVenue } from "./venues";
 
@@ -19,6 +24,7 @@ import { type ProcessedVenue, processVenue } from "./venues";
 export type GalleryImage = CollectionEntry<"eventGalleryImage"> & {
   thumbnail: ResponsiveImageData;
   full: ResponsiveImageData;
+  dimensions: ImageDimensions;
 };
 
 // Enriched event type that combines CollectionEntry with processed data
@@ -115,15 +121,17 @@ export const getGalleryImages = memoize(async (eventId: string): Promise<Gallery
   return await Promise.all(
     eventGalleryImages.map(async (img) => {
       // Generate responsive data for thumbnail and full images directly from path
-      const [thumbnail, full] = await Promise.all([
+      const [thumbnail, full, dimensions] = await Promise.all([
         getResponsiveImage(img.data.image, "galleryThumbnail"),
         getResponsiveImage(img.data.image, "galleryLightbox"),
+        getImageDimensions(img.data.image),
       ]);
 
       return {
         ...img,
         thumbnail,
         full,
+        dimensions,
       };
     }),
   );
