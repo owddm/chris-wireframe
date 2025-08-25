@@ -12,7 +12,7 @@ export default function Brand({
   return (
     <div className={clsx("grid max-w-full grid-cols-4 items-center justify-center", className)}>
       <div>
-        <OKTechLogoIcon active={active} />
+        <OKTechLogoIcon noStyle active={active} />
       </div>
       <div className="col-span-3">
         <OKTechLogoText />

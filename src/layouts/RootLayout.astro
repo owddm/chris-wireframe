@@ -4,6 +4,7 @@ import { SITE } from "@/constants";
 import { resolveInternalHref } from "@/utils/urlResolver";
 import SEO from "./SEO.astro";
 import { ClientRouter } from "astro:transitions";
+import ThemeEditor from "@/components/DevTools/ThemeEditor";
 
 import "@fontsource/noto-sans/400.css";
 import "@fontsource/noto-sans/700.css";
@@ -59,6 +60,7 @@ import "@fontsource/space-mono/400.css";
   </head>
   <body class="bg-base-100">
     <ClientRouter />
+    {import.meta.env.DEV && <ThemeEditor client:only="react" />}
     <slot />
   </body>
 </html>
