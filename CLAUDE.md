@@ -36,6 +36,7 @@ oktech-web/
 - **Never proactively create documentation files** (\*.md) unless explicitly requested
 - **Clean up after yourself** - remove unused imports, variables, functions, and components
 - **Actively identify and remove dead code** - if code isn't being used, delete it
+- **Always use existing utilities** - check `/src/utils/` for date formatting, text processing, and other common functions before implementing your own
 
 ## Development Workflow
 
